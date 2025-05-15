@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="خدمات ورقية مميزة تشمل تصميم وطباعة بطاقات العمل، الأوراق الرسمية، البروشورات، والدفاتر بجودة عالية وتصاميم مبتكرة تلبي احتياجات الشركات والأفراد.">
+    <meta name="keywords" content="خدمات ورقية, تصميم بطاقات عمل, طباعة أوراق رسمية, تصميم بروشورات, تصميم دفاتر, خدمات الشركات, تصميمات مبتكرة">
+    <meta name="author" content="OS-Designer Team">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Arabic">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0FKLDXNLD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q0FKLDXNLD');
+</script>    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>pepar-Designer </title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+
+        <div class="header">
+        <a href="file:///C:/OS-Designer/index.html"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="file:///C:/OS-Designer/logo/logo.html">logo</a>
+           <a href="file:///C:/OS-Designer/Social-media/Social-media.html">أعلانات </a>
+           <a href="file:///C:/OS-Designer/panar/panar.html">بنر و يفط </a>
+           <a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+           <a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات الورقيه </a>
+           <a href="file:///C:/OS-Designer/support/support.html">الدعم</a>
+        </div>    <a href="file:///C:/OS-Designer/login/login.html" class="account-icon" title="حسابي"  >
+            <i class="fas fa-user"></i>
+        </a>
+        <!-- أيقونة السلة -->
+<div class="cart-icon" onclick="toggleCart()">
+    <i class="fas fa-bag-shopping"></i>
+    <span class="cart-count" id="cart-count">0</span>
+</div>
+ 
+             
+        <div class="menu-icon" onclick="toggleNav()">☰</div>
+
+        
+<!-- السلة الجانبية -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>سلة المشتريات</h2>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items" style="flex-direction: column;">
+        <!-- العناصر تظهر هنا -->
+    </div>
+    <div class="cart-total" style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;">
+        المجموع: <span id="cart-total">0</span> جنيه
+    </div>
+    <button id="send-order-btn" style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;">
+        <i class="fas fa-paper-plane" style="margin-left:8px;"></i>ارسال الطلبات
+    </button>
+
+</div>
+
+<script>
+        document.getElementById('send-order-btn').onmouseover = function() {
+        this.style.background = '#0056b3';
+    };
+    document.getElementById('send-order-btn').onmouseout = function() {
+        this.style.background = '#007bff';
+    };
+// متغير السلة
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// دالة إضافة المنتج مع الملاحظات
+function addToCart(id, name, price, image, notes = '') {
+    const displayName = notes ? `${name} (${notes})` : name;
+    
+    // البحث عن منتج مطابق (نفس الاسم، السعر، الصورة، الملاحظات)
+    const existingItem = cart.find(item => 
+        item.name === name && 
+        item.price === Number(price) && 
+        item.image === image &&
+        item.notes === notes
+    );
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: id + Date.now(), // إنشاء معرف فريد
+            name,
+            displayName,
+            price: Number(price),
+            image,
+            quantity: 1,
+            notes
+        });
+    }
+    
+    updateCart();
+    alert(`تم إضافة ${displayName} إلى السلة`);
+}
+
+// دالة إضافة المنتج المحدد مع الملاحظات
+function addSelectedProductWithNotes(selectId, notesId) {
+    const select = document.getElementById(selectId);
+    const notesInput = document.getElementById(notesId);
+    const selectedValue = select.value;
+    const notes = notesInput.value.trim();
+    
+    if (!selectedValue) {
+        alert("الرجاء اختيار منتج أولاً");
+        return;
+    }
+    
+    const [id, name, price, image] = selectedValue.split('|');
+    addToCart(id, name, price, image, notes);
+    
+    // إفراغ حقل الملاحظات بعد الإضافة
+    notesInput.value = '';
+}
+
+// دالة حذف المنتج
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// دالة تحديث الكمية
+function updateQuantity(id, newQuantity) {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity = Math.max(1, newQuantity);
+        updateCart();
+    }
+}
+
+// دالة عرض/إخفاء السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+    document.getElementById('cart-overlay').style.display = 
+        sidebar.classList.contains('active') ? 'block' : 'none';
+}
+
+function updateCart() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+    
+    const cartItems = document.getElementById('cart-items');
+    const totalElement = document.getElementById('cart-total');
+    let total = 0;
+    
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center; color:#888;">السلة فارغة</p>';
+    } else {
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/100'">
+                <div style="flex:1;">
+                    <h4>${item.name}</h4>
+                    ${item.notes ? `<p class="notes">${item.notes}</p>` : ''}
+                    <p>${item.price} جنيه</p>
+                    <div class="cart-controls">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" style="border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">-</button>
+                            <span style="display:inline-block;min-width:24px;text-align:center;font-weight:bold;font-size:16px;color:#222;background:#f7f7f7;border-radius:6px;padding:3px 8px;margin:0 2px;">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" style=";border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">+</button>
+                         <button onclick="removeFromCart('${item.id}')" style="background:none;border:none;cursor:pointer;color:red;font-size:18px; padding: 0 5px;" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>   
+                    </div>
+                </div>
+            `;
+            cartItems.appendChild(itemElement);
+            total += item.price * item.quantity;
+        });
+    }
+    
+    totalElement.textContent = total;
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// تحميل السلة عند بدء الصفحة
+window.onload = function() {
+    updateCart();
+    
+    // إضافة حدث لإدخال الملاحظات
+    document.getElementById('notes').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSelectedProductWithNotes('iphone-options', 'notes');
+        }
+    });
+};
+</script>
+
+        </div>
+          
+         
+            <script>
+              function toggleSearchBar() {
+                const searchBar = document.getElementById('searchBar');
+                if (window.innerWidth < 768) {
+                  searchBar.style.display = searchBar.style.display === 'block' ? 'none' : 'block';
+                }
+              }
+          
+              function searchProducts() {
+                const input = document.getElementById('searchInput').value.toLowerCase();
+                const products = document.querySelectorAll('.product-card');
+                products.forEach(product => {
+                  const title = product.querySelector('.product-title').textContent.toLowerCase();
+                  product.style.display = title.includes(input) ? 'block' : 'none';
+                });
+              }
+          
+              // إغلاق البحث لما المستخدم يضغط براها
+              document.addEventListener('click', function (e) {
+                const searchBar = document.getElementById('searchBar');
+                const searchIcon = document.querySelector('.search-icon');
+                if (!searchBar.contains(e.target) && !searchIcon.contains(e.target) && window.innerWidth < 768) {
+                  searchBar.style.display = 'none';
+                }
+              });
+            </script>
+          </body>
+          
+
+
+          </div>
+
+
+
+
+
+
+
+
+
+
+          <div class="conect">
+            <h1>اطلب تصميمك و طباعتك</h1>
+            <div class="conect-me">
+                <img src="لوجو-متفرغ-[Recovered].jpg" alt="Logo">
+                   <div class="content-me-text">
+                     <h2>يمكنك طلب مساعده</h2>
+                    <a href="https://wa.me/201144898934?text=اريد%20طلب%20مساعده%20في%20التصميمات%20الورقيه">تواصل معنا عبر الواتس اب &gt;</a>
+                   </div>
+            </div>
+        </div>
+    
+
+        <div class="selact-option">
+        
+            <div class="a-option">
+             <a href="#text-pepar">كتابه ورق</a>
+            </div>
+            <div class="a-option">
+                <a href="#text-ID">منيو و كارت شخصي و الكارت التعريفي </a>
+               </div>
+            <div class="a-option">
+             <a href="#text-daftar">دفاتر و رشتات</a>
+            </div>
+
+               <div class="a-option">
+                <a href="#text-stekar">بوسترات و استيكرات</a>
+               </div>
+            <div class="a-option">
+             <a href="#text-cv">cv</a>
+            </div>
+            <div class="a-option">
+             <a href="#text-note">نوته</a>
+            </div>
+            
+            <div class="a-option">
+                <a href="#text-taplo">تابلوه</a>
+               </div>
+
+            <div class="a-option">
+             <a href="#text-circumstance">ظروف و كروت افراح</a>
+            </div>
+        </div>
+    
+
+     <div class="text-pepar" id="text-pepar">
+        <h1>.الخدمات الورقيه</h1>
+     </div>
+
+
+<div class="product-grid-pepar" id="product-grid-pepar">
+
+
+    <div class="product-pepar">
+        <div class="product-image">
+            <img src="book.png" alt="book">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">ورق كتب </h3>
+            <p class="product-description">تصميمات مميزة لأغلفة كتب المدرسين بجودة طباعة عالية تعكس الاحترافية والتميز</p>
+            <a href="book/book.html" class="view-product">عرض المنتج</a>
+        </div>
+    </div>
+
+  <!-- Product 2 -->
+  <div class="product-pepar">
+    <div class="product-image">
+        <img src="pepar.png" alt="أوراق رسمية">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">اوراق رسميه</h3>
+        <p class="product-description">أوراق رسمية للشركات بطباعة فاخرة تعكس الاحترافية</p>
+        <a href="pepar/pepar.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+  <!-- Product 5 -->
+  <div class="product-pepar">
+    <div class="product-image">
+        <img src="folder.png" alt="فولدر">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">اوراق فولدر</h3>
+        <p class="product-description">فولدر لعرض جميع اعمالك و انجازاتك</p>
+        <br>
+        <a href="folder/folder.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+  <!-- Product 6 -->
+  <div class="product-pepar">
+    <div class="product-image">
+        <img src="Flaur.png" alt="كتالوجات">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">اوراق كاتالوج</h3>
+        <p class="product-description">كتالوجات منتجات بطباعة عالية الجودة وتصاميم جذابة</p>
+        <a href="Flaur/Flaur.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+</div>
+
+
+
+
+<div class="text-pepar" id="text-ID">
+    <h1>.  و كروت <spaa class="menu">Menu</spaa></h1>
+ </div>
+
+<div class="product-grid-ID" id="product-grid-ID">
+    <!-- Product 3 -->
+    <div class="product-ID">
+       <div class="product-image">
+           <img src="Brochure.png" alt="بروشورات">
+       </div>
+       <div class="product-info">
+           <h3 class="product-title">اوراق بروشورات</h3>
+           <p class="product-description">بروشورات دعائية بتصاميم إبداعية لعرض منتجاتك وخدماتك</p>
+           <a href="Brochure/Brochure.html" class="view-product">عرض المنتج</a>
+       </div>
+   </div>
+   
+   
+    <!-- Product 1 -->
+    <div class="product-ID">
+       <div class="product-image">
+           <img src="card.png" alt="بطاقات عمل">
+       </div>
+       <div class="product-info">
+           <h3 class="product-title">كارت اعمال</h3>
+           <p class="product-description">بطاقات عمل عالية الجودة بتصاميم مخصصة لتعزيز حضور علامتك التجارية</p>
+           <a href="card/card.html" class="view-product">عرض المنتج</a>
+       </div>
+   </div>
+   
+   
+   <div class="product-ID">
+       <div class="product-image">
+           <img src="ID.png" alt="كارت تعريفي">
+       </div>
+       <div class="product-info">
+           <h3 class="product-title">الكارت التعريفي ID</h3>
+           <p class="product-description">تصميمات مميزة للكروت التعريفية بأعلى جودة طباعة لتبرز هويتك الشخصية أو التجارية.</p>
+           <a href="ID/ID.html" class="view-product">عرض المنتج</a>
+       </div>
+   </div>
+   </div>
+           
+
+
+
+   
+
+
+
+   <div class="text-pepar" id="text-daftar">
+    <h1>.دفاتر تنسبك</h1>
+ </div>
+
+<div class="product-grid-daftar" id="product-grid-daftar">
+
+<div class="product-daftar">
+    <div class="product-image">
+        <img src="rosheta.png" alt="rosheta">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">دفتر رشتات</h3>
+        <p class="product-description">تصميمات احترافية للروشتات الطبية تعكس هوية العيادة أو المركز الطبي بجودة طباعة عالية</p>
+        <a href="rosheta/rosheta.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+<div class="product-daftar">
+    <div class="product-image">
+        <img src="daftar.png" alt="daftar">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">دفتر الفواتير</h3>
+        <p class="product-description">دفاتر فواتير مخصصة بتصاميم احترافية وجودة طباعة عالية لتلبية احتياجات عملك</p>
+        <a href="daftar/daftar.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+<div class="text-pepar" id="text-stekar">
+    <h1>.الزق بصمتك بكل سهوله</h1>
+ </div>
+
+
+<div class="product-grid-stekar" id="product-grid-stekar">
+
+    <div class="product-stekar">
+        <div class="product-image">
+            <img src="postar.png" alt="بوستار">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">اوراق بوستر</h3>
+            <p class="product-description">بوسترات دعائية بتصاميم مبتكرة لجذب الانتباه وتعزيز رسالتك التسويقية</p>
+            <a href="postar/postar.html" class="view-product">عرض المنتج</a>
+        </div>
+    </div>
+    <div class="product-stekar">
+        <div class="product-image">
+            <img src="stickar.png" alt="استيكر">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">اوراق استيكر</h3>
+            <p class="product-description">استيكرات مميزة بتصاميم مبتكرة وجودة طباعة عالية لتلبية جميع احتياجاتك التسويقية والإبداعية</p>
+            <a href="sticker/sticker.html" class="view-product">عرض المنتج</a>
+        </div>
+    </div>
+    
+    </div>
+    
+    
+
+
+
+    <div class="text-pepar" id="text-cv">
+        <h1>.CV</h1>
+     </div>
+
+<div class="product-grid-cv" id="product-grid-cv">
+
+
+
+    <!-- Product 4 -->
+
+<div class="product-cv">
+    <div class="product-image">
+        <img src="cv.png" alt="cv">
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">CV</h3>
+        <p class="product-description">تصميمات احترافية للسير الذاتية تعكس مهاراتك وخبراتك بجودة عالية وإبداع مميز</p>
+        <a href="cv/cv.html" class="view-product">عرض المنتج</a>
+    </div>
+</div>
+
+</div>
+
+
+
+
+<div class="text-pepar" id="text-note">
+    <h1>.كشكول يومياتك جااااهز</h1>
+ </div>
+
+<div class="product-grid-note" id="product-grid-note">
+    
+    <div class="product-note">
+        <div class="product-image">
+            <img src="note.png" alt="note">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title"> نوته </h3>
+            <p class="product-description">نوت بوك مميز بتصاميم أنيقة وجودة طباعة عالية لتدوين أفكارك وملاحظاتك بكل سهولة وأناقة</p>
+            <a href="note/note.html" class="view-product">عرض المنتج</a>
+        </div>
+    </div>
+    
+    </div>
+           
+
+
+
+    <div class="text-pepar" id="text-taplo">
+        <h1>. طابلوه حائط</h1>
+     </div>
+
+    <div class="product-grid-taplo" id="product-grid-taplo">
+    <div class="product-taplo">
+        <div class="product-image">
+            <img src="taplo.png" alt="طابلو">
+        </div>
+        <div class="product-info">
+            <h3 class="product-title">طابلو الصور</h3>
+            <p class="product-description">طابلوهات صور مميزة بتصاميم فنية رائعة تضيف لمسة جمالية لأي مكان</p>
+            <a href="taplo/taplo.html" class="view-product">عرض المنتج</a>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+<div class="text-pepar" id="text-circumstance">
+    <h1>. كرتك او ظرفك هنا</h1>
+ </div>
+
+<div class="product-grid-circumstance" id="product-grid-circumstance">
+
+    <!-- Product 4 -->
+    <div class="product-circumstance">
+        <div class="product-image">
+            <img src="circumstance.png" alt="ظروف">
+        </div>
+            <div class="product-info">
+                <h3 class="product-title">ظروف</h3>
+                <p class="product-description">ظروف شركات مخصصة متوافقة مع أوراقكم الرسمية</p>
+                <a href="circumstance/circumstance.html" class="view-product">عرض المنتج</a>
+            </div>
+        </div>
+                    
+    </div>          
+
+
+            
+    
+       <footer class="footer">
+    <div class="footer-top">
+        <a href="C:/OS-Designer/index.html" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                <li><a href="file:///C:/OS-Designer/logo/logo.html">شعار</a></li>
+                <li><a href="file:///C:/OS-Designer/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="file:///C:/OS-Designer/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+     <style>
+    
+
+
+    </style>
+<script src="script.js" ></script>    
+</body>
+        </html>
