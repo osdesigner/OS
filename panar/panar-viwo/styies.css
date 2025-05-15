@@ -1,0 +1,583 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Readex+Pro&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: "Zain", sans-serif;
+    font-weight: 700;
+    font-style: normal;  
+      background-color:#020202;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* إخفاء المحتوى الأول */
+#content {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.header {
+    background-color: #414141;
+    color: #ffffff;
+    padding: 7px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    top: 0;
+}
+.logo {
+    margin-right: 40px;
+    height: 25px; /* ارتفاع الصورة */
+}
+
+.nav {
+    display: flex;
+    gap: 40px;
+}
+.nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    font-style: bold;
+}
+.menu-icon {
+    color: rgba(255, 255, 255, 0.527);
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    animation: move 2s ;
+}
+
+@media (max-width: 834px) {
+    .nav {
+        display: none;
+        flex-direction: column;
+        background-color: #414141;
+        position: absolute;
+        top: 40px; /* علشان نبعد القائمة عن الهدر */
+        right: 0;
+        width: 100%;
+        padding: 20px;
+        text-align: right; /* علشان نركز النص في شاشة الهاتف */
+   height: 100vh;
+    }
+  
+    .nav.active {
+        display: flex;
+    }
+    .menu-icon {
+        display: block;
+    }
+}
+/* التعديل الجديد علشان الكلام يظهر في نص الشاشة */
+@media (min-width: 834px) {
+    .header {
+        justify-content: center; /* علشان نركز العناصر في المنتصف */
+    }
+    .nav {
+        margin-right: 20px; /* علشان نبعد القائمة عن اللوجو */
+    }
+}
+
+    
+.form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field {
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #2a2a2a;
+    color: #ffffff;
+    margin: 20px;
+}
+
+.input-field:focus {
+    border-color: #1e90ff;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
+}
+
+
+.submit-btn {
+    background: #00a2ff;
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    margin: 20px;
+}
+.note{
+    margin: 0 23px;
+}
+.submit-btn:hover {
+    background: #00498d;
+    box-shadow: 0 4px 12px #00aeffbd;
+}
+
+.form-note {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #cccccc;
+}
+
+@media (max-width: 480px) {
+    .order-container {
+        padding: 15px;
+    }
+
+    .form-title {
+        font-size: 1.2rem;
+    }
+}
+
+
+.cart-icon {
+    position: relative;
+    display: inline-block;
+    margin-left: 40px;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.cart-count {
+    position: absolute;
+    top: 5px;
+    right: -8px;
+    background: #313131;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 12px;
+    padding: 1px 7px;
+}
+.cart-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    
+    z-index: 1001;
+}
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 340px;
+    max-width: 90vw;
+    height: 100%;
+    background: #fff;
+    
+    z-index: 1002;
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    padding: 30px 20px 20px 20px;
+    overflow-y: auto;
+    direction: rtl;
+    color: #000000;
+}
+.cart-sidebar.active {
+    transform: translateX(0);
+}
+.close-cart {
+    font-size: 40px;
+    cursor: pointer;
+    color: #ff1900;
+}
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #000000;
+    padding-bottom: 10px;
+}
+.cart-item img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    margin-left: 12px;
+    border-radius: 8px;
+    border: 1px solid #000000;
+}
+.cart-item .notes {
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0;
+    padding: 5px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+@media (max-width: 600px) {
+    .cart-sidebar {
+        width: 95vw;
+        padding: 15px 5vw 15px 5vw;
+    }
+    .cart-icon {
+        margin-left: 0px;
+        font-size: 18px;
+    }
+
+}
+
+
+
+.account-icon{
+          color: #ffffff;
+          font-size: 20px;
+          cursor: pointer;
+           margin-left: 20px;
+          align-items: center;
+        }
+
+            @media (max-width:834px){
+                .account-icon{
+                   margin-left: 90px;
+                   margin-top: 5px;
+                }
+            }
+
+
+.header2 {
+    background-color: rgba(235, 235, 235, 0.2);  /* شفافية أعلى للون الخلفية */
+    backdrop-filter: blur(20px);  /* زيادة قوة البلور */
+    -webkit-backdrop-filter: blur(20px);  /* للتأكد من عمل البلور في متصفحات سفاري */
+    color: rgb(255, 255, 255);
+    padding: 7px 10%;  /* تعديل البادينج ليكون متجاوبًا */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 60px;  /* زيادة الارتفاع قليلًا */
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);  /* حد فاتح لتحسين الشكل */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* ظل خفيف لإبراز الهيدر */
+    transition: all 0.3s ease-in-out;
+}
+
+.header2-nav button {
+    font-family: "Zain", sans-serif;
+    font-weight: 400px;
+    font-style: normal;
+    background-color: #1f53ff;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 20px;
+    margin-right: 50px;
+}
+
+.support{
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0 10px;
+}
+.header2-nav a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    padding: 10px 15px;
+    position: relative;
+    font-size: 14px;
+}
+
+.header2-nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -5px; /* وضع الخط تحت النص */
+    width: 54%;
+    height: 2px;
+    background-color: rgb(255, 255, 255); /* لون الخط */
+    border-radius: 5px; /* جعل الخط ناعم الحواف */
+}
+
+.Social {
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    margin-left: 40px;
+}
+
+@media (max-width: 834px) {
+    .header2{
+        padding: 0px 0px;
+    }
+    .header2-nav button {
+        font-size: 12px;
+        padding: 5px 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .header2-nav a {
+        font-size: 15px;
+        margin: 0 2px;
+        padding: 5px;
+        font-size: 12px;
+    }
+    .header2-nav a.active::after {
+        height: 1px;
+        bottom: -10px; /* وضع الخط تحت النص */
+        width: 63%;
+
+    }
+    .Social {
+        font-size: 15px;
+        margin-left: 10px;
+    }
+}
+
+.seciton-top {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* تعديل المحاذاة لتكون في خط واحد */
+    flex-wrap: nowrap; /* منع التفاف العناصر */
+    background: #000000;
+    
+}
+.hero-text {
+    max-width: 500px;
+    text-align: right;
+    padding: 20px;
+}
+.hero-text h1 {
+    font-size: 36px;
+color: #ffffff;
+}
+.hero-text p {
+    font-size: 18px;
+    color: #333;
+}
+.seciton-top img {
+    width: 30%;
+    margin: 10px 20px 0 200px;
+    
+}
+.hero-text, .seciton-top img {
+    opacity: 0;
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+/* انيميشن للكتابة */
+.hero-text {
+    transform: translateX(-50px); /* تحريك النص إلى اليسار */
+}
+
+/* انيميشن للصورة */
+.seciton-top img {
+    transform: translateX(50px); /* تحريك الصورة إلى اليمين */
+}
+
+/* إظهار العناصر عند إضافة الكلاس "active" */
+.hero-text.active, .seciton-top img.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+@media (max-width: 768px) {
+    .seciton-top {
+        flex-direction: column; /* ترتيب العناصر عموديًا */
+        padding: 0;
+    }
+    .hero-text {
+        text-align: center; /* توسيط النصوص */
+        padding: 10px;
+    }
+    .hero-text h1 {
+        font-size: 28px; /* تقليل حجم النص */
+    }
+    .hero-text p {
+        font-size: 16px; /* تقليل حجم النص */
+    }
+    .seciton-top img {
+        width: 80%; /* تكبير الصورة لتناسب الشاشة */
+        margin: 10px 0 0 0; /* تعديل المسافات */
+    }
+}
+
+
+.section-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0px; /* تقليل الحواف لتناسب الهواتف */
+    text-align: center; /* لضمان توسيط النصوص والصور */
+    flex-direction: column; /* ترتيب العناصر عموديًا للهواتف */
+}
+
+.tiles-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* السماح بتغليف الصور في أسطر متعددة */
+    margin-top: 50px;
+}
+
+.tiles-container img {
+    border-radius: 10px;
+    width: 90%; /* تقليل العرض لتناسب الهواتف */
+    margin: 10px 0px 0; /* تعديل المسافات لتناسب الهواتف */
+    margin: 10px 0; /* تعديل المسافات لتناسب الهواتف */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* إضافة انتقال سلس */
+}
+
+.tiles-container-2 img {
+    border-radius: 10px;
+    width: 90%; /* تقليل العرض لتناسب الهواتف */
+    margin: 10px 0px 0; /* تعديل المسافات لتناسب الهواتف */
+    margin: 10px 0; /* تعديل المسافات لتناسب الهواتف */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* إضافة انتقال سلس */
+}
+
+@media (min-width: 768px) {
+    .section-content {
+        padding: 0 50px; /* زيادة الحواف للشاشات الأكبر */
+        flex-direction: row; /* ترتيب العناصر أفقيًا للشاشات الأكبر */
+    }
+
+    .tiles-container img,
+    .tiles-container-2 img {
+        width: 40%; /* إعادة العرض للشاشات الأكبر */
+        margin: 10px 5px 5px 0px; /* إعادة المسافات للشاشات الأكبر */
+    }
+}
+
+
+.footer {
+    padding: 50px;
+        background: #1c1c1c;
+        color: #fff;
+        padding: 20px;
+        text-align: right;
+        direction: rtl;
+    }
+    .footer-top {
+        padding-right: 95px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    .footer-top img{
+        width: 40px;
+    }
+    .footer-container {
+        padding-left: 50px;
+        padding-right: 100px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .footer-column {
+        width: 22%;
+    }
+    .footer-column h4 {
+        cursor: pointer;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+    .footer-column h4:hover {
+        color: #d4d4d4;
+    }
+    .footer-list {
+        list-style: none;
+        padding: 0;
+        display: block;
+        transition: max-height 0.3s ease-out;
+    }
+    .footer-column ul li a {
+        font-size: 18px;
+        color: #ccc;
+        text-decoration: none;
+    }
+    .footer-column ul li a:hover {
+        text-decoration: underline;
+        color: #fff;
+    }
+    .footer-bottom {
+        text-align: center;
+        margin-top: 60px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .footer-bottom a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .footer-bottom a:hover {
+        text-decoration: underline;
+        color: #ffffff;
+    }
+
+    .footer-bottom .country {
+        color: #ccc;
+        margin-right: 300px;
+    }
+
+    .footer-bottom span {
+        color: #cecece;
+    }
+
+    @media (max-width: 768px) {
+        .footer-bottom .country {
+            font-size: 12px;
+            display: block;
+            margin: 10px 0 0 0;
+        }
+    }
+    @media (max-width: 768px) {
+        .footer-top{
+            padding-right: 0px;
+            padding-top: 10px;
+        }
+        .footer-container {
+            padding: 10px;
+            flex-direction: column;
+        }
+        .footer-top img{
+        width: 30px;
+    }
+        .footer-column {
+            width: 100%;
+        }
+        .footer-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .footer-column h4::after {
+            content: " ▼";
+            float: left;
+            transition: transform 0.3s ease;
+        }
+        .footer-column.open h4::after {
+            content: " ▲";
+        }
+        .footer-column.open .footer-list {
+            max-height: 500px; /* Adjust as needed */
+        }
+    }
