@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OS-Designer - نقدم تصاميم سوشيال ميديا احترافية: ستوريات، بانرات، فيديوهات، وإنفوجرافيك. نبتكر محتوى جذاب يعزز وجودك الرقمي!">
+    <meta name="keywords" content="تصميم سوشيال ميديا, تصميم انستقرام, ستوريات احترافية, بانر فيسبوك, تصميم فيديو, إنفوجرافيك, اعلانات سوشيال ميديا, OS-Designer">
+    <meta name="author" content="OS-Designer">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-language" content="ar">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="C:/OS-Designer/index.html">
+    <meta property="og:title" content="OS-Designer | تصاميم سوشيال ميديا تلفت الأنظار">
+    <meta property="og:description" content="مختصون في تصميم محتوى السوشيال ميديا: ستوريات، بانرات، فيديوهات، وإنفوجرافيك بتصميمات عصرية وجذابة.">
+    <meta property="og:image" content="https://os-designer1.github.io/Social-media-ordar/1.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="C:/OS-Designer/index.html">
+    <meta property="twitter:title" content="OS-Designer | تصاميم سوشيال ميديا تلفت الأنظار">
+    <meta property="twitter:description" content="مختصون في تصميم محتوى السوشيال ميديا: ستوريات، بانرات، فيديوهات، وإنفوجرافيك بتصميمات عصرية وجذابة.">
+    <meta property="twitter:image" content="https://os-designer1.github.io/Social-media-ordar/1.jpg">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="C:/OS-Designer/index.html" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "serviceType": "تصميم سوشيال ميديا",
+          "provider": {
+            "@type": "Organization",
+            "name": "OS-Designer",
+            "url": "https://os-designer1.github.io/OS-Designer",
+            "logo": "C:/OS-Designer/index.htmllogo.png"
+          },
+          "description": "خدمة تصميم سوشيال ميديا تتضمن تصميم إعلانات، صور مميزة، ومواد تسويقية لجميع المنصات.",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EGP",
+            "price": "ابتداءً من 50 جنيه",
+            "priceSpecification": {
+              "@type": "UnitPriceSpecification",
+              "priceCurrency": "EGP",
+              "value": "50"
+            }
+          },
+          "areaServed": {
+            "@type": "Place",
+            "name": "مصر"
+          },
+          "serviceOutput": {
+            "@type": "CreativeWork",
+            "name": "تصميم سوشيال ميديا"
+          }
+        }
+        </script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <!-- Font Awesome CDN for icons -->
+    <title>Social media-Designer</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+
+        <div class="header">
+        <a href="C:/OS-Designer/index.html"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="file:///C:/OS-Designer/logo/logo.html">logo</a>
+           <a href="file:///C:/OS-Designer/Social-media/Social-media.html">أعلانات </a>
+           <a href="file:///C:/OS-Designer/panar/panar.html">بنر و يفط </a>
+           <a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+           <a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات الورقيه </a>
+           <a href="file:///C:/OS-Designer/support/support.html">الدعم</a>
+        </div>   
+        
+        
+        <a href="file:///C:/OS-Designer/login/login.html" class="account-icon" title="حسابي"  >
+            <i class="fas fa-user"></i>
+        </a>
+        <!-- أيقونة السلة -->
+<div class="cart-icon" onclick="toggleCart()">
+    <i class="fas fa-bag-shopping"></i>
+    <span class="cart-count" id="cart-count">0</span>
+</div>
+ 
+             
+        <div class="menu-icon" onclick="toggleNav()">☰</div>
+
+        
+<!-- السلة الجانبية -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>سلة المشتريات</h2>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items" style="flex-direction: column;">
+        <!-- العناصر تظهر هنا -->
+    </div>
+    <div class="cart-total" style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;">
+        المجموع: <span id="cart-total">0</span> جنيه
+    </div>
+    <button id="send-order-btn" style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;">
+        <i class="fas fa-paper-plane" style="margin-left:8px;"></i>ارسال الطلبات
+    </button>
+
+</div>
+
+
+
+<script>
+        document.getElementById('send-order-btn').onmouseover = function() {
+        this.style.background = '#0056b3';
+    };
+    document.getElementById('send-order-btn').onmouseout = function() {
+        this.style.background = '#007bff';
+    };
+// متغير السلة
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// دالة إضافة المنتج مع الملاحظات
+function addToCart(id, name, price, image, notes = '') {
+    const displayName = notes ? `${name} (${notes})` : name;
+    
+    // البحث عن منتج مطابق (نفس الاسم، السعر، الصورة، الملاحظات)
+    const existingItem = cart.find(item => 
+        item.name === name && 
+        item.price === Number(price) && 
+        item.image === image &&
+        item.notes === notes
+    );
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: id + Date.now(), // إنشاء معرف فريد
+            name,
+            displayName,
+            price: Number(price),
+            image,
+            quantity: 1,
+            notes
+        });
+    }
+    
+    updateCart();
+    alert(`تم إضافة ${displayName} إلى السلة`);
+}
+
+// دالة إضافة المنتج المحدد مع الملاحظات
+function addSelectedProductWithNotes(selectId, notesId) {
+    const select = document.getElementById(selectId);
+    const notesInput = document.getElementById(notesId);
+    const selectedValue = select.value;
+    const notes = notesInput.value.trim();
+    
+    if (!selectedValue) {
+        alert("الرجاء اختيار منتج أولاً");
+        return;
+    }
+    
+    const [id, name, price, image] = selectedValue.split('|');
+    addToCart(id, name, price, image, notes);
+    
+    // إفراغ حقل الملاحظات بعد الإضافة
+    notesInput.value = '';
+}
+
+// دالة حذف المنتج
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// دالة تحديث الكمية
+function updateQuantity(id, newQuantity) {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity = Math.max(1, newQuantity);
+        updateCart();
+    }
+}
+
+// دالة عرض/إخفاء السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+    document.getElementById('cart-overlay').style.display = 
+        sidebar.classList.contains('active') ? 'block' : 'none';
+}
+
+function updateCart() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+    
+    const cartItems = document.getElementById('cart-items');
+    const totalElement = document.getElementById('cart-total');
+    let total = 0;
+    
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center; color:#888;">السلة فارغة</p>';
+    } else {
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/100'">
+                <div style="flex:1;">
+                    <h4>${item.name}</h4>
+                    ${item.notes ? `<p class="notes">${item.notes}</p>` : ''}
+                    <p>${item.price} جنيه</p>
+                    <div class="cart-controls">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" style="border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">-</button>
+                            <span style="display:inline-block;min-width:24px;text-align:center;font-weight:bold;font-size:16px;color:#222;background:#f7f7f7;border-radius:6px;padding:3px 8px;margin:0 2px;">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" style=";border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">+</button>
+                         <button onclick="removeFromCart('${item.id}')" style="background:none;border:none;cursor:pointer;color:red;font-size:18px; padding: 0 5px;" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>   
+                    </div>
+                </div>
+            `;
+            cartItems.appendChild(itemElement);
+            total += item.price * item.quantity;
+        });
+    }
+    
+    totalElement.textContent = total;
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// تحميل السلة عند بدء الصفحة
+window.onload = function() {
+    updateCart();
+    
+    // إضافة حدث لإدخال الملاحظات
+    document.getElementById('notes').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSelectedProductWithNotes('iphone-options', 'notes');
+        }
+    });
+};
+</script>
+
+        
+      
+        </div>
+
+        <div class="header2">
+            <a class="Social" href="">Social media</a>
+            <div class="header2-nav">
+                <a href="ordar/ordar.html"><button>اطلب </button></a>
+            </div>
+          </div>
+
+
+
+        
+
+
+        <div class="contenar1">
+            <h1>Social media</h1>
+            <p>تصميم اعلانات تجزب عملائك</p>
+            <img src="os.jpg" alt="">
+            <a href="ordar/ordar.html"><button>اطلب تصميم الان</button></a>
+            <h3> الأبداع يبدا من هنا OS-Designer مع</h3>
+        </div>
+
+
+       <section class="section-1">
+        
+        <img src="img-1.jpg" class="img-section-1">
+        <div class="text-section-1">
+        <h1 class="text-h1-section-1">تصميمات جزابه بالوان فتاكه</h1>
+        <p class="text-p-section-1">الان مع <span class="span-p-section-1">تصميمات سوشال ميديا  </span> الحديثه ننتج افضل <br>التصميمات  لترويج خدمتك التجاره وتعبير عن جوده<br> المقدمه من نشاطك التجاري وهذا لمساعدتك <br>علي اكثار مبيعاتك و تمييزك عن الاخرين</p>
+        </div>
+    </section>
+    
+    <section class="section-2">
+            <h1 class="text-h1-section-2"> .الي الابداع طِر</h1>
+            <div class="img-section-2">
+            <img src="img-highet-1.jpeg">
+             <img src="img-highet-2.jpeg" >
+        </div>
+         <p class="text-p-section-2"><span class="span-p-section-2">  OS-Designer  </span> من اللمسه الاولي الي اللمسه النهائيه سينجز   <br>كل ما تحبه بطريقة سهلة وقوية</p>
+         <a href="ordar/ordar.html"><button>اطلب تصميم الان</button></a>
+        </section>  
+
+
+
+         <div class="aput-pac">
+
+      <h1 class="h1-aput">نظره عن قرب</h1>
+      <img src="1.jpg"  class="img-aput">
+      <h3> الأبداع يبدا من هنا OS-Designer مع</h3>
+
+</div>
+   
+          
+
+        
+   
+
+
+<footer class="footer">
+    <div class="footer-top">
+        <a href="C:/OS-Designer/index.html" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                <li><a href="file:///C:/OS-Designer/logo/logo.html">شعار</a></li>
+                <li><a href="file:///C:/OS-Designer/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="file:///C:/OS-Designer/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
+
+
+
