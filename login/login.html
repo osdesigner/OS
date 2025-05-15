@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ملفي الشخصي | نظام OS Designer</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="nav" id="nav">
+            <a href="https://os-designer1.github.io/support/">الدعم</a>
+            <a href="https://os-designer1.github.io/OS-Designer-pepar-Designer/">خدمات الورقيه </a>
+            <a href="https://os-designer1.github.io/OS-Designer-logo-Teshrt-Designer/">لوجو علي تيشرت</a>
+            <a href="https://os-designer1.github.io/OS-Designer-panar-Designer/">بنر و يفط </a>
+            <a href="https://os-designer1.github.io/OS-Designer-Social-media-Designer/">أعلانات </a>
+        </div>
+        <a href="index.html"> <!-- رابط نسبي بدلاً من file:/// -->
+            <img src="logo.png" alt="لوجو الموقع" class="logo-top" />
+        </a>
+        <div class="menu-icon" onclick="toggleNav()">☰</div>
+    </div>
+
+    <div class="header2" id="mainHeader">
+        <a class="Social" href="">حسابات</a>
+        <div class="header2-nav">
+            <a class="support" href="Create-Account/index.html">انشاء حساب جديد</a>
+            <a class="active" href="">تسجيل الدخول</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- صفحة تسجيل الدخول -->
+        <div id="loginPage" class="login-container" style="display:flex;">
+            <img src="img-designer.png" alt="" />
+
+            <div class="login-card" id="loginCard">
+                <div class="login-title">تسجيل الدخول</div>
+                <div class="input-group">
+                    <input type="tel" id="phoneInput" placeholder="رقم الهاتف" />
+                </div>
+                <div class="input-group">
+                    <input type="password" id="passwordInput" placeholder="كلمه السر " />
+                </div>
+
+                <button id="loginBtn" class="btn btn-primary" onclick="handleLoginClick()">
+                    <span id="loginBtnSpinner" style="display:none; margin-left:6px;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </span>
+                    <span id="loginBtnText"><i class="fas fa-sign-in-alt"></i> دخول</span>
+                </button>
+
+                <div id="errorMsg" class="error-msg" style="display:none; color:red; margin-top:10px;"></div>
+                <a href="send Email.html" style="text-decoration: none; color: #1900ff;">نسيت كلمه السر</a>
+            </div>
+        </div>
+
+        <!-- صفحة الملف الشخصي -->
+        <div id="profilePage" class="profile-container" style="display:none;">
+            <div class="profile-header">
+                <div class="avatar" id="userAvatar">?</div>
+                <h1 class="user-name" id="userName">اسم العميل</h1>
+                <p class="user-phone" id="userPhone">رقم الهاتف</p>
+            </div>
+
+            <div class="profile-body">
+                <h2 class="section-title"><i class="fas fa-user-circle"></i> المعلومات الشخصية</h2>
+
+                <div class="info-item">
+                    <span class="info-label">البريد الإلكتروني:</span>
+                    <span class="info-value" id="userEmail">غير متوفر</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">العنوان:</span>
+                    <span class="info-value" id="userAddress">غير متوفر</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">تاريخ الميلاد:</span>
+                    <span class="info-value" id="userBirthdate">غير متوفر</span>
+                </div>
+
+                <div class="action-btns">
+                    <a href="index.html" target="_blank" class="action-btn btn-order">
+                        <i class="fas fa-palette"></i> طلب تصميم جديد
+                    </a>
+                    <a href="#" onclick="logout()" class="action-btn btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+  // تهيئة Firebase
+  const firebaseConfig = {
+        apiKey: "AIzaSyAIL9B-CijJ_1jQelALW0hdXV2bzqBhjnw",
+        authDomain: "storehub-manager.firebaseapp.com",
+        projectId: "storehub-manager",
+        storageBucket: "storehub-manager.appspot.com",
+        messagingSenderId: "584686051923",
+        appId: "1:584686051923:web:3aad37de33ccc43dfa1ca6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    function handleLoginClick() {
+        const btn = document.getElementById("loginBtn");
+        const spinner = document.getElementById("loginBtnSpinner");
+        const btnText = document.getElementById("loginBtnText");
+        btn.disabled = true;
+        spinner.style.display = "inline-block";
+        btnText.style.opacity = "0.6";
+        login().finally(() => {
+            btn.disabled = false;
+            spinner.style.display = "none";
+            btnText.style.opacity = "1";
+        });
+    }
+
+    async function login() {
+    const phone = document.getElementById("phoneInput").value.trim();
+    const password = document.getElementById("passwordInput").value.trim();
+    const errorMsg = document.getElementById("errorMsg");
+
+    errorMsg.style.display = "none";
+    errorMsg.textContent = "";
+
+    if (!phone || !password) {
+        showError("الرجاء إدخال رقم الهاتف وكلمة المرور");
+        return;
+    }
+
+    try {
+        const snapshot = await db
+            .collection("customers")
+            .where("phone", "==", phone)
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            showError("رقم الهاتف غير مسجل");
+            return;
+        }
+
+        const customerDoc = snapshot.docs[0];
+        const customerData = customerDoc.data();
+
+        if (customerData.email) {
+            // لو فيه إيميل، نفذ تسجيل الدخول العادي
+            await auth.signInWithEmailAndPassword(customerData.email, password);
+
+            // تحميل بيانات المستخدم من Firestore
+            const userDoc = await db.collection("customers").doc(customerDoc.id).get();
+            if (userDoc.exists) {
+                displayProfile(userDoc.data());
+                togglePages(true);
+            } else {
+                showError("بيانات المستخدم غير موجودة");
+                await auth.signOut();
+            }
+        } else {
+            // لو مفيش إيميل، نسمح بالدخول مباشرة بدون auth (غير آمن!)
+            displayProfile(customerData);
+            togglePages(true);
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        showError("كلمة المرور غير صحيحة أو حدث خطأ أثناء تسجيل الدخول");
+    }
+}
+
+
+    function showError(message) {
+        const errorMsg = document.getElementById("errorMsg");
+        errorMsg.textContent = message;
+        errorMsg.style.display = "block";
+    }
+
+    function togglePages(showProfile) {
+        const loginPage = document.getElementById("loginPage");
+        const profilePage = document.getElementById("profilePage");
+        if (showProfile) {
+            loginPage.style.display = "none";
+            profilePage.style.display = "block";
+            hideHeadersOnProfile(true);
+        } else {
+            loginPage.style.display = "flex";
+            profilePage.style.display = "none";
+            hideHeadersOnProfile(false);
+        }
+    }
+
+    function displayProfile(customer) {
+    document.getElementById("userName").textContent = customer.name || "غير معروف";
+    document.getElementById("userPhone").textContent = customer.phone || "غير معروف";
+    document.getElementById("userEmail").textContent = customer.email || "غير متوفر";
+    document.getElementById("userAddress").textContent = customer.address || "غير متوفر";
+    document.getElementById("userBirthdate").textContent = customer.birthdate || "غير متوفر";
+
+    const avatar = document.getElementById("userAvatar");
+    if (customer.name) {
+        avatar.textContent = customer.name.charAt(0).toUpperCase();
+        avatar.style.backgroundColor = getRandomColor();
+        avatar.style.color = "white";
+    }
+
+    // ✅ تخزين البيانات في localStorage
+    localStorage.setItem("userName", customer.name || "");
+    localStorage.setItem("userPhone", customer.phone || "");
+    localStorage.setItem("userAddress", customer.address || "");
+}
+
+
+    async function logout() {
+        try {
+            await auth.signOut();
+            togglePages(false);
+            document.getElementById("phoneInput").value = "";
+            document.getElementById("passwordInput").value = "";
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    }
+
+    function hideHeadersOnProfile(showProfile) {
+        const header = document.querySelector(".header");
+        const header2 = document.getElementById("mainHeader");
+        if (showProfile) {
+            if (header) header.style.display = "none";
+            if (header2) header2.style.display = "none";
+        } else {
+            if (header) header.style.display = "";
+            if (header2) header2.style.display = "";
+        }
+    }
+
+    function getRandomColor() {
+        const colors = ["#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#6366f1"];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+
+
+    window.onload = function () {
+        auth.onAuthStateChanged(async function (user) {
+            if (user) {
+                // بدلاً من user.uid، نبحث بالـ email
+                const snapshot = await db
+                    .collection("customers")
+                    .where("email", "==", user.email)
+                    .limit(1)
+                    .get();
+
+                if (!snapshot.empty) {
+                    displayProfile(snapshot.docs[0].data());
+                    togglePages(true);
+                } else {
+                    await auth.signOut();
+                    togglePages(false);
+                }
+            } else {
+                togglePages(false);
+            }
+        });
+    };
+    </script>
+</body>
+</html>

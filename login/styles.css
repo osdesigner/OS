@@ -1,0 +1,628 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Readex+Pro&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap');
+
+:root {
+    --primary: #4e73df;
+    --secondary: #1cc88a;
+    --accent: #f6c23e;
+    --dark: #5a5c69;
+    --light: #f8f9fc;
+    --blak: #000000;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: "Zain", sans-serif;
+    font-weight: 700;
+
+    background-color: #ffffff;
+    color: #333;
+}
+
+
+
+
+
+
+
+/* إخفاء المحتوى الأول */
+#content {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .header {
+      background-color: #ffffff;
+      color: white;
+      padding: 7px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      top: 0;
+  }
+  .logo-top {
+      margin-right: 40px;
+      height: 25px; /* ارتفاع الصورة */
+  }
+  
+  .nav {
+      display: flex;
+      gap: 40px;
+  }
+  .nav a {
+      color: #0f0f0f;
+      text-decoration: none;
+      font-size: 15px;
+      font-style: bold;
+  }
+  .menu-icon {
+      color: rgb(104, 104, 104);
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      animation: move 2s ;
+  }
+  @keyframes move {
+     
+      50% {
+        transform: translateX(50px);
+      }
+     
+    }
+  @media (max-width: 834px) {
+      .nav {
+          display: none;
+          flex-direction: column;
+          background-color: #eeeeee;
+          position: absolute;
+          top: 40px; /* علشان نبعد القائمة عن الهدر */
+          right: 0;
+          width: 100%;
+          padding: 20px;
+          text-align: right; /* علشان نركز النص في شاشة الهاتف */
+     height: 100vh;
+      }
+    
+      .nav.active {
+          display: flex;
+      }
+      .menu-icon {
+          display: block;
+      }
+  }
+  /* التعديل الجديد علشان الكلام يظهر في نص الشاشة */
+  @media (min-width: 834px) {
+      .header {
+          justify-content: center; /* علشان نركز العناصر في المنتصف */
+      }
+      .nav {
+          margin-right: 20px; /* علشان نبعد القائمة عن اللوجو */
+      }
+  }
+  
+  .header2 {
+      background-color: rgba(255, 255, 255, 0.349);  /* شفافية أعلى للون الخلفية */
+      backdrop-filter: blur(20px);  /* زيادة قوة البلور */
+      -webkit-backdrop-filter: blur(20px);  /* للتأكد من عمل البلور في متصفحات سفاري */
+      color: rgb(255, 255, 255);
+      padding: 7px 10%;  /* تعديل البادينج ليكون متجاوبًا */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 50px;  /* زيادة الارتفاع قليلًا */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);  /* حد فاتح لتحسين الشكل */
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* ظل خفيف لإبراز الهيدر */
+      transition: all 0.3s ease-in-out;
+  }
+  
+  .header2-nav button {
+      font-family: "Zain", sans-serif;
+      font-weight: 400px;
+      font-style: normal;
+      background-color: #1f53ff;
+      color: white;
+      border: none;
+      padding: 5px 15px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 20px;
+      margin-right: 50px;
+  }
+  
+  .support{
+      color: rgb(34, 34, 34);
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      margin: 0 10px;
+  }
+  .header2-nav a {
+      text-decoration: none;
+      color: rgb(0, 0, 0);
+      padding: 10px 15px;
+      position: relative;
+      font-size: 14px;
+  
+  }
+  
+  .header2-nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px; /* وضع الخط تحت النص */
+      width: 100%;
+      height: 2px;
+      background-color: rgb(0, 0, 0); /* لون الخط */
+      border-radius: 5px; /* جعل الخط ناعم الحواف */
+  }
+  
+  .Social {
+      font-weight: bold;
+      text-decoration: none;
+      color: rgb(31, 31, 31);
+      font-size: 25px;
+      margin-left: 40px;  }
+  
+  @media (max-width: 834px) {
+    .logo-top{
+        align-items: self-end;
+        margin-right: 0px; /* إزالة المسافة بين اللوجو والقائمة */
+    }
+      .header2{
+          padding: 0px 10px;
+      }
+
+  
+      .header2-nav a {
+          font-size: 10px;
+          margin: 0;
+          padding: 5px;
+          font-size: 12px;
+      }
+      .header2-nav a.active::after {
+          height: 1px;
+          bottom: -10px; /* وضع الخط تحت النص */
+  
+      }
+      .Social {
+          font-size: 20px;
+          margin-left: 10px;
+      }
+  }
+  
+  
+
+
+
+
+
+
+
+
+
+.container {
+    max-width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.container img{
+    width: 30%;
+    height: auto;
+    margin: 0px auto;
+}
+/* تصميم صفحة الدخول */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+.login-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 40px; 
+    text-align: center;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.logo {
+    width: 120px;
+    margin-bottom: 30px;
+}
+.login-title {
+    color: var(--blak);
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 700;
+}
+.input-group {
+    text-align: right;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dark);
+    font-weight: 600;
+}
+.input-group input {
+    width: 100%;
+    padding: 15px 15px 15px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px 10px 0 0px ;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+.input-group input:focus {
+    border-color: #1e90ff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.3);
+}
+#passwordInput{
+    border-radius: 0 0 10px 10px ;
+}
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    margin: 20px 0;
+    width: 100%;
+}
+.btn-btn-link{
+    margin-top: 15px;
+    color: var(--primary)
+}
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+.btn-primary:hover {
+    border-color: #1e90ff;
+    background-color: #1f53ff;
+    box-shadow: 0 0 8px rgb(0, 38, 255);
+}
+.error-msg {
+    color: #e74a3b;
+    margin-top: 15px;
+    font-size: 14px;
+    display: none;
+}
+
+
+
+
+
+
+
+
+/* أنماط صفحة الملف الشخصي - تصميم عصري */
+.profile-container {
+    display: none;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #f8f9fa;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header {
+    text-align: center;
+    padding: 3rem 2rem;
+    /* background: linear-gradient(135deg, #1f53ff, #4e73df); */
+    background: url('bacegrawend .webp') center center/cover no-repeat;
+    color: rgb(0, 0, 0);
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-header::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.profile-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    z-index: 1;
+}
+.profile-header p{
+    font-size: 1.3rem;
+
+}
+.avatar {
+    font-family: "Zain", sans-serif;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: white;
+    margin: 0 70px 1.5rem auto; /* move to right */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    color: #1f53ff;
+    font-weight: bold;
+    position: relative;
+    z-index: 2;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.user-name {
+    font-size: 2.2rem;
+    margin: 0.5rem 100px 0.5rem auto; /* move to right */
+    position: relative;
+    z-index: 2;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: right;
+}
+
+.user-phone {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+    margin-bottom: 1rem;
+    margin-right:100px; /* ensure right alignment */
+    text-align: right;
+}
+
+.profile-body {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    color: #1f53ff;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid #eee;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.section-title i {
+    margin-left: 10px;
+    font-size: 1.4rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #1f53ff;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #eee;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: 700;
+    color: #1f53ff;
+    font-size: 1.3rem;
+}
+
+.info-value {
+    color: #333;
+    text-align: left;
+    font-size: 1.3rem;
+    max-width: 60%;
+    word-break: break-word;
+}
+
+.action-btns {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 1rem 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn i {
+    margin-left: 8px;
+    font-size: 1.2rem;
+}
+
+.btn-order {
+    background: linear-gradient(135deg, #1cc88a, #17a673);
+    color: white;
+}
+
+.btn-order:hover {
+    background: linear-gradient(135deg, #17a673, #13895f);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(23, 166, 115, 0.3);
+}
+
+.btn-logout {
+    background: linear-gradient(135deg, #e74a3b, #c03526);
+    color: white;
+}
+
+.btn-logout:hover {
+    background: linear-gradient(135deg, #c03526, #a52e20);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(231, 74, 59, 0.3);
+}
+
+.edit-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    backdrop-filter: blur(5px);
+}
+
+.edit-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(15deg);
+}
+
+/* التكيف مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem;
+        border-radius: 0;
+        padding: 0;
+    }
+    
+    .profile-header {
+        padding: 2rem 1rem;
+        border-radius: 0;
+    }
+    
+    .avatar {
+        width: 120px;
+        height: 120px;
+        font-size: 3rem;
+        margin: 0 0 1.5rem auto; /* move to right */
+    }
+    .profile-body {
+        padding: 1rem;
+    }
+    
+    .user-name {
+        font-size: 1.8rem;
+        margin: 0.5rem 30px 0 auto; /* move to right */
+
+    }
+    .user-phone {
+        margin: 0 30px 0 auto; /* move to right */
+
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-btns {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .action-btn {
+        width: 100%;
+    }
+    .info-label{
+        font-size: 1rem;
+    }
+    .info-value{
+        font-size: 1rem;
+    }
+}
+
+.btn-link {
+background: none;
+border: none;
+color: var(--primary);
+text-decoration: underline;
+cursor: pointer;
+padding: 0;
+font-size: 14px;
+}
+
+.btn-link:hover {
+color: #3a5ccc;
+text-decoration: none;
+}
+
+#recoveryMsg {
+font-size: 14px;
+text-align: center;
+padding: 10px;
+border-radius: 5px;
+}
+
