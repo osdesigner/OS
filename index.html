@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google-site-verification" content="THakc1KC3F2MZ7-nXqpzhNvT3VWJSsLdVtGFXj85QfY" />
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="OS-Designer - متخصصون في تصميم الجرافيك، الشعارات، البنرات، والمواد التسويقية. نقدم حلولًا إبداعية بأفضل جودة." />
+    <meta name="keywords" content="تصميم جرافيك, تصميم شعار, جرافيك ديزاين, تصميم إعلانات, OS-Designer, هوية بصرية" />
+    <meta name="author" content="Osama" />
+    <meta name="robots" content="index, follow" />
+    <meta http-equiv="content-language" content="ar" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://os-designer-web.web.app/index.html" />
+    <meta property="og:title" content="OS-Designer | تصميمات إبداعية باحترافية" />
+    <meta property="og:description" content="تصميم جرافيك، شعارات، بنرات دعائية، وهوية بصرية متكاملة." />
+    <meta property="og:image" content="https://os-designer-web.web.app/logo.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://os-designer-web.web.app/index.html" />
+    <meta property="twitter:title" content="OS-Designer | تصميمات إبداعية باحترافية" />
+    <meta property="twitter:description" content="تصميم جرافيك، شعارات، بنرات دعائية، وهوية بصرية متكاملة." />
+    <meta property="twitter:image" content="https://os-designer-web.web.app/logo.png" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://os-designer-web.web.app/index.html" />
+
+    <title>OS-Designer</title>
+
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "OS-Designer",
+        "url": "https://os-designer-web.web.app/",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://os-designer-web.web.app/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+<script>
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAdQo-uYOXlbuheO4tP2B76ix3X4XZ-34I",
+  authDomain: "os-web-1.firebaseapp.com",
+  projectId: "os-web-1",
+  storageBucket: "os-web-1.firebasestorage.app",
+  messagingSenderId: "379334533887",
+  appId: "1:379334533887:web:9ff92622c1d6c1e94fe2ca",
+  measurementId: "G-K0SECJNP40"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+</script>
+    <!-- Favicon -->
+    <link rel="icon" href="logo.png" type="image/x-icon" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q0FKLDXNLD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-Q0FKLDXNLD');
+    </script>
+
+</head>
+<body>
+
+    <header class="header">
+        <a href="index.html">
+            <img src="logo.png" alt="لوجو الموقع" class="logo" />
+        </a>
+        <nav class="nav" id="nav">
+            <a href="logo/logo.html">logo</a>
+            <a href="Social-media/Social-media.html">أعلانات</a>
+            <a href="panar/panar.html">بنر و يفط</a>
+            <a href="logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+            <a href="pepar/pepar.html">خدمات الورقيه</a>
+            <a href="support/support.html">الدعم</a>
+        </nav>
+        <a href="login/login.html" class="account-icon" title="حسابي">
+            <i class="fas fa-user"></i>
+        </a>
+
+        <!-- أيقونة السلة في الهيدر -->
+        <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-bag-shopping"></i>
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
+        <div class="menu-icon" onclick="toggleNav()">☰</div>
+    </header>
+
+    <!-- السلة الجانبية -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>سلة المشتريات</h2>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-direction: column;">
+            <!-- العناصر تظهر هنا -->
+        </div>
+        <div
+            class="cart-total"
+            style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;"
+        >
+            المجموع: <span id="cart-total">0</span> جنيه
+        </div>
+        <button
+        id="send-order-btn"
+        style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;"
+    >
+        <i class="fas fa-paper-plane" style="margin-left:8px;"></i>ارسال الطلبات
+    </button>
+
+
+    </div>
+
+    <p class="p-top">
+        سجل في موقعنا و استمتع عمليات اسرع و اسهل
+        <a href="login/login.html">سجل الان</a>
+    </p>
+
+    <main>
+        <section class="container">
+            <h1>log<span class="gradient-letter">o</span></h1>
+            <p>لوجو يعكس هويتك بكل إبداع</p>
+            <div class="button-group">
+                <a href="logo/logo.html">
+                    <button class="primary">اعرف المزيد</button>
+                </a>
+                <a href="logo/ordar/ordar.html">
+                    <button class="secondary">اطلب تصميم</button>
+                </a>
+            </div>
+            <img src="logo.png" alt="Sample Image" loading="lazy" />
+        </section>
+
+        <section class="progct1">
+            <h1>Social media</h1>
+            <p>نصمم لك حضورًا قويًا على السوشيال ميديا</p>
+            <div class="button-group">
+                <a href="Social-media/Social-media.html">
+                    <button class="primary">اعرف المزيد</button>
+                </a>
+                <a href="Social-media/ordar/ordar.html">
+                    <button class="secondary">اطلب تصميم</button>
+                </a>
+            </div>
+
+            <img src="img-1.jpg" alt="Sample Image" loading="lazy" />
+            <img src="img-highet-1.jpeg" alt="Sample Image" loading="lazy" />
+            <img src="0010.jpg" alt="Sample Image" loading="lazy" />
+        </section>
+
+        <section class="progct2">
+            <h1>يفط و بنرات</h1>
+            <p>نصمم لك يفط و بنرات بجودة عالية</p>
+            <div class="button-group">
+                <a href="panar/panar.html">
+                    <button class="primary">اعرف المزيد</button>
+                </a>
+                <a href="panar/ordar/ordar.html">
+                    <button class="secondary">اطلب تصميم</button>
+                </a>
+            </div>
+            <img src="panar-os.jpg" loading="lazy" />
+        </section>
+        
+
+        <nav class="nav-spees">
+            <div class="nav-tshert">
+                <h1><span class="gradient-letter">logo</span>Teshrt</h1>
+                <p>لوجو مميز على تيشرت لترك انطباع دائم</p>
+                <div class="button-group">
+                    <a href="logo-Teshrt/t-shert.html">
+                        <button class="primary">اعرف المزيد</button>
+                    </a>
+                    <a href="logo-Teshrt/ordar/ordar.html">
+                        <button class="secondary">اطلب تصميم</button>
+                    </a>
+                </div>
+                <img src="t-shert.png" alt="Sample Image" loading="lazy" />
+            </div>
+
+            <div class="nav-pepar">
+                <img src="ID.webp" alt="Sample Image" loading="lazy" />
+                <h1>خدمات ورقيه</h1>
+                <div class="button-group">
+                    <a href="pepar/pepar.html">
+                        <button class="primary">اعرف المزيد</button>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+
+
+ <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <picture>
+                <source srcset="img-400px-2.png" media="(max-width: 767px)">
+                <img src="social-media-2-1024.png" alt="صورة 1">
+            </picture>
+            <div class="overlay">
+                <div class="text-container">
+                    <h2>سوشال ميديا</h2>
+                    <p>اعلاناتك تجزب عملائك</p>
+                </div>
+                <a href="Social-media/ordar/ordar.html"><button>اكتشف المزيد</button></a>
+            </div>
+        </div>
+
+        <div class="swiper-slide">
+            <picture>
+                <source srcset="img-400px-3.png" media="(max-width: 767px)">
+                <img src="img-1028px-2.png" alt="صورة 2">
+            </picture>
+            <div class="overlay">
+                <div class="text-container">
+                    <h2>كتاب الدحيح</h2>
+                    <p>تصميمات كتب مميزه</p>
+                </div>
+                <a href="pepar/pepar.html"><button>اكتشف المزيد</button></a>
+            </div>
+        </div>
+
+        <div class="swiper-slide">
+            <picture>
+                <source srcset="img-400px-1.png" media="(max-width: 767px)">
+                <img src="img-1028px-3.png" alt="صورة 3">
+            </picture>
+            <div class="overlay">
+                <div class="text-container">
+                    <h2>لوجو</h2>
+                    <p>اطلب اللوجو و استمتع بالخصومات</p>
+                </div>
+                <a href="logo/logo.html"><button>اكتشف المزيد</button></a>
+            </div>
+        </div>
+
+    
+
+
+
+
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+
+
+<footer class="footer">
+    <div class="footer-top">
+        <a href="C:/OS-Designer/index.html" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                <li><a href="file:///C:/OS-Designer/logo/logo.html">شعار</a></li>
+                <li><a href="file:///C:/OS-Designer/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="file:///C:/OS-Designer/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+
+    </body>
+    <script src="scrept-care.js"></script>
+<script src="scrept.js"></script>
+</html>
