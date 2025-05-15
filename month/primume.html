@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="اشترك مع OS-Designer للحصول على تصميمات شهرية احترافية بأسعار مخفضة – وفر حتى 20% على باقات التصميم الشهرية.">
+<meta name="keywords" content="تصميم شهري, باقات تصميم, OS-Designer, تصميمات سوشيال ميديا, تصميم بنرات, لوجو تيشرتات, خدمات تصميم احترافية, توفير في التصميم">
+<meta name="author" content="OS-Designer">
+<meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="google" content="notranslate"> <!-- Prevents Google from translating the page -->
+    <meta name="theme-color" content="#000000"> <!-- Theme color for mobile browsers -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <title>month-ordar </title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+
+        <div class="header">
+        <a href="C:/OS-Designer/index.html"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="file:///C:/OS-Designer/logo/logo.html">logo</a>
+           <a href="file:///C:/OS-Designer/Social-media/Social-media.html">أعلانات </a>
+           <a href="file:///C:/OS-Designer/panar/panar.html">بنر و يفط </a>
+           <a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+           <a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات الورقيه </a>
+           <a href="file:///C:/OS-Designer/support/support.html">الدعم</a>
+        </div>     <a href="file:///C:/OS-Designer/login/login.html" class="account-icon" title="حسابي"  >
+            <i class="fas fa-user"></i>
+        </a>
+        <!-- أيقونة السلة -->
+<div class="cart-icon" onclick="toggleCart()">
+    <i class="fas fa-bag-shopping"></i>
+    <span class="cart-count" id="cart-count">0</span>
+</div>
+ 
+             
+        <div class="menu-icon" onclick="toggleNav()">☰</div>
+
+        
+<!-- السلة الجانبية -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>سلة المشتريات</h2>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items" style="flex-direction: column;">
+        <!-- العناصر تظهر هنا -->
+    </div>
+    <div class="cart-total" style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;">
+        المجموع: <span id="cart-total">0</span> جنيه
+    </div>
+    <button id="send-order-btn" style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;">
+        <i class="fas fa-paper-plane" style="margin-left:8px;"></i>ارسال الطلبات
+    </button>
+
+</div>
+
+
+
+<script>
+        document.getElementById('send-order-btn').onmouseover = function() {
+        this.style.background = '#0056b3';
+    };
+    document.getElementById('send-order-btn').onmouseout = function() {
+        this.style.background = '#007bff';
+    };
+// متغير السلة
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// دالة إضافة المنتج مع الملاحظات
+function addToCart(id, name, price, image, notes = '') {
+    const displayName = notes ? `${name} (${notes})` : name;
+    
+    // البحث عن منتج مطابق (نفس الاسم، السعر، الصورة، الملاحظات)
+    const existingItem = cart.find(item => 
+        item.name === name && 
+        item.price === Number(price) && 
+        item.image === image &&
+        item.notes === notes
+    );
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: id + Date.now(), // إنشاء معرف فريد
+            name,
+            displayName,
+            price: Number(price),
+            image,
+            quantity: 1,
+            notes
+        });
+    }
+    
+    updateCart();
+    alert(`تم إضافة ${displayName} إلى السلة`);
+}
+
+// دالة إضافة المنتج المحدد مع الملاحظات
+function addSelectedProductWithNotes(selectId, notesId) {
+    const select = document.getElementById(selectId);
+    const notesInput = document.getElementById(notesId);
+    const selectedValue = select.value;
+    const notes = notesInput.value.trim();
+    
+    if (!selectedValue) {
+        alert("الرجاء اختيار منتج أولاً");
+        return;
+    }
+    
+    const [id, name, price, image] = selectedValue.split('|');
+    addToCart(id, name, price, image, notes);
+    
+    // إفراغ حقل الملاحظات بعد الإضافة
+    notesInput.value = '';
+}
+
+// دالة حذف المنتج
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// دالة تحديث الكمية
+function updateQuantity(id, newQuantity) {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity = Math.max(1, newQuantity);
+        updateCart();
+    }
+}
+
+// دالة عرض/إخفاء السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+    document.getElementById('cart-overlay').style.display = 
+        sidebar.classList.contains('active') ? 'block' : 'none';
+}
+
+function updateCart() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+    
+    const cartItems = document.getElementById('cart-items');
+    const totalElement = document.getElementById('cart-total');
+    let total = 0;
+    
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center; color:#888;">السلة فارغة</p>';
+    } else {
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/100'">
+                <div style="flex:1;">
+                    <h4>${item.name}</h4>
+                    ${item.notes ? `<p class="notes">${item.notes}</p>` : ''}
+                    <p>${item.price} جنيه</p>
+                    <div class="cart-controls">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" style="border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">-</button>
+                            <span style="display:inline-block;min-width:24px;text-align:center;font-weight:bold;font-size:16px;color:#222;background:#f7f7f7;border-radius:6px;padding:3px 8px;margin:0 2px;">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" style=";border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">+</button>
+                         <button onclick="removeFromCart('${item.id}')" style="background:none;border:none;cursor:pointer;color:red;font-size:18px; padding: 0 5px;" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>   
+                    </div>
+                </div>
+            `;
+            cartItems.appendChild(itemElement);
+            total += item.price * item.quantity;
+        });
+    }
+    
+    totalElement.textContent = total;
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// تحميل السلة عند بدء الصفحة
+window.onload = function() {
+    updateCart();
+    
+    // إضافة حدث لإدخال الملاحظات
+    document.getElementById('notes').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSelectedProductWithNotes('iphone-options', 'notes');
+        }
+    });
+};
+</script>
+        </div>
+
+        <div class="header2">
+            
+            <div class="header2-nav">
+                          
+
+                <p class="hedar-2-p">premim</p>
+
+            </div>
+          </div>
+
+
+        <div class="container">
+            <div class="image-section">
+            </div>
+    
+            <div class="info-section">
+               <div class="title">
+                    <h1>اشترك معانا في الشهر الواحد  </h1>
+                    <p>  وفر 20% او اكتر</p>
+                    <div class="descuond">
+                    </div>
+                </div>
+    
+                <div class="options">
+                    <div class="option" onclick="selectOption('logo_text')">
+                        <span>عرض الشهر الواحد 1<br><small>هو (لوجو كتابه - و تصميم سوشال ميديا)</small><br><small>وفرت %20</small></span>
+                        <span class="price">$145 جنيه</span>
+                    </div>
+                    
+                    <div class="option" onclick="selectOption('logo_text')">
+                        <span>عرض الشهر الواحد 2<br><small>هو (تصميمان سوشال ميديا - بنر )</small><br><small>وفرت %30</small></span>
+                        <span class="price">$210 جنيه</span>
+                    </div>
+                    <div class="option" onclick="selectOption('logo_text')">
+                        <span>عرض الشهر الواحد 3<br><small>هو (3 تصميمات سوشال ميديا - بنر- كارت شخصي - لوجو تيشرت )     </small><br><small>وفرت %35</small></span>
+                        <span class="price">$370 جنيه</span>
+                    </div>
+                    <h2>يتم تصميم العرض خلال الشهر</h2>
+                </div>
+                
+
+
+                <div class="order-container">
+                    <form id="form" class="order-form">
+                        <h2 class="form-title">طلب العرض </h2>
+                
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input class="input-field" type="text" name="name" placeholder=" " required>
+                                <span class="input-placeholder">الاسم الكامل</span>
+                            </label>
+                        </div>
+                
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input class="input-field" type="number" name="phone" placeholder=" " required>
+                                <span class="input-placeholder">رقم الهاتف</span>
+                            </label>
+                        </div>
+                
+                        <div class="form-group">
+                            <label class="form-label">
+                                <select class="input-field" name="designType" required>
+                                    <option value="عرض الشهر الواحد 1">عرض الشهر الواحد 1</option>
+                                    <option value="عرض الشهر الواحد 2">عرض الشهر الواحد 2</option>
+                                    <option value="عرض الشهر الواحد 3">عرض الشهر الواحد 3</option>
+
+
+                                </select>
+                                <span class="input-placeholder">نوع التصميم</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">ملاحظات إضافية</label>
+                            <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
+                          </div>
+                        <input type="hidden" name="location" id="location">
+                
+                        <button class="submit-btn" id="button">إرسال الطلب</button>
+                        <p class="form-note">سيتم التواصل معك في أقرب وقت من خلال رقم هاتفك</p>
+                    </form>
+                </div>
+        
+                <script>
+                    // عند تحميل الصفحة، قم باسترجاع رقم الهاتف والاسم من Local Storage
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const loggedInUserPhone = localStorage.getItem('loggedInUserPhone'); // استرجاع رقم الهاتف من Local Storage
+                        const loggedInUserName = localStorage.getItem('loggedInUserName'); // استرجاع الاسم من Local Storage
+
+                        const phoneInput = document.querySelector('.input-field[name="phone"]'); // استهداف حقل رقم الهاتف
+                        const nameInput = document.querySelector('.input-field[name="name"]'); // استهداف حقل الاسم
+
+                        if (loggedInUserPhone && phoneInput) {
+                            phoneInput.value = loggedInUserPhone; // تعبئة الحقل برقم الهاتف
+                        }
+
+                        if (loggedInUserName && nameInput) {
+                            nameInput.value = loggedInUserName; // تعبئة الحقل بالاسم
+                        }
+
+                        if (!loggedInUserPhone || !loggedInUserName) {
+                            console.log('لم يتم العثور على بيانات المستخدم المسجل.');
+                        }
+                    });
+                </script>
+    
+                
+            </div>
+        </div>
+
+        <div class="done-ordar">
+            <h1 class="done-ordar-h1">ثق  في تواصلنا</h1>
+            <p class="done-ordar-p">موعدنا مظبوته و تسلمنا في معادو!</p>
+        <img src="done-ordar.webp" class="img-done-ordar">
+
+       </div>
+
+           </span>
+        </div>
+
+        
+
+
+
+         <script src="scrept.js" ></script>
+         <script>
+            // استيراد مكتبة EmailJS
+            emailjs.init('djmDvTd_C6wCy4VqG')
+
+// ربط زر الإرسال والنموذج
+const btn = document.getElementById('button');
+const locationInput = document.getElementById('location');
+
+
+
+// عند إرسال النموذج
+document.getElementById('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    btn.innerText = 'جاري الإرسال...';
+
+    const serviceID = 'default_service';
+    const templateID = 'template_6mrcbbq';
+
+    emailjs.sendForm(serviceID, templateID, this)
+        .then(() => {
+            btn.innerText = 'إرسال الطلب';
+            alert('✅ تم إرسال الطلب بنجاح!');
+            document.getElementById('form').reset();
+        }, (err) => {
+            btn.innerText = 'إرسال الطلب';
+            alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
+            console.error("Error:", err);
+        });
+});
+
+         </script>
+ <footer class="footer">
+    <div class="footer-top">
+        <a href="C:/OS-Designer/index.html" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                <li><a href="file:///C:/OS-Designer/logo/logo.html">شعار</a></li>
+                <li><a href="file:///C:/OS-Designer/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="file:///C:/OS-Designer/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+    </body>
+ </html>
