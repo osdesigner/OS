@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <meta name="description" content="OS-Designer - تصميم لوجو احترافي يناسب جميع المجالات. اطلب تصميمك الآن!">
+    <meta name="keywords" content="OS-Designer, تصميم لوجو, تصميم احترافي, خدمات تصميم, لوجو , لوجو مميز">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <title>logo-ordar </title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+
+        <div class="header">
+        <a href="C:/OS-Designer/index.html"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="file:///C:/OS-Designer/logo/logo.html">logo</a>
+           <a href="file:///C:/OS-Designer/Social-media/Social-media.html">أعلانات </a>
+           <a href="file:///C:/OS-Designer/panar/panar.html">بنر و يفط </a>
+           <a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+           <a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات الورقيه </a>
+           <a href="file:///C:/OS-Designer/support/support.html">الدعم</a>
+           
+        </div>  
+        
+        <a href="file:///C:/OS-Designer/login/login.html" class="account-icon" title="حسابي"  >
+            <i class="fas fa-user"></i>
+        </a>
+         <!-- أيقونة السلة -->
+         <div class="cart-icon" onclick="toggleCart()">
+            <i class="fas fa-bag-shopping"></i>
+            <span class="cart-count" id="cart-count">0</span>
+        </div>
+
+
+
+  
+    <!-- أيقونة السلة في الهيدر -->
+
+    <div class="menu-icon" onclick="toggleNav()">☰</div>
+
+    <!-- السلة الجانبية (خارج الهيدر وليس داخله) -->
+    </div> <!-- نهاية .header -->
+
+    <!-- السلة الجانبية وعناصرها خارج الهيدر لتظهر فوق كل الصفحة -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>سلة المشتريات</h2>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-direction: column;">
+            <!-- العناصر تظهر هنا -->
+        </div>
+        <div class="cart-total" style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;">
+            المجموع: <span id="cart-total">0</span> جنيه
+        </div>
+        <button id="send-order-btn" style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;">
+            <i class="fas fa-paper-plane" style="margin-left:8px;"></i>ارسال الطلبات
+        </button>
+        <script>
+            document.getElementById('send-order-btn').onmouseover = function() {
+                this.style.background = '#0056b3';
+            };
+            document.getElementById('send-order-btn').onmouseout = function() {
+                this.style.background = '#007bff';
+            };
+            </script>      
+              
+    </div>
+
+    <script>
+        document.getElementById('send-order-btn').onmouseover = function() {
+        this.style.background = '#0056b3';
+    };
+    document.getElementById('send-order-btn').onmouseout = function() {
+        this.style.background = '#007bff';
+    };
+// متغير السلة
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// دالة إضافة المنتج مع الملاحظات
+function addToCart(id, name, price, image, notes = '') {
+    const displayName = notes ? `${name} (${notes})` : name;
+    
+    // البحث عن منتج مطابق (نفس الاسم، السعر، الصورة، الملاحظات)
+    const existingItem = cart.find(item => 
+        item.name === name && 
+        item.price === Number(price) && 
+        item.image === image &&
+        item.notes === notes
+    );
+
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({
+            id: id + Date.now(), // إنشاء معرف فريد
+            name,
+            displayName,
+            price: Number(price),
+            image,
+            quantity: 1,
+            notes
+        });
+    }
+    
+    updateCart();
+    alert(`تم إضافة ${displayName} إلى السلة`);
+}
+
+// دالة إضافة المنتج المحدد مع الملاحظات
+function addSelectedProductWithNotes(selectId, notesId) {
+    const select = document.getElementById(selectId);
+    const notesInput = document.getElementById(notesId);
+    const selectedValue = select.value;
+    const notes = notesInput.value.trim();
+    
+    if (!selectedValue) {
+        alert("الرجاء اختيار منتج أولاً");
+        return;
+    }
+    
+    const [id, name, price, image] = selectedValue.split('|');
+    addToCart(id, name, price, image, notes);
+    
+    // إفراغ حقل الملاحظات بعد الإضافة
+    notesInput.value = '';
+}
+
+// دالة حذف المنتج
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// دالة تحديث الكمية
+function updateQuantity(id, newQuantity) {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity = Math.max(1, newQuantity);
+        updateCart();
+    }
+}
+
+// دالة عرض/إخفاء السلة
+function toggleCart() {
+    const sidebar = document.getElementById('cart-sidebar');
+    sidebar.classList.toggle('active');
+    document.getElementById('cart-overlay').style.display = 
+        sidebar.classList.contains('active') ? 'block' : 'none';
+}
+
+function updateCart() {
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-count').textContent = totalItems;
+    
+    const cartItems = document.getElementById('cart-items');
+    const totalElement = document.getElementById('cart-total');
+    let total = 0;
+    
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="text-align:center; color:#888;">السلة فارغة</p>';
+    } else {
+        cart.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/100'">
+                <div style="flex:1;">
+                    <h4>${item.name}</h4>
+                    ${item.notes ? `<p class="notes">${item.notes}</p>` : ''}
+                    <p>${item.price} جنيه</p>
+                    <div class="cart-controls">
+                        <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})" style="border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">-</button>
+                            <span style="display:inline-block;min-width:24px;text-align:center;font-weight:bold;font-size:16px;color:#222;background:#f7f7f7;border-radius:6px;padding:3px 8px;margin:0 2px;">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})" style=";border:none;border-radius:50%;width:28px;height:28px;font-size:18px;color:#000;cursor:pointer;margin:0 5px;">+</button>
+                         <button onclick="removeFromCart('${item.id}')" style="background:none;border:none;cursor:pointer;color:red;font-size:18px; padding: 0 5px;" title="حذف">
+                                <i class="fas fa-trash"></i>
+                            </button>   
+                    </div>
+                </div>
+            `;
+            cartItems.appendChild(itemElement);
+            total += item.price * item.quantity;
+        });
+    }
+    
+    totalElement.textContent = total;
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// تحميل السلة عند بدء الصفحة
+window.onload = function() {
+    updateCart();
+    
+    // إضافة حدث لإدخال الملاحظات
+    document.getElementById('notes').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSelectedProductWithNotes('iphone-options', 'notes');
+        }
+    });
+};
+</script>
+        
+      
+
+
+        <div class="header2">
+            
+            <div class="header2-nav">
+                <img src="Cargo truck.png" class="hedar-2-p-img-1">
+                <p class="hedar-2-p">توصيل امام المنزل</p>
+                
+                |
+                <img src="shop.png" class="hedar-2-p-img-1">                
+
+                <p class="hedar-2-p">الاستلام من المتجر</p>
+
+            </div>
+          </div>
+
+
+        <div class="container">
+            <div class="image-section">
+                <img src="logo.png" alt="iPhone 16 Pro">
+            </div>
+    
+            <div class="info-section">
+               <div class="title">
+                    <h1>اطلب لوجو او شعار</h1>
+                    <p>يوجد اشتراك شهري وفر 20% او اكتر</p>
+                    <div class="descuond">
+                        <a href="file:///C:/OS-Designer/month/primume.html" class="descuond-1">عرض الشهر الواحد</a>
+                    </div>
+                </div>
+    
+                <div class="options">
+                    <h2>نموج، أيهما أفضل لك؟</h2>
+                    <div class="option" onclick="selectOption('logo_text')">
+                        <span>لوجو كتابه فقط<br><small>هو لوجو  كتابه فقط بدون اي شعارات</small></span>
+                        <span class="price">$80 جنيه</span>
+                    </div>
+                    <div class="option" onclick="selectOption('logo_icon')">
+                        <span>لوجو شعار فقط<br><small>هو لوجو  شعار بدون كتابه</small></span>
+                        <span class="price">$50 جنيه</span>
+                    </div>
+                    <div class="option" onclick="selectOption('logo_combined')">
+                        <span>لوجو شعار و كتابه <br><small>هو لوجو  كتابه و شعارات</small></span>
+                        <span class="price">$100 جنيه</span>
+                    </div>
+                </div>
+                
+
+
+
+
+
+
+                <div class="order-container">
+                    <form id="form" class="order-form">
+                        <h2 class="form-title">طلب تصميم جديد</h2>
+                
+                
+
+                <div class="form-group" style="min-width:220px; ">
+
+                    <!-- منتج مع خيارات -->
+                <div class="product">
+                
+                    <select id="iphone-options" class="input-field">
+                        <option value="" disabled selected>شكل لوجو </option>
+                        <option value="لوجو كتابه | لوجو كتابه |80|C:/OS-Designer/index.htmllogo.png">لوجو كتابه</option>
+                        <option value=" لوجو شعار| لوجو شعار |50|C:/OS-Designer/index.htmllogo.png">لوجو شعار</option>
+                        <option value=" لوجو شعار و كتابه| لوجو شعار و كتابه |100|C:/OS-Designer/index.htmllogo.png "> لوجو شعار و كتابه</option>
+                    </select>
+                    
+                
+                </div>
+                
+                
+                <div class="form-group">
+                    <label for="notes" class="note">ملاحظات إضافية</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3" placeholder="اكتب ملاحظتك"></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="addSelectedProductWithNotes('iphone-options', 'notes')">أضف إلى السلة</button>
+                                        <input type="hidden" name="location" id="location">
+                
+                                        <p class="form-note">سيتم التواصل معك في أقرب وقت من خلال رقم هاتفك</p>
+                                    </form>
+                                </div>
+        </div>
+    </div>  
+
+</div> 
+
+
+
+        
+
+
+
+
+
+
+
+        <div class="comparison-section">
+            <div class="comparison-header">
+                <h1>اختر اللوجو المناسب اليك</h1>
+            </div>
+    
+            <div class="products">
+                <div class="product">
+                  <img src="logo.png" alt="Creative Logo">
+                  <div class="loader">
+                    <div class="dot"></div>
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                  </div>
+                  <h2>شعار</h2>
+                  <div class="features">
+                    <p>تصميم فريد يعبر عن شخصيتك</p>
+                    <p>جودة عالية تناسب جميع الاستخدامات</p>
+                    <p>ألوان جذابة تلفت الأنظار</p>
+                    <p class="price">جنيه $80</p>
+                  </div>
+                  <hr>
+                </div>
+            
+                <div class="product">
+                  <img src="logo-text.jpeg" alt="Logo Text">
+                  <div class="loader">
+                    <div class="dot3"></div>
+                    <div class="dot4"></div>
+                    <div class="dot5"></div>
+                  </div>
+                  <h2>شعار و كتابة</h2>
+                  <div class="features">
+                    <p>تصميم احترافي يعكس هويتك</p>
+                    <p>مناسب لجميع الاستخدامات</p>
+                    <p>جودة عالية في التنفيذ</p>
+                    <p class="price">جنيه $100</p>
+                  </div>
+                  <hr>
+                </div>
+            
+                <div class="product">
+                  <img src="text.png" alt="Logo Icon">
+                  <div class="loader">
+                    <div class="dot6"></div>
+                    <div class="dot7"></div>
+                    <div class="dot8"></div>
+                  </div>
+                  <h2>كتابة</h2>
+                  <div class="features">
+                    <p>تصميم فريد يعبر عن فكرتك</p>
+                    <p>ألوان جذابة ومميزة</p>
+                    <p>مناسب للشركات والمشاريع</p>
+                    <p class="price">جنيه $80</p>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+            </div>
+        <div class="done-ordar">
+            <h1 class="done-ordar-h1">ثق  في تواصلنا</h1>
+            <p class="done-ordar-p">موعدنا مظبوته و تسلمنا في معادو!</p>
+        <img src="done-ordar.webp" class="img-done-ordar">
+
+       </div>
+      
+
+
+
+
+
+         <script src="scrept.js" ></script>
+        
+ <footer class="footer">
+    <div class="footer-top">
+        <a href="C:/OS-Designer/index.html" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                <li><a href="file:///C:/OS-Designer/logo/logo.html">شعار</a></li>
+                <li><a href="file:///C:/OS-Designer/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="file:///C:/OS-Designer/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="file:///C:/OS-Designer/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="file:///C:/OS-Designer/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+    </body>
+ </html>

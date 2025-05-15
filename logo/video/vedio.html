@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>عرض الفيديو</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    video {
+      width: 100%;
+      height: 80%;
+      max-width: 1000px;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      display: block;
+      border-radius: 16px;
+      background-color: rgb(255, 255, 255);
+      box-shadow: 0 0 30px rgba(255,255,255,0.05);
+      padding: 0 10px;
+    }
+
+    @media (max-width: 768px) {
+      video {
+        width: 150%;
+        padding: 0;
+        border-radius: 10px;
+        max-width: 2000px;
+        max-height: 2000px;
+        height: 200%;
+      }
+    }
+  </style>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+</head>
+<body>
+
+  <video autoplay muted playsinline>
+    <source src="logo design website(MP4).mp4" type="video/mp4">
+  </video>
+
+</body>
+</html>
