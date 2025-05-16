@@ -145,7 +145,6 @@
         await db.collection("orders").add(orderData);
         alert("تم إرسال الطلب بنجاح");
         localStorage.removeItem("cart");
-        window.location.href = "thanks.html";
       } catch (error) {
         console.error("خطأ في الإرسال", error.message);
         alert("حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.");
