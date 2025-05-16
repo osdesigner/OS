@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تأكيد الطلب</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body { font-family: Arial; background: #f8f9fa; direction: rtl; text-align: right; margin: 20px; }
+    .container { max-width: 800px; margin: auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    h2 { color: #333; margin-bottom: 10px; }
+    .info, .order-summary { margin-bottom: 20px; }
+    .item { display: flex; gap: 15px; margin-bottom: 15px; }
+    .item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+    .item-details { flex-grow: 1; }
+    #submitBtn { background: #10b981; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 8px; cursor: pointer; }
+    #submitBtn:hover { background: #0e9e6e; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>مراجعة الطلب</h2>
+
+    <div class="info">
+      <strong>الاسم:</strong> <span id="userName"></span><br/>
+      <strong>رقم الهاتف:</strong> <span id="userPhone"></span><br/>
+      <strong>العنوان:</strong> <span id="userAddress"></span>
+    </div>
+
+    <div class="order-summary" id="orderSummary"></div>
+
+    <button id="submitBtn"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAIaEPGGOJcGEGcYD5_pntD6whM9Zk81Ok",
+      authDomain: "ordars-578e0.firebaseapp.com",
+      projectId: "ordars-578e0",
+      storageBucket: "ordars-578e0.firebasestorage.app",
+      messagingSenderId: "274691655392",
+      appId: "1:274691655392:web:318fc9d4ecffd43e623285",
+      measurementId: "G-S59P9T6NT0"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const name = localStorage.getItem("userName") || "غير معروف";
+    const phone = localStorage.getItem("userPhone") || "غير متوفر";
+    const address = localStorage.getItem("userAddress") || "غير متوفر";
+
+    document.getElementById("userName").textContent = name;
+    document.getElementById("userPhone").textContent = phone;
+    document.getElementById("userAddress").textContent = address;
+
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const summary = document.getElementById("orderSummary");
+    let total = 0;
+    cart.forEach(item => {
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "item";
+      itemDiv.innerHTML = `
+        <img src="${item.image}" onerror="this.src='https://via.placeholder.com/80'" alt="${item.name}">
+        <div class="item-details">
+          <strong>${item.name}</strong><br/>
+          الكمية: ${item.quantity} — السعر: ${item.price} جنيه<br/>
+          ${item.notes ? `<em>ملاحظات: ${item.notes}</em>` : ''}
+        </div>
+      `;
+      total += item.quantity * item.price;
+      summary.appendChild(itemDiv);
+    });
+
+    summary.innerHTML += `<h3>الإجمالي: ${total} جنيه</h3>`;
+
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      if (cart.length === 0) {
+        alert("السلة فارغة");
+        return;
+      }
+
+      const orderData = {
+  customer: { name, phone, address },
+  items: cart,
+  total,
+  status: "قيد المراجعة",
+  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+};
+
+try {
+  await db.collection("orders").add(orderData);  // تنشئ مجموعة orders تلقائيًا إذا لم تكن موجودة
+  alert("تم إرسال الطلب بنجاح");
+  localStorage.removeItem("cart");
+  window.location.href = "thanks.html";
+} catch (error) {
+  console.error("خطأ في الإرسال", error.message);
+  alert("سجل دخول اولا: ");
+}
+    });
+  </script>
+</body>
+</html>
