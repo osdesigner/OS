@@ -5,31 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>تأكيد الطلب</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body { font-family: Arial; background: #f8f9fa; direction: rtl; text-align: right; margin: 20px; }
-    .container { max-width: 800px; margin: auto; background: white; border-radius: 10px; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
-    h2 { color: #333; margin-bottom: 10px; }
-    .info, .order-summary { margin-bottom: 20px; }
-    .item { display: flex; gap: 15px; margin-bottom: 15px; }
-    .item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-    .item-details { flex-grow: 1; }
-    #submitBtn { background: #10b981; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 8px; cursor: pointer; }
-    #submitBtn:hover { background: #0e9e6e; }
-  </style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h2>مراجعة الطلب</h2>
-
-    <div class="info">
-      <strong>الاسم:</strong> <span id="userName"></span><br/>
-      <strong>رقم الهاتف:</strong> <span id="userPhone"></span><br/>
-      <strong>العنوان:</strong> <span id="userAddress"></span>
+    <div class="header">
+      <h2>فاتورة الطلب</h2>
+      <p>شكراً لثقتكم بنا، هذه تفاصيل طلبكم</p>
+      <div class="invoice-number">رقم الفاتورة: #<span id="invoiceNumber"></span></div>
     </div>
 
-    <div class="order-summary" id="orderSummary"></div>
+    <div class="invoice-card">
+      <div class="customer-info">
+        <div class="info-item">
+          <h3>اسم العميل</h3>
+          <p id="userName"></p>
+        </div>
+        <div class="info-item">
+          <h3>رقم الهاتف</h3>
+          <p id="userPhone"></p>
+        </div>
+        <div class="info-item">
+          <h3>العنوان</h3>
+          <p id="userAddress"></p>
+        </div>
+      </div>
 
-    <button id="submitBtn"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+      <div class="order-items" id="orderSummary"></div>
+
+      <div class="order-total">
+        <div class="total-row">
+          <span class="total-label">الإجمالي:</span>
+          <span class="total-value" id="subtotal"></span>
+        </div>
+      
+        <div class="total-row grand-total">
+          <span class="total-label">المبلغ الإجمالي:</span>
+          <span class="total-value" id="grandTotal"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button id="submitBtn"><i class="fas fa-paper-plane"></i> تأكيد الطلب</button>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -48,6 +67,14 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // توليد رقم فاتورة عشوائي
+    function generateInvoiceNumber() {
+      return 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+    }
+    
+    const invoiceNumber = generateInvoiceNumber();
+    document.getElementById('invoiceNumber').textContent = invoiceNumber;
+
     const name = localStorage.getItem("userName") || "غير معروف";
     const phone = localStorage.getItem("userPhone") || "غير متوفر";
     const address = localStorage.getItem("userAddress") || "غير متوفر";
@@ -59,23 +86,36 @@
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     const summary = document.getElementById("orderSummary");
-    let total = 0;
-    cart.forEach(item => {
-      const itemDiv = document.createElement("div");
-      itemDiv.className = "item";
-      itemDiv.innerHTML = `
-        <img src="${item.image}" onerror="this.src='https://via.placeholder.com/80'" alt="${item.name}">
-        <div class="item-details">
-          <strong>${item.name}</strong><br/>
-          الكمية: ${item.quantity} — السعر: ${item.price} جنيه<br/>
-          ${item.notes ? `<em>ملاحظات: ${item.notes}</em>` : ''}
-        </div>
-      `;
-      total += item.quantity * item.price;
-      summary.appendChild(itemDiv);
-    });
+    let subtotal = 0;
+    
+    if (cart.length === 0) {
+      summary.innerHTML = '<p style="text-align: center; color: #95a5a6;">لا توجد عناصر في السلة</p>';
+    } else {
+      cart.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "order-item";
+        itemDiv.innerHTML = `
+          <img src="${item.image}" class="item-img" onerror="this.src='https://via.placeholder.com/80?text=صورة+المنتج'" alt="${item.name}">
+          <div class="item-details">
+            <h4 class="item-name">${item.name}</h4>
+            <div class="item-meta">
+              <span>الكمية: ${item.quantity}</span>
+              <span class="item-price">${item.price * item.quantity} جنيه</span>
+            </div>
+            ${item.notes ? `<p class="item-notes">ملاحظات: ${item.notes}</p>` : ''}
+          </div>
+        `;
+        subtotal += item.quantity * item.price;
+        summary.appendChild(itemDiv);
+      });
+    }
 
-    summary.innerHTML += `<h3>الإجمالي: ${total} جنيه</h3>`;
+    
+    const grandTotal = subtotal;
+    
+    document.getElementById("subtotal").textContent = subtotal + " جنيه";
+    document.getElementById("grandTotal").textContent = grandTotal + " جنيه";
+
 
     document.getElementById("submitBtn").addEventListener("click", async () => {
       if (cart.length === 0) {
@@ -83,23 +123,33 @@
         return;
       }
 
-      const orderData = {
-  customer: { name, phone, address },
-  items: cart,
-  total,
-  status: "قيد المراجعة",
-  createdAt: firebase.firestore.FieldValue.serverTimestamp()
-};
+      // تحقق من تسجيل الدخول
+      if (!name || name === "غير معروف" || !phone || phone === "غير متوفر") {
+        alert("يجب تسجيل الدخول أولاً لإرسال الطلب.");
+        window.location.href = "https://os-desin.vercel.app/login/login.html";
+        return;
+      }
 
-try {
-  await db.collection("orders").add(orderData);  // تنشئ مجموعة orders تلقائيًا إذا لم تكن موجودة
-  alert("تم إرسال الطلب بنجاح");
-  localStorage.removeItem("cart");
-  window.location.href = "thanks.html";
-} catch (error) {
-  console.error("خطأ في الإرسال", error.message);
-  alert("سجل دخول اولا: ");
-}
+      const orderData = {
+        customer: { name, phone, address },
+        items: cart,
+        subtotal,
+        deliveryFee,
+        grandTotal,
+        invoiceNumber,
+        status: "قيد المراجعة",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        await db.collection("orders").add(orderData);
+        alert("تم إرسال الطلب بنجاح");
+        localStorage.removeItem("cart");
+        window.location.href = "thanks.html";
+      } catch (error) {
+        console.error("خطأ في الإرسال", error.message);
+        alert("حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.");
+      }
     });
   </script>
 </body>
