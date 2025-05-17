@@ -1,27 +1,252 @@
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عربة التسوق الفاخرة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style-prodacts.css">
+</head>
+<body>
+    <div class="container">
+        <!-- شريط التقدم -->
+        <div class="progress-steps">
+            <div class=" step active">
+                          <div class="progress-bar" style="width: 33%;"></div>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAIaEPGGOJcGEGcYD5_pntD6whM9Zk81Ok",
-    authDomain: "ordars-578e0.firebaseapp.com",
-    projectId: "ordars-578e0",
-    databaseURL: "https://ordars-578e0-default-rtdb.firebaseio.com"
-  };
+                <div class="step-icon">1</div>
+                <span class="step-title">عربة التسوق</span>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <span class="step-title">معلومات الشحن</span>
+            </div>
+            
+            <div class="step">
+                <div class="step-icon">3</div>
+                <span class="step-title">الدفع</span>
+            </div>
+        </div>
+        
+        <div class="cart-layout">
+            <!-- قسم العناصر -->
+            <div class="cart-items" id="cart-container">
+                <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+            </div>
+            
+            <!-- ملخص الطلب -->
+            <div class="order-summary">
+                <div class="summary-card">
+                    <h2 class="summary-title">ملخص الطلب</h2>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">المجموع الفرعي</span>
+                        <span class="summary-value" id="subtotal">0.00 EGP</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">خصم</span>
+                        <span class="summary-value" id="discount">0.00 EGP</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span class="summary-label">الشحن</span>
+                        <span class="summary-value" id="shipping">0.00 EGP</span>
+                    </div>
+                    
+                   
+                    <div class="summary-row total-row">
+                        <span class="summary-label total-label">الإجمالي</span>
+                        <span class="summary-value total-value" id="total">0.00 EGP</span>
+                    </div>
+                    
+                    <button class="checkout-btn"><a href="chekout-data.html" style="text-decoration: none; color: white;">المتابعة إلى الدفع </a></button>
+                    <button class="continue-btn">مواصلة التسوق</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+    <script>
+        // بيانات عربة التسوق من localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [
+            {
+                id: 1,
+                name: "حذاء رياضي فاخر",
+                description: "حذاء رياضي من الجلد الطبيعي مع وسادة هوائية",
+                price: 120.00,
+                quantity: 1,
+                image: "https://via.placeholder.com/300"
+            },
+            {
+                id: 2,
+                name: "ساعة ذكية متطورة",
+                description: "ساعة ذكية مع شاشة AMOLED ومقاومة للماء",
+                price: 250.00,
+                quantity: 1,
+                image: "https://via.placeholder.com/300"
+            }
+        ];
 
-  async function testSend() {
-    try {
-      const ordersRef = database.ref('orders');
-      const newRef = ordersRef.push();
-      await newRef.set({ test: "نجح الاتصال!" });
-      alert("تم الإرسال بنجاح!");
-    } catch (err) {
-      alert("فشل الاتصال: " + err.message);
-    }
-  }
-</script>
+        // تطبيق خصم
+        let discount = 0;
+        let shipping = 50.00;
 
-<button onclick="testSend()">اختبار الإرسال</button>
+        // عرض عربة التسوق
+        function renderCart() {
+            const container = document.getElementById("cart-container");
+            container.innerHTML = "";
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>سلة التسوق فارغة</p>
+                        <button class="continue-btn" onclick="window.location.href='products.html'">تصفح المنتجات</button>
+                    </div>
+                `;
+                updateSummary();
+                return;
+            }
+
+            // إنشاء بطاقة العناصر
+            const itemsCard = document.createElement("div");
+            itemsCard.className = "cart-card";
+            
+            // رأس البطاقة
+            const cardHeader = document.createElement("div");
+            cardHeader.className = "cart-header";
+            cardHeader.innerHTML = `
+                <h2>عربة التسوق</h2>
+                <span>${cart.length} ${cart.length === 1 ? 'منتج' : 'منتجات'}</span>
+            `;
+            itemsCard.appendChild(cardHeader);
+
+            // إضافة العناصر
+            cart.forEach((item, index) => {
+                const itemElement = document.createElement("div");
+                itemElement.className = "cart-item";
+                itemElement.innerHTML = `
+                    <div class="item-image">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="item-details">
+                        <div>
+                            <h3 class="item-title">${item.name}</h3>
+                            <p class="item-description">${item.description}</p>
+                            <p class="item-price">${item.price.toFixed(2)} EGP</p>
+                        </div>
+                        <div class="item-actions">
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" 
+                                    onchange="updateQuantityInput(${index}, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                            <button class="remove-btn" onclick="removeItem(${index})">
+                                <i class="fas fa-trash"></i> إزالة
+                            </button>
+                        </div>
+                    </div>
+                `;
+                itemsCard.appendChild(itemElement);
+            });
+
+            container.appendChild(itemsCard);
+
+            // إضافة قسم القسيمة
+            const couponCard = document.createElement("div");
+            couponCard.className = "cart-card";
+            couponCard.innerHTML = `
+                <h2 class="cart-header">كود الخصم</h2>
+                <div class="coupon-section">
+                    <input type="text" class="coupon-input" placeholder="أدخل كود الخصم" id="coupon-code">
+                    <button class="apply-btn" onclick="applyCoupon()">تطبيق الكود</button>
+                </div>
+            `;
+            container.appendChild(couponCard);
+
+            // تحديث الملخص
+            updateSummary();
+        }
+
+        // تحديث الكمية باستخدام الأزرار +/-
+        function updateQuantity(index, change) {
+            const newQuantity = cart[index].quantity + change;
+            if (newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+                saveCart();
+            }
+        }
+
+        // تحديث الكمية باستخدام حقل الإدخال
+        function updateQuantityInput(index, value) {
+            const newQuantity = parseInt(value);
+            if (!isNaN(newQuantity) && newQuantity > 0) {
+                cart[index].quantity = newQuantity;
+                saveCart();
+            } else {
+                renderCart(); // إعادة العرض لتصحيح القيمة
+            }
+        }
+
+        // إزالة عنصر من السلة
+        function removeItem(index) {
+            cart.splice(index, 1);
+            saveCart();
+        }
+
+        // تطبيق كود الخصم
+        function applyCoupon() {
+            const couponCode = document.getElementById("coupon-code").value;
+            if (couponCode === "DISCOUNT10") {
+                discount = calculateSubtotal() * 0.1; // خصم 10%
+                alert("تم تطبيق خصم 10% بنجاح");
+                updateSummary();
+            } else if (couponCode === "DISCOUNT20") {
+                discount = calculateSubtotal() * 0.2; // خصم 20%
+                alert("تم تطبيق خصم 20% بنجاح");
+                updateSummary();
+            } else if (couponCode) {
+                alert("كود الخصم غير صحيح");
+            }
+        }
+
+        // حساب المجموع الفرعي
+        function calculateSubtotal() {
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        }
+
+       
+        // تحديث ملخص الطلب
+       function updateSummary() {
+    const subtotal = calculateSubtotal();
+    const total = subtotal - discount + shipping;
+
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2) + " EGP";
+    document.getElementById("discount").textContent = "-" + discount.toFixed(2) + " EGP";
+    document.getElementById("shipping").textContent = shipping.toFixed(2) + " EGP";
+    document.getElementById("total").textContent = total.toFixed(2) + " EGP";
+
+    // إخفاء أو إزالة الضريبة من الواجهة إذا كانت موجودة
+    const taxRow = document.getElementById("tax");
+    if (taxRow) taxRow.parentElement.style.display = "none";
+}
+
+
+        // حفظ السلة في localStorage
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        // عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+        });
+    </script>
+</body>
+</html>
