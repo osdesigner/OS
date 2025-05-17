@@ -158,16 +158,7 @@
             container.appendChild(itemsCard);
 
             // إضافة قسم القسيمة
-            const couponCard = document.createElement("div");
-            couponCard.className = "cart-card";
-            couponCard.innerHTML = `
-                <h2 class="cart-header">كود الخصم</h2>
-                <div class="coupon-section">
-                    <input type="text" class="coupon-input" placeholder="أدخل كود الخصم" id="coupon-code">
-                    <button class="apply-btn" onclick="applyCoupon()">تطبيق الكود</button>
-                </div>
-            `;
-            container.appendChild(couponCard);
+           
 
             // تحديث الملخص
             updateSummary();
