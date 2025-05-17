@@ -105,7 +105,7 @@
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart"></i>
                         <p>سلة التسوق فارغة</p>
-                        <button class="continue-btn" onclick="window.location.href='products.html'">تصفح المنتجات</button>
+                        <button class="continue-btn" onclick="window.location.href='https://os-desin.vercel.app/'">تصفح المنتجات</button>
                     </div>
                 `;
                 updateSummary();
@@ -190,21 +190,7 @@
             saveCart();
         }
 
-        // تطبيق كود الخصم
-        function applyCoupon() {
-            const couponCode = document.getElementById("coupon-code").value;
-            if (couponCode === "DISCOUNT10") {
-                discount = calculateSubtotal() * 0.1; // خصم 10%
-                alert("تم تطبيق خصم 10% بنجاح");
-                updateSummary();
-            } else if (couponCode === "DISCOUNT20") {
-                discount = calculateSubtotal() * 0.2; // خصم 20%
-                alert("تم تطبيق خصم 20% بنجاح");
-                updateSummary();
-            } else if (couponCode) {
-                alert("كود الخصم غير صحيح");
-            }
-        }
+       
 
         // حساب المجموع الفرعي
         function calculateSubtotal() {
