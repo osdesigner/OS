@@ -340,17 +340,11 @@ body{
   /* الشريط */
   .slider-container::-webkit-scrollbar {
     height: 8px;
-  }
-
-
-  /* متجاوب */
+  }/* متجاوب */
   @media (max-width: 768px) {
     .main-title {
       font-size: 1.8rem;
-    }
-
-
-    .image-box p {
+    }  .image-box p {
       font-size: 0.95rem;
     }
   }

@@ -1,0 +1,245 @@
+:root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+      --border-color: #ddd;
+      --success-color: #2ecc71;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f9f9f9;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 30px;
+    }
+    
+    .checkout-header {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .checkout-header h1 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    
+    /* قسم معلومات العميل */
+    .customer-info {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+    
+    /* قسم ملخص الطلب */
+    .order-summary {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      align-self: start;
+      position: sticky;
+      top: 20px;
+    }
+    
+    .order-items {
+      margin-bottom: 20px;
+    }
+    
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .item-info {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .item-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    
+    .item-details h4 {
+      margin-bottom: 5px;
+    }
+    
+    .item-price {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    
+    .order-totals {
+      margin-top: 20px;
+    }
+    
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 10px 0;
+    }
+    
+    .grand-total {
+      font-weight: bold;
+      font-size: 18px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 10px;
+      padding-top: 15px;
+    }
+    
+    /* قسم الدفع */
+    .payment-methods {
+      margin-top: 30px;
+    }
+    
+    .payment-options {
+      margin: 15px 0;
+    }
+    
+    .payment-option {
+      align-items: center;
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .payment-option:hover {
+      border-color: var(--primary-color);
+    }
+    
+    .payment-option input {
+      width: auto;
+      margin-left: 10px;
+    }
+    
+    .payment-icons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .payment-icons i {
+      font-size: 28px;
+      color: #555;
+    }
+    
+    /* زر التأكيد */
+    .submit-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 15px;
+      width: 100%;
+      border-radius: 4px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+    
+    .submit-btn:hover {
+      background: var(--secondary-color);
+    }
+    
+    /* الشروط والأحكام */
+    .terms {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .terms input {
+      width: auto;
+      margin-left: 10px;
+    }
+    
+    /* رسائل الخطأ */
+    .error-message {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    /* للجوال */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .order-summary {
+        position: static;
+      }
+    }

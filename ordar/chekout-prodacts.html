@@ -1,0 +1,27 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAIaEPGGOJcGEGcYD5_pntD6whM9Zk81Ok",
+    authDomain: "ordars-578e0.firebaseapp.com",
+    projectId: "ordars-578e0",
+    databaseURL: "https://ordars-578e0-default-rtdb.firebaseio.com"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  async function testSend() {
+    try {
+      const ordersRef = database.ref('orders');
+      const newRef = ordersRef.push();
+      await newRef.set({ test: "نجح الاتصال!" });
+      alert("تم الإرسال بنجاح!");
+    } catch (err) {
+      alert("فشل الاتصال: " + err.message);
+    }
+  }
+</script>
+
+<button onclick="testSend()">اختبار الإرسال</button>

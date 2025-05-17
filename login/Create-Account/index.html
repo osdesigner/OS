@@ -3,19 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل حساب جديد</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+    <title>إنشاء حساب جديد - OS Designer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .logo {
+            height: 50px;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover {
+            color: #007bff;
+        }
+        
+        .menu-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .header2 {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header2 a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        
+        .header2-nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .active {
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .register-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .register-header {
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .register-header h1 {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .register-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .register-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .input-field {
+            position: relative;
+        }
+        
+        .input-field input, .custom-select {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .custom-select-field select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        
+        .input-field input:focus, .custom-select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn i {
+            margin-left: 8px;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                z-index: 100;
+            }
+            
+            .nav.active {
+                display: flex;
+            }
+            
+            .menu-icon {
+                display: block;
+            }
+            
+            .header2 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header2-nav {
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-
     <div class="header">
         <div class="nav" id="nav">
             <a href="https://os-designer1.github.io/support/">الدعم</a>
@@ -23,20 +242,19 @@
             <a href="https://os-designer1.github.io/OS-Designer-logo-Teshrt-Designer/">لوجو علي تيشرت</a>
             <a href="https://os-designer1.github.io/OS-Designer-panar-Designer/">بنر و يفط </a>
             <a href="https://os-designer1.github.io/OS-Designer-Social-media-Designer/">أعلانات </a>
-           <a href="https://os-desin.vercel.app/logo/logo.html">logo</a>
+            <a href="https://os-desin.vercel.app/logo/logo.html">logo</a>
         </div>
-        <a href="https://os-desin.vercel.app"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
-
-      
+        <a href="https://os-desin.vercel.app"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a>
         <div class="menu-icon" onclick="toggleNav()">☰</div>
-        </div>
-  <div class="header2" id="mainHeader">
-    <a class="Social" href=""> حسابات </a>
-    <div class="header2-nav">
-        <a class="active" href="">انشاء حساب جديد</a>
-        <a class="support" href="https://os-desin.vercel.app/login/login.html">تسجيل الدخول</a>
     </div>
-  </div>
+    
+    <div class="header2" id="mainHeader">
+        <a class="Social" href=""> حسابات </a>
+        <div class="header2-nav">
+            <a class="active" href="">انشاء حساب جديد</a>
+            <a class="support" href="https://os-desin.vercel.app/login/login.html">تسجيل الدخول</a>
+        </div>
+    </div>
 
     <div class="container">
         <div class="register-card">
@@ -45,8 +263,8 @@
                 <p>املأ النموذج أدناه لإنشاء حسابك</p>
             </div>
             
-            <div class="success-message" id="successMessage" style="font-size: 14px;">
-               تم إنشاء حسابك بنجاح اذهب الي <a href="https://os-desin.vercel.app/login/login.html" style="color: rgb(0, 68, 255); font-size: 12px;" >  تسجيل الدخول</a>
+            <div class="success-message" id="successMessage">
+               تم إنشاء حسابك بنجاح اذهب الي <a href="https://os-desin.vercel.app/login/login.html" style="color: rgb(0, 68, 255); font-size: 12px;">تسجيل الدخول</a>
             </div>
             
             <div class="register-body">
@@ -60,29 +278,20 @@
                         <div class="error-message" id="nameError"></div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني <span style="color: #888; font-size: 12px;">(اختياري)</span></label>
-                        <div class="input-field">
-                            <i class="fas fa-envelope input-icon"></i>
-                            <input type="email" id="email" placeholder="">
-                        </div>
-                        <p style="padding: 10px;">(تحتاجه عند فقدان كلمت السر )</p>
-                        <div class="error-message" id="emailError"></div>
-
-                    </div>
+                  
                     
                     <div class="form-group">
                         <label for="phone">رقم الهاتف</label>
                         <div class="input-field">
                             <i class="fas fa-phone input-icon"></i>
-                            <input type="tel" id="phone" placeholder="" required>
+                            <input type="tel" id="phone" placeholder="أدخل رقم هاتفك" required>
                         </div>
                         <div class="error-message" id="phoneError"></div>
                     </div>
                     
                     <div class="form-group">
                         <label for="address">المحافظة</label>
-                        <div class="input-field custom-select-field"></div>
+                        <div class="input-field custom-select-field">
                             <select id="address" class="custom-select">
                                 <option value="">اختر المحافظة</option>
                                 <option value="القاهرة">القاهرة</option>
@@ -99,26 +308,22 @@
                                 <option value="القليوبية">القليوبية</option>
                                 <option value="الوادي الجديد">الوادي الجديد</option>
                                 <option value="السويس">السويس</option>
-                                <option value="اسوان">اسوان</option>
-                                <option value="اسيوط">اسيوط</option>
+                                <option value="أسوان">أسوان</option>
+                                <option value="أسيوط">أسيوط</option>
                                 <option value="بني سويف">بني سويف</option>
                                 <option value="بورسعيد">بورسعيد</option>
                                 <option value="دمياط">دمياط</option>
-                                <option value="الشرقية">الشرقية</option>
                                 <option value="جنوب سيناء">جنوب سيناء</option>
                                 <option value="كفر الشيخ">كفر الشيخ</option>
                                 <option value="مطروح">مطروح</option>
-                                <option value="الأقصر">الأقصر</option>
                                 <option value="قنا">قنا</option>
                                 <option value="شمال سيناء">شمال سيناء</option>
                                 <option value="سوهاج">سوهاج</option>
+                                <option value="الأقصر">الأقصر</option>
                             </select>
                         </div>
                         <div class="error-message" id="addressError"></div>
                     </div>
-                    <style>
-                   
-                    </style>
                     
                     <div class="form-group">
                         <label for="birthdate">تاريخ الميلاد <span style="color: #888; font-size: 12px;">(اختياري)</span></label>
@@ -151,16 +356,143 @@
                         <i class="fas fa-user-plus"></i> إنشاء حساب
                     </button>
                 </form>
-
-
-                
             </div>
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
     <script>
-       
+        // تهيئة Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAIL9B-CijJ_1jQelALW0hdXV2bzqBhjnw",
+            authDomain: "storehub-manager.firebaseapp.com",
+            projectId: "storehub-manager",
+            storageBucket: "storehub-manager.appspot.com",
+            messagingSenderId: "584686051923",
+            appId: "1:584686051923:web:3aad37de33ccc43dfa1ca6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // وظيفة تبديل القائمة على الأجهزة الصغيرة
+        function toggleNav() {
+            const nav = document.getElementById('nav');
+            nav.classList.toggle('active');
+        }
+
+        // التحقق من صحة النموذج
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // إخفاء جميع رسائل الخطأ
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // الحصول على قيم الحقول
+            const fullName = document.getElementById('fullName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            let isValid = true;
+            
+            // التحقق من الاسم الكامل
+            if (fullName === '') {
+                document.getElementById('nameError').textContent = 'الاسم الكامل مطلوب';
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            
+            // التحقق من رقم الهاتف
+            const phoneRegex = /^01[0125][0-9]{8}$/;
+            if (phone === '') {
+                document.getElementById('phoneError').textContent = 'رقم الهاتف مطلوب';
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            } else if (!phoneRegex.test(phone)) {
+                document.getElementById('phoneError').textContent = 'رقم الهاتف غير صالح (يجب أن يبدأ بـ 01 ويحتوي على 11 رقمًا)';
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // التحقق من المحافظة
+            if (address === '') {
+                document.getElementById('addressError').textContent = 'المحافظة مطلوبة';
+                document.getElementById('addressError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // التحقق من كلمة المرور
+            if (password === '') {
+                document.getElementById('passwordError').textContent = 'كلمة المرور مطلوبة';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            } else if (password.length < 6) {
+                document.getElementById('passwordError').textContent = 'كلمة المرور يجب أن تحتوي على الأقل على 6 أحرف';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // التحقق من تطابق كلمة المرور
+            if (confirmPassword === '') {
+                document.getElementById('confirmPasswordError').textContent = 'تأكيد كلمة المرور مطلوب';
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'كلمة المرور غير متطابقة';
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // إذا كان النموذج صالحًا، قم بالتسجيل
+            if (isValid) {
+                registerUser(password, fullName, phone, address, birthdate);
+            }
+        });
+        
+        // تسجيل المستخدم في Firebase
+        function registerUser( password, fullName, phone, address, birthdate) {
+            auth.createUserWithEmailAndPassword(password)
+                .then((userCredential) => {
+                    // تم إنشاء الحساب بنجاح
+                    const user = userCredential.user;
+                    
+                    // حفظ بيانات المستخدم الإضافية في Firestore
+                    return db.collection('users').doc(user.uid).set({
+                        fullName: fullName,
+                        phone: phone,
+                        address: address,
+                        birthdate: birthdate,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    // إظهار رسالة النجاح
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('registerForm').reset();
+                    
+                    // إخفاء رسالة النجاح بعد 5 ثوانٍ
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 5000);
+                })
+                .catch((error) => {
+                    // معالجة الأخطاء
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                });
+        }
     </script>
-   <script src="scrept.js"></script>
 </body>
 </html>
