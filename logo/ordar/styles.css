@@ -86,20 +86,7 @@ body{
 }
 
 
-.account-icon{
-    color: #000000;
-    font-size: 20px;
-    cursor: pointer;
-     margin-left: 20px;
-    align-items: center;
-  }
 
-      @media (max-width:834px){
-          .account-icon{
-             margin-left: 90px;
-             margin-top: 5px;
-          }
-      }
 
 .cart-icon {
     position: relative;

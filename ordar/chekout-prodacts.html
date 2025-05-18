@@ -9,13 +9,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="style-prodacts.css">
+<script>
+    function toggleNav() {
+    const nav = document.getElementById("nav");
+    const header2 = document.querySelector(".header2");
+
+    nav.classList.toggle("active");
+
+    if (nav.classList.contains("active")) {
+        header2.style.marginTop = "100vh"; // اجعل `header2` ينزل أسفل القائمة
+    } else {
+        header2.style.marginTop = "0px"; // أعد `header2` لمكانه الطبيعي عند إغلاق القائمة
+    }
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const columns = document.querySelectorAll(".footer-column h4");
+    columns.forEach(column => {
+        column.addEventListener("click", function () {
+            let parent = this.parentElement;
+            parent.classList.toggle("open");
+        });
+    });
+});
+
+</script>
 </head>
 <body>
+
+
+ <div class="header">
+        <a href="https://os-desin.vercel.app"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="https://os-desin.vercel.app/logo/logo.html">logo</a>
+            <a href="https://os-desin.vercel.app/Social-media/Social-media.html">أعلانات</a>
+            <a href="https://os-desin.vercel.app/panar/panar.html">بنر و يفط</a>
+            <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+            <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
+            <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
+        </div> 
+            <!-- أيقونة السلة في الهيدر -->
+
+    <div class="menu-icon" onclick="toggleNav()">☰</div>
+</div>
+
+
+
     <div class="container">
         <!-- شريط التقدم -->
         <div class="progress-steps">
             <div class=" step active">
-                          <div class="progress-bar" style="width: 33%;"></div>
+                          <div class="progress-bar" style="width: 50%;"></div>
 
                 <div class="step-icon">1</div>
                 <span class="step-title">عربة التسوق</span>
@@ -24,8 +71,6 @@
                 <div class="step-icon">2</div>
                 <span class="step-title">معلومات الشحن</span>
             </div>
-            
-           
         </div>
         
         <div class="cart-layout">
@@ -60,32 +105,65 @@
                         <span class="summary-value total-value" id="total">0.00 EGP</span>
                     </div>
                     
-                    <button class="checkout-btn"><a href="chekout-data.html" style="text-decoration: none; color: white;">المتابعة إلى الدفع </a></button>
+                    <button class="checkout-btn"><a href="https://os-desin.vercel.app" style="text-decoration: none; color: white;">المتابعة إلى الدفع </a></button>
                     <button class="continue-btn">مواصلة التسوق</button>
                 </div>
             </div>
         </div>
     </div>
 
+
+<footer class="footer">
+    <div class="footer-top">
+        <a href="os-desin.vercel.app" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                 <li><a href="https://os-desin.vercel.app/logo/logo.html">شعار</a></li>
+                <li><a href="https://os-desin.vercel.app/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="https://os-desin.vercel.app/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+       
+         <div class="footer-column">
+            <h4>حسابات</h4>
+            <ul class="footer-list">
+                <li><a href="https://os-desin.vercel.app/login/login.html">الملف الشخصي</a></li>
+                <li><a href="https://os-desin.vercel.app/login/Create-Account/index.html">انشاء حساب جديد</a></li>
+                <li><a href="https://os-desin.vercel.app/login/login.html"> تسجيل دخول </a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+</footer>
+
+
+
     <script>
         // بيانات عربة التسوق من localStorage
         let cart = JSON.parse(localStorage.getItem('cart')) || [
-            {
-                id: 1,
-                name: "حذاء رياضي فاخر",
-                description: "حذاء رياضي من الجلد الطبيعي مع وسادة هوائية",
-                price: 120.00,
-                quantity: 1,
-                image: "https://via.placeholder.com/300"
-            },
-            {
-                id: 2,
-                name: "ساعة ذكية متطورة",
-                description: "ساعة ذكية مع شاشة AMOLED ومقاومة للماء",
-                price: 250.00,
-                quantity: 1,
-                image: "https://via.placeholder.com/300"
-            }
+           
         ];
 
         // تطبيق خصم
