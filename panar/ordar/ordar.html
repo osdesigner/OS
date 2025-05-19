@@ -959,121 +959,53 @@ window.onload = function() {
                 <div class="options">
                     <div class="option" onclick="selectOption('logo_text')">
                         <span>  يفط مضيئه   <br><small> </small></span>
-                        <span class="price">$230 جنيه</span>
+                        <span class="price">$250 جنيه</span>
                     </div>
-                    <div class="option" onclick="selectOption('logo_text')">
-                        <span>يفطه غير مضيئه<br><small> </small></span>
-                        <span class="price"> $150 جنيه</span>
-                    </div>
+                   
                     <div class="option" onclick="selectOption('logo_text')">
                         <span>بنر<br><small> </small></span>
-                        <span class="price"> $150 جنيه</span>
+                        <span class="price"> $170 جنيه</span>
                     </div>
                     <p class="one-m">لكل 1 متر</p>
                 </div>
                 
 
-                <form id="form" class="order-form">
-                    <h2 class="form-title">طلب تصميم جديد</h2>
-                
-                    <div class="form-group">
-                      <input class="input-field" type="text" name="name" placeholder="الاسم الكامل" required />
-                    </div>
-                
-                    <div class="form-group">
-                      <input class="input-field" type="tel" name="phone" placeholder="رقم الهاتف" required />
-                    </div>
-                
-                    <div class="form-group">
-                      <select name="type" class="input-field" required>
-                        <option value="">اختر نوع الطلب</option>
-                        <option value="يفطة">يفطة</option>
-                        <option value="بنر">بنر</option>
-                      </select>
-                    </div>
-                
-                    <div class="form-group">
-                      <input class="input-field" type="number" name="width" placeholder="العرض بالسنتيمتر" required />
-                    </div>
-                
-                    <div class="form-group">
-                      <input class="input-field" type="number" name="height" placeholder="الطول بالسنتيمتر" required />
-                    </div>
-                
-                    <div class="form-group">
-                      <select name="lighting" class="input-field" required>
-                        <option value="">اختر نوع الإضاءة</option>
-                        <option value="عادي">عادي (150 جنيه)</option>
-                        <option value="مضيء">مضيء (230 جنيه)</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                        <label  for="quantity">الكمية</label>
-                        <input class="input-field" type="number" id="quantity" name="quantity" min="1" value="1">
-                      </div>
-                    <div class="form-group">
-                        <label for="notes">ملاحظات إضافية</label>
-                        <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
-                      </div>
-                    <div class="form-group">
-                      💰 السعر الكلي: <span id="totalPriceDisplay">0</span> جنيه
-                    </div>
-                
-                    <!-- حقول مخفية لتضمينها في الإيميل -->
-                    <input type="hidden" name="totalPrice" id="totalPrice" />
-                    <input type="hidden" name="location" id="location">
-                        <input type="hidden" name="whatsappLink" id="whatsappLink" />
-                    <input type="hidden" name="callLink" id="callLink" />
-                <p>شامل التصميم و الطباعه</p>
-                    <input class="submit-btn" type="submit" id="button" value="إرسال الطلب" />
-                  </form>
-                
-                        <script>
-                            // عند تحميل الصفحة، قم باسترجاع رقم الهاتف والاسم من Local Storage
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const loggedInUserPhone = localStorage.getItem('loggedInUserPhone'); // استرجاع رقم الهاتف من Local Storage
-                                const loggedInUserName = localStorage.getItem('loggedInUserName'); // استرجاع الاسم من Local Storage
-
-                                const phoneInput = document.querySelector('.input-field[name="phone"]'); // استهداف حقل رقم الهاتف
-                                const nameInput = document.querySelector('.input-field[name="name"]'); // استهداف حقل الاسم
-
-                                if (loggedInUserPhone && phoneInput) {
-                                    phoneInput.value = loggedInUserPhone; // تعبئة الحقل برقم الهاتف
-                                }
-
-                                if (loggedInUserName && nameInput) {
-                                    nameInput.value = loggedInUserName; // تعبئة الحقل بالاسم
-                                }
-
-                                if (!loggedInUserPhone || !loggedInUserName) {
-                                    console.log('لم يتم العثور على بيانات المستخدم المسجل.');
-                                }
-                            });
-                        </script>
-                        
-                      
-
-                                </select>
-                            </label>
-                        </div>
-                
-                    </form>
+               <form id="form" class="order-form">
+                <h2 class="form-title">طلب تصميم جديد</h2>
+                <div class="form-group" style="min-width:220px; ">
+                    <!-- منتج مع خيارات -->
+                <div class="product">
+                    <select id="iphone-options" class="input-field">
+                        <option value="" disabled selected> اختر نوع اليفطه </option>
+                        <option value=" بنر مضئ | بنر مضئ |250|https://os-desin.vercel.app/panar/panar-os.jpg">بنر مضئ</option>
+                        <option value=" بنر غير مضئ |  بنر غير مضئ |170|https://os-desin.vercel.app/panar/panar-os.jpg">بنر غير مضئ</option>
+                    </select>
                 </div>
-        
-
-    
                 
-            </div>
-        </div>
+                <div class="form-group">
+                    <label for="notes" class="note">ملاحظات إضافية</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3" placeholder="اكتب مقاساتك  مع ملاحظاتك"></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="addSelectedProductWithNotes('iphone-options', 'notes')">أضف إلى السلة</button>
+                         <input type="hidden" name="location" id="location">
+
+                      </form>
+                
+
+                
+                                
+
+                         </select>
+                     </label>
+                 </div>
+             </form>
+         </div>
+     </div>
+ </div>
 
 
-         
-        <div class="done-ordar">
-            <h1 class="done-ordar-h1">ثق  في تواصلنا</h1>
-            <p class="done-ordar-p">موعدنا مظبوته و تسلمنا في معادو!</p>
-        <img src="done-ordar.webp" class="img-done-ordar">
-
-       </div>
+        
       
 
    
@@ -1104,77 +1036,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-         </script>
-         <script>
-           emailjs.init('djmDvTd_C6wCy4VqG'); // ← هنا المفتاح العام الخاص بك
-
-const form = document.getElementById("form");
-const button = document.getElementById("button");
-
-const totalPriceDisplay = document.getElementById("totalPriceDisplay");
-const totalPriceInput = document.getElementById("totalPrice");
-const geoLocationInput = document.getElementById("geoLocation");
-const whatsappLinkInput = document.getElementById("whatsappLink");
-const callLinkInput = document.getElementById("callLink");
-
-function calculateTotal(width, height, lighting) {
-  const meters = (parseFloat(width) + parseFloat(height)) / 100;
-  const rate = lighting === "مضيء" ? 230 : 150;
-  return Math.round(meters * rate);
-}
-
-form.addEventListener("input", () => {
-  const width = parseFloat(form.width.value);
-  const height = parseFloat(form.height.value);
-  const lighting = form.lighting.value;
-
-  if (width && height && lighting) {
-    const total = calculateTotal(width, height, lighting);
-    totalPriceDisplay.textContent = total;
-    totalPriceInput.value = total + " جنيه";
-  }
-});
-
-
-// ربط زر الإرسال والنموذج
-const btn = document.getElementById('button');
-const locationInput = document.getElementById('location');
-
-// جلب الموقع الجغرافي عند تحميل الصفحة
-if (navigator.geolocation) {
-navigator.geolocation.getCurrentPosition(position => {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-    locationInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-}, error => {
-    console.error("لم يتمكن من تحديد الموقع:", error);
-    locationInput.value = "لم يتمكن من تحديد الموقع";
-});
-} else {
-locationInput.value = "المتصفح لا يدعم تحديد الموقع";
-}
-
-// عند إرسال النموذج
-document.getElementById('form').addEventListener('submit', function (event) {
-event.preventDefault();
-
-btn.innerText = 'جاري الإرسال...';
-
-const serviceID = 'default_service';
-const templateID = 'template_g0zprua';
-
-emailjs.sendForm(serviceID, templateID, this)
-    .then(() => {
-        btn.innerText = 'إرسال الطلب';
-        alert('✅ تم إرسال الطلب بنجاح!');
-        document.getElementById('form').reset();
-    }, (err) => {
-        btn.innerText = 'إرسال الطلب';
-        alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
-        console.error("Error:", err);
-    });
-});
-         </script>
+ </script>
+         
 <footer class="footer">
     <div class="footer-top">
         <a href="os-desin.vercel.app" class="footer-logo">
@@ -1218,5 +1081,6 @@ emailjs.sendForm(serviceID, templateID, this)
         <span class="country">مصر | Egypt</span>
     </div>
 </footer>
+     <script src="screbt-shopping-cart.js"></script>
     </body>
  </html>

@@ -22,9 +22,7 @@
             <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
             <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
             <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
-        </div>     <a href="https://os-desin.vercel.app/login/login.html" class="account-icon" title="حسابي"  >
-            <i class="fas fa-user"></i>
-        </a>
+        </div>
         <!-- أيقونة السلة -->
 <div class="cart-icon" onclick="toggleCart()">
     <i class="fas fa-bag-shopping"></i>
@@ -100,66 +98,31 @@
 
 
                 <div class="order-container">
-                    <form id="form" class="order-form">
-                      
-                        
-                        
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="designType" required>
-                                    <option value="نوته">نوته</option>
+                     <form id="form" class="order-form">
+                <h2 class="form-title">طلب تصميم جديد</h2>
+                <div class="form-group" style="min-width:220px; ">
 
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
 
-                       
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="styleType" required>
-                                    <option value=""> اختر عدد ورق الدفتر </option>
-                                    <option value=" 50 ورقه">  50 ورقه </option>
-                                    <option value="100 ورقه "> 100 ورقه </option>
-
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="allType" required>
-                                    <option value=""> اختر مقاس التصميم </option>
-                                    <option value="A4">كبير A4</option>
-                                    <option value="A5"> صغير A5</option>
-                                    
-
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <input class="input-field" type="number" name="quantity" placeholder=" " required value="1">
-                                <span class="input-placeholder">الكمية المطلوبة</span>
-                            </label>
-                        </div>
-
-                                                       <a style="display: block; background: #0059ff; color: #fff; padding: 8px; border-radius: 4px; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; max-width: 230px;" href="https://wa.me/201144898934?text=صوره تصميم عجبني" class="design-link">📤 أرسل صورة التصميم عجبك و عاوز زيو</a>
-
-                        <div class="form-group">
-                            <label for="notes">ملاحظات إضافية</label>
-                            <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
-                          </div>
-                        <input type="hidden" name="location" id="location">
-                
-                        <button class="submit-btn" id="button">إرسال الطلب</button>
-                    </form>
+                    <!-- منتج مع خيارات -->
+                <div class="product">
+                    <select id="iphone-options" class="input-field">
+                           
+                        <option value=" نوته | نوته |50 |https://os-desin.vercel.app/pepar/note/note.png">نوته</option>
+                    </select>
                 </div>
-        
+
+                 <a style="display: block; background: #0059ff; color: #fff; padding: 8px; border-radius: 4px; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; max-width: 230px;" href="https://wa.me/201144898934?text=صوره تصميم عجبني" class="design-link">📤 أرسل صورة التصميم عجبك و عاوز زيو</a>
+
+                <div class="form-group">
+                    <label for="notes" class="note">ملاحظات إضافية</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3" placeholder=" اكتب ملاحظاتك "></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="addSelectedProductWithNotes('iphone-options', 'notes')">أضف إلى السلة</button>
+                         <input type="hidden" name="location" id="location">
+                      </form> 
+                </div>
+        </div>
 
     
                 
@@ -179,60 +142,6 @@
             <p>✅ تصميم أنيق يعكس هويتك الشخصية أو التجارية.</p>
         </div>
 
-        <br>
-        <br>
-        <br>
-
-        <div class="titel-1">
-            <h2>تصاميم فريدة تناسب احتياجاتك</h2>
-            <br>
-              <p>تتميز OS-Designer بتقديم تصاميم إبداعية للنوتات والدفاتر تناسب مختلف الأذواق، حيث يمكنك اختيار تصميمك بناءً على:</p>
-             <br>
-            <p>🎨 إضافة اسمك أو اسم شركتك بخطوط أنيقة تتناسب مع هوية العلامة التجارية.</p>      
-            <p>📌 اختيار عدد الأوراق وحجم الدفتر حسب احتياجاتك.</p>
-            <p>🖌️ إضافة شعار شركتك ليصبح الدفتر جزءًا من هويتك البصرية.</p>
-            <p>📖 تصميم الغلاف بلمسة إبداعية تعكس طابعك الشخصي أو التجاري.</p>
-          </div>
-
-          <br>
-          <br>
-          <br>
-
-          <div class="titel-1">
-              <h2>أهمية النوتات المخصصة</h2>
-              <br>
-              <p>النوتات المخصصة ليست مجرد أداة للكتابة، بل هي وسيلة فعالة لتعزيز العلامة التجارية، حيث يمكن استخدامها كهدايا للعملاء أو الموظفين، مما يترك انطباعًا إيجابيًا ويعزز الولاء.</p>              
-            </div>
-
-            <br>
-            <br>
-            <br>
-    
-            <div class="titel-1">
-                <h2> العناصر الأساسية التي يجب أن تتوفر في تصميم النوتة </h2>
-                <br>
-                <p>📌 الغلاف: تصميم جذاب يعكس هويتك.</p>
-                <p>📌 عدد الأوراق: اختيار العدد المناسب حسب الاستخدام.</p>
-                <p>📌 نوع الورق: جودة الورق تلعب دورًا كبيرًا في تجربة الاستخدام.</p>
-               <p>📌 الشعار أو الهوية البصرية: لمنح النوتة طابعًا احترافيًا ومميزًا.</p>
-               <p>📌 الألوان والتشطيبات: لإضافة لمسة إبداعية.</p>
-             <p>📌 إمكانية تخصيص الصفحات الداخلية: مثل إضافة شعارات أو خطوط مخصصة.</p>
-            </div>
-            <br>
-            <br>
-            <br>
-    
-            <div class="titel-1"></div>
-                <h2> أسعار تصميم وطباعة النوتات</h2>
-                <br>
-                <p>تختلف أسعار تصميم وطباعة النوتات بناءً على عدة عوامل، منها: </p>
-                <br>
-                <p>💰 نوع الورق المستخدم ومدى جودته.</p>
-                <p>💰 تصميم الغلاف والتشطيبات الخاصة مثل الطباعة البارزة أو اللمعان الخاص.</p>
-                <p>💰 عدد الأوراق وحجم الدفتر.</p>
-                <p>  <br><br>وهذه العوامل ليست مانعة لإرضاء عملائنا.</p>
-                
-            </div>
             
         </section>
 
@@ -244,50 +153,7 @@
 
                   <script src="screbt-shopping-cart.js" ></script>
          <script src="scrept.js" ></script>
-         <script>
-            // استيراد مكتبة EmailJS
-            emailjs.init('djmDvTd_C6wCy4VqG')
-
-// ربط زر الإرسال والنموذج
-const btn = document.getElementById('button');
-const locationInput = document.getElementById('location');
-
-// جلب الموقع الجغرافي عند تحميل الصفحة
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        locationInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-    }, error => {
-        console.error("لم يتمكن من تحديد الموقع:", error);
-        locationInput.value = "لم يتمكن من تحديد الموقع";
-    });
-} else {
-    locationInput.value = "المتصفح لا يدعم تحديد الموقع";
-}
-
-// عند إرسال النموذج
-document.getElementById('form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    btn.innerText = 'جاري الإرسال...';
-
-    const serviceID = 'default_service';
-    const templateID = 'template_6mrcbbq';
-
-    emailjs.sendForm(serviceID, templateID, this)
-        .then(() => {
-            btn.innerText = 'إرسال الطلب';
-            alert('✅ تم إرسال الطلب بنجاح!');
-            document.getElementById('form').reset();
-        }, (err) => {
-            btn.innerText = 'إرسال الطلب';
-            alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
-            console.error("Error:", err);
-        });
-});
-
-         </script>
+        
  <footer class="footer">
     <div class="footer-top">
         <a href="os-desin.vercel.app" class="footer-logo">

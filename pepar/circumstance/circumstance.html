@@ -22,9 +22,7 @@
             <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
             <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
             <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
-        </div>     <a href="https://os-desin.vercel.app/login/login.html" class="account-icon" title="حسابي"  >
-            <i class="fas fa-user"></i>
-        </a>
+        </div>
         <!-- أيقونة السلة -->
 <div class="cart-icon" onclick="toggleCart()">
     <i class="fas fa-bag-shopping"></i>
@@ -214,50 +212,7 @@
 
                   <script src="screbt-shopping-cart.js" ></script>
          <script src="scrept.js" ></script>
-         <script>
-            // استيراد مكتبة EmailJS
-            emailjs.init('djmDvTd_C6wCy4VqG')
-
-// ربط زر الإرسال والنموذج
-const btn = document.getElementById('button');
-const locationInput = document.getElementById('location');
-
-// جلب الموقع الجغرافي عند تحميل الصفحة
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        locationInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-    }, error => {
-        console.error("لم يتمكن من تحديد الموقع:", error);
-        locationInput.value = "لم يتمكن من تحديد الموقع";
-    });
-} else {
-    locationInput.value = "المتصفح لا يدعم تحديد الموقع";
-}
-
-// عند إرسال النموذج
-document.getElementById('form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    btn.innerText = 'جاري الإرسال...';
-
-    const serviceID = 'default_service';
-    const templateID = 'template_6mrcbbq';
-
-    emailjs.sendForm(serviceID, templateID, this)
-        .then(() => {
-            btn.innerText = 'إرسال الطلب';
-            alert('✅ تم إرسال الطلب بنجاح!');
-            document.getElementById('form').reset();
-        }, (err) => {
-            btn.innerText = 'إرسال الطلب';
-            alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
-            console.error("Error:", err);
-        });
-});
-
-         </script>
+        
  <footer class="footer">
     <div class="footer-top">
         <a href="os-desin.vercel.app" class="footer-logo">

@@ -535,7 +535,7 @@ body {
         padding-top: 0px;
     }
     .info-section{
-        padding: 0 20px;
+        padding: 0 15px;
     }
     .info-section span{
         font-size: 1rem;
@@ -546,7 +546,7 @@ body {
     }
     .image-section img{
         padding: 10px ;
-        border-radius: 12px;
+        border-radius: 20px;
     }
 }
 

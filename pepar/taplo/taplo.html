@@ -22,9 +22,7 @@
             <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
             <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
             <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
-        </div>     <a href="https://os-desin.vercel.app/login/login.html" class="account-icon" title="حسابي"  >
-            <i class="fas fa-user"></i>
-        </a>
+        </div>
         <!-- أيقونة السلة -->
 <div class="cart-icon" onclick="toggleCart()">
     <i class="fas fa-bag-shopping"></i>
@@ -109,52 +107,35 @@
 
 
                 <div class="order-container">
-                    <form id="form" class="order-form">
-                      
-                        
-                        
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="designType" required>
-                                    <option value="طبلوه صور">  طبلوه صور  </option>
+                   <form id="form" class="order-form">
+                <h2 class="form-title">طلب تصميم جديد</h2>
+                <div class="form-group" style="min-width:220px; ">
 
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="allType" required>
-                                    <option value=""> اختر مقاس الطباعه  </option>
-                                    <option value=" 20*30 مقاس"> 20*30 </option>
-                                    <option value="30*40 مقاس">  30*40 </option>
+                    <!-- منتج مع خيارات -->
+                <div class="product">
+                    <select id="iphone-options" class="input-field">
+                        <option value="">اختر الطبلوه</option>
+                    <option value=" طبلوه مقاس 20*30
+ | طبلوه  مقاس 20*30
+ |140 |https://os-desin.vercel.app/pepar/taplo/taplo.png">طبلوه  مقاس 20*30</option>
+                    <option value=" طبلوه مقاس 30*40
+ | طبلوه مقاس 30*40
+ |200 |https://os-desin.vercel.app/pepar/taplo/taplo.png">طبلوه مقاس 30*40</option>
+                    </select>
+                </div>
 
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
+                 <a style="display: block; background: #0059ff; color: #fff; padding: 8px; border-radius: 4px; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; max-width: 230px;" href="https://wa.me/201144898934?text=صوره تصميم عجبني" class="design-link">📤 أرسل صورة التصميم عجبك و عاوز زيو</a>
 
-                        
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <input class="input-field" type="number" name="quantity" placeholder=" " required value="1">
-                                <span class="input-placeholder">الكمية المطلوبة</span>
-                            </label>
-                        </div>
-
-                        
-                                                       <a style="display: block; background: #0059ff; color: #fff; padding: 8px; border-radius: 4px; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; max-width: 230px;" href="https://wa.me/201144898934?text=صوره تصميم عجبني" class="design-link">📤 أرسل صورة التصميم عجبك و عاوز زيو</a>
-
-                        <div class="form-group">
-                            <label for="notes">ملاحظات إضافية</label>
-                            <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
-                          </div>
-                        <input type="hidden" name="location" id="location">
+                <div class="form-group">
+                    <label for="notes" class="note">ملاحظات إضافية</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3" placeholder=" اكتب ملاحظاتك "></textarea>
+                </div>
                 
-                        <button class="submit-btn" id="button">إرسال الطلب</button>
-                    </form>
+                <button class="submit-btn" onclick="addSelectedProductWithNotes('iphone-options', 'notes')">أضف إلى السلة</button>
+                         <input type="hidden" name="location" id="location">
+                      </form> 
+                </div>
                 </div>
         
 
@@ -227,50 +208,7 @@
 
                   <script src="screbt-shopping-cart.js" ></script>
          <script src="scrept.js" ></script>
-         <script>
-            // استيراد مكتبة EmailJS
-            emailjs.init('djmDvTd_C6wCy4VqG')
-
-// ربط زر الإرسال والنموذج
-const btn = document.getElementById('button');
-const locationInput = document.getElementById('location');
-
-// جلب الموقع الجغرافي عند تحميل الصفحة
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        locationInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-    }, error => {
-        console.error("لم يتمكن من تحديد الموقع:", error);
-        locationInput.value = "لم يتمكن من تحديد الموقع";
-    });
-} else {
-    locationInput.value = "المتصفح لا يدعم تحديد الموقع";
-}
-
-// عند إرسال النموذج
-document.getElementById('form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    btn.innerText = 'جاري الإرسال...';
-
-    const serviceID = 'default_service';
-    const templateID = 'template_6mrcbbq';
-
-    emailjs.sendForm(serviceID, templateID, this)
-        .then(() => {
-            btn.innerText = 'إرسال الطلب';
-            alert('✅ تم إرسال الطلب بنجاح!');
-            document.getElementById('form').reset();
-        }, (err) => {
-            btn.innerText = 'إرسال الطلب';
-            alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
-            console.error("Error:", err);
-        });
-});
-
-         </script>
+        
  <footer class="footer">
     <div class="footer-top">
         <a href="os-desin.vercel.app" class="footer-logo">

@@ -22,9 +22,7 @@
             <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
             <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
             <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
-        </div>     <a href="https://os-desin.vercel.app/login/login.html" class="account-icon" title="حسابي"  >
-            <i class="fas fa-user"></i>
-        </a>
+        </div>
         <!-- أيقونة السلة -->
 <div class="cart-icon" onclick="toggleCart()">
     <i class="fas fa-bag-shopping"></i>
@@ -100,68 +98,28 @@
 
                 <div class="order-container">
                     <form id="form" class="order-form">
-                      
-                        
-                        
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="designType" required>
-                                    <option value="بروشر">  برشير  </option>
-
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="allType" required>
-                                    <option value=""> اختر طباعه التصميم </option>
-                                    <option value="وجه واحد"> وجه واحد </option>
-                                    <option value="وجهين">  وجهين </option>
-
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <select class="input-field" name="styleType" required>
-                                    <option value=""> اختر نوع الطباعه </option>
-                                    <option value="ورق عادي"> ورق عادي </option>
-                                    <option value="ورق محمل"> ورق محمل </option>
-                                    <option value="ورق مغلف حراري"> ورق مغلف حراري </option>
-                                </select>
-                                <span class="input-placeholder">نوع التصميم</span>
-                            </label>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">
-                                <input class="input-field" type="number" name="quantity" placeholder=" " required value="20">
-                                <span class="input-placeholder">الكمية المطلوبة</span>
-                            </label>
-                        </div>
-
-                        <p>اقل كميه 20 </p>
-
-
-                                                       <a style="display: block; background: #0059ff; color: #fff; padding: 8px; border-radius: 4px; text-align: center; text-decoration: none; font-size: 14px; transition: 0.3s; max-width: 230px;" href="https://wa.me/201144898934?text=صوره تصميم عجبني" class="design-link">📤 أرسل صورة التصميم عجبك و عاوز زيو</a>
-
-                        <div class="form-group">
-                            <label for="notes">ملاحظات إضافية</label>
-                            <textarea class="input-field" id="notes" name="notes" rows="3"></textarea>
-                          </div>
-                        <input type="hidden" name="location" id="location">
-                
-                        <button class="submit-btn" id="button">إرسال الطلب</button>
-                    </form>
+                <h2 class="form-title">طلب تصميم جديد</h2>
+                <div class="form-group" style="min-width:220px; ">
+                    <!-- منتج مع خيارات -->
+                <div class="product">
+                    <select id="iphone-options" class="input-field">
+                        <option value=" بروشير | بروشير |30|https://os-desin.vercel.app/pepar/Brochure/Brochure.png">بروشير</option>
+                    </select>
                 </div>
-        
-
-    
                 
+                  <p style="padding:10px 30px;">اقل كميه 20</p>
+
+                <div class="form-group">
+                    <label for="notes" class="note">ملاحظات إضافية</label>
+                    <textarea class="input-field" id="notes" name="notes" rows="3" placeholder=" اكتب ملاحظاتك "></textarea>
+                </div>
+                
+                <button class="submit-btn" onclick="addSelectedProductWithNotes('iphone-options', 'notes')">أضف إلى السلة</button>
+                         <input type="hidden" name="location" id="location">
+
+                      </form>
+                </div>
+              </div>
             </div>
         </div>
      
@@ -179,92 +137,19 @@
             <p>✅ بفضل وزنها الخفيف وأبعادها المناسبة، يمكن توزيع البرشورات بسهولة، مما يساعد في زيادة الوصول إلى العملاء المحتملين..</p>
         </div>
 
-        <br>
-        <br>
-        <br>
-
-        <div class="titel-1">
-            <h2>.أنواع البروشور:</h2>
-            <br>
-             <br>
-            <p>بروشور ورقة واحدة:هو تصميم بسيط يتكون من ورقة واحدة، يمكن أن تكون مطبوعة على جانب واحد أو على كلا الجانبين. يتوفر بأحجام مختلفة مثل A5 وA4، ويمكن أن يأتي بأشكال مستطيلة أو مربعة. يُستخدم هذا النوع بشكل رئيسي للرسائل الإعلانية السريعة أو التعريفات الأساسية.</p>
-             <br>
-            <p>بروشور ثنائي الطي:يتكون من ورقة واحدة مطوية إلى قسمين، مما يتيح الحصول على 4 أوجه للطباعة. يُعتبر هذا النوع الأكثر شيوعاً، إذ يستخدمه الكثير من المطاعم والشركات للتعريف عن منتجاتها وعروضها بوضوح وجاذبية. يتميز بحجمه المعتاد A4، مما يجعله سهل الحمل والتوزيع.</p>
-             <br>
-            <p>بروشور ثلاثي الطي:هو تصميم يتضمن طيَ الورقة ثلاث مرات، ليمنحك 6 أوجه للإعلانات. يعد هذا النوع مثالياً للشركات التي تقدم مجموعة واسعة من المنتجات، حيث يوفر مساحة أكبر لعرض معلومات كافية تفيد العملاء وتساعدهم على اتخاذ قراراتهم. يُستخدم عادةً في الفعاليات والمعارض التجارية.</p>
-            <br>
-        </div>
-
-          <br>
-          <br>
-          <br>
-
-          <div class="titel-1">
-              <h2>اجعل ترويج علامتك التجارية يتألق مع البرشور</h2>
-              <br>
-              <p>سهولة الانتشار:يمتاز البرشور بقدرته العالية على الانتشار، حيث يمكن توزيعه بسهولة مع المنتجات أو خلال الفعاليات الإعلانية المختلفة. هذا يسهم في جذب الانتباه إلى المنتجات والخدمات ويزيد من فرص إقبال العملاء، مما يساهم في تعزيز الوعي بالعلامة التجارية.</p>
-              <p>المرونة وسهولة الاستخدام:يمكن وضع البرشور في أماكن متعددة مثل المحلات التجارية أو مراكز الاستقبال، مما يجعله وسيلة رفع ضغط التسويق. يمكن أن يكون محفوظًا في قاعات الانتظار أو مع موظفي الاستقبال، مما يسمح للزوار بالحصول على المعلومات الضرورية بكل سهولة وسرعة.</p>
-              <p>مرجع جيد:يعد البرشور مصدرًا مثاليًا للمعلومات. حيث يُستخدم كدليل يقدم تفاصيل شاملة عن الشركة أو النشاط التجاري، مما يسمح للأفراد بالرجوع إليه في أي وقت يحتاجون فيه لمزيد من المعلومات. كما يساهم في تقديم شرح واضح ودقيق عن المنتجات والخدمات، مما يعزز من احترافية التواصل مع العملاء.</p>
-            </div>
-
-            <br>
-            <br>
-            <br>
+    
             
         </section>
 
  
          
-
+</div>
       
      
 
                   <script src="screbt-shopping-cart.js" ></script>
          <script src="scrept.js" ></script>
-         <script>
-            // استيراد مكتبة EmailJS
-            emailjs.init('djmDvTd_C6wCy4VqG')
-
-// ربط زر الإرسال والنموذج
-const btn = document.getElementById('button');
-const locationInput = document.getElementById('location');
-
-// جلب الموقع الجغرافي عند تحميل الصفحة
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        locationInput.value = `https://www.google.com/maps?q=${lat},${lng}`;
-    }, error => {
-        console.error("لم يتمكن من تحديد الموقع:", error);
-        locationInput.value = "لم يتمكن من تحديد الموقع";
-    });
-} else {
-    locationInput.value = "المتصفح لا يدعم تحديد الموقع";
-}
-
-// عند إرسال النموذج
-document.getElementById('form').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    btn.innerText = 'جاري الإرسال...';
-
-    const serviceID = 'default_service';
-    const templateID = 'template_6mrcbbq';
-
-    emailjs.sendForm(serviceID, templateID, this)
-        .then(() => {
-            btn.innerText = 'إرسال الطلب';
-            alert('✅ تم إرسال الطلب بنجاح!');
-            document.getElementById('form').reset();
-        }, (err) => {
-            btn.innerText = 'إرسال الطلب';
-            alert('❌ حدث خطأ، يرجى المحاولة مرة أخرى.');
-            console.error("Error:", err);
-        });
-});
-
-         </script>
+        
  <footer class="footer">
     <div class="footer-top">
         <a href="os-desin.vercel.app" class="footer-logo">
