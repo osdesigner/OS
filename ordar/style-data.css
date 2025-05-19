@@ -305,7 +305,7 @@
 
 #termsBox {
     position: fixed;
-    bottom: -300px; /* مخفي تحت الصفحة */
+    bottom: -350px; /* مخفي تحت الصفحة */
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
