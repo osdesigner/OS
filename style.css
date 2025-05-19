@@ -107,7 +107,7 @@ body {
             padding: 15px 5vw 15px 5vw;
         }
         .cart-icon {
-            margin-left: 0px;
+            margin-left: 150px;
             font-size: 18px;
         }
     }
@@ -245,7 +245,7 @@ button {
 
 .p-top {
     font-size: 19px;
-    margin-top: 47px;
+    margin-top: 56px;
     color: #414141;
     text-align: center;
     padding: 10px 0;
@@ -284,6 +284,10 @@ button {
     }
 }
 
+
+.container{
+    margin-top: 40px;
+}
 
 .container,
 .container3,
