@@ -9,7 +9,7 @@
 
 body {
     font-family: Zain, sans-serif;
-
+    text-decoration: none;
     font-style: normal;
     background-color: #dfdfdf;
     justify-content: center;
@@ -285,9 +285,7 @@ button {
 }
 
 
-.container{
-    margin-top: 40px;
-}
+
 
 .container,
 .container3,
@@ -853,6 +851,130 @@ flex-direction: column;
 
     }
 }
+
+
+
+
+
+        .card {
+            margin-top: 60px;
+            display: flex;
+            gap: 30px;
+            background-color: #ebebeb;
+            margin-bottom: 10px;
+            align-items: center; /* محاذاة العناصر في المركز عمودياً */
+            width: 100%;
+            
+        }
+        
+
+        
+        .card img {
+            display: flex;
+            width: 550px;
+            height: 10%;
+            object-fit: cover;
+            margin-left: 100px;
+            align-items: center;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+            padding: 50px;
+        }
+        
+        .button-with-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .custom-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            align-self: flex-end;
+        }
+        
+        .custom-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .ordar-teshar{
+            text-decoration: none;
+          color: white;
+         }
+        .text-under-button {
+            text-align: right;
+            color: #333;
+            line-height: 1.7;
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+        }
+        .text-under-button p{
+            font-size: 19px;
+        }
+        
+
+
+ @media (max-width: 1200px) {
+                .card img {
+            width: 50%;
+            margin: 0;
+            padding: 0;
+        }
+        .image-container{
+            margin: 0;
+            padding: 0;
+        }
+ }
+
+
+
+
+        /* التصميم المتجاوب */
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .card img {
+            width: 70%;
+            margin: 0;
+        }
+
+        .content{
+            padding: 10px 20px
+        }
+            
+            .button-with-text {
+                align-items: center;
+            }
+            
+            .custom-button {
+                align-self: center;
+            }
+            
+            .text-under-button {
+                text-align: center;
+            }
+        }
+
 
 
 .footer {
