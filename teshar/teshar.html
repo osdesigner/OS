@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <title>طلب خدمات تصميم وتطوير الويب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <script>
+      function toggleNav() {
+    const nav = document.getElementById("nav");
+    const header2 = document.querySelector(".header2");
+
+    nav.classList.toggle("active");
+
+    if (nav.classList.contains("active")) {
+        header2.style.marginTop = "100vh"; // اجعل `header2` ينزل أسفل القائمة
+    } else {
+        header2.style.marginTop = "0px"; // أعد `header2` لمكانه الطبيعي عند إغلاق القائمة
+    }
+}
+
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const columns = document.querySelectorAll(".footer-column h4");
+    columns.forEach(column => {
+        column.addEventListener("click", function () {
+            let parent = this.parentElement;
+            parent.classList.toggle("open");
+        });
+    });
+});
+
+
+    </script>
+    <script src="script.js"></script>
+</head>
+<body>
+
+
+   <div class="header">
+        <a href="https://os-desin.vercel.app"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
+        <div class="nav" id="nav">
+           <a href="https://os-desin.vercel.app/logo/logo.html">logo</a>
+            <a href="https://os-desin.vercel.app/Social-media/Social-media.html">أعلانات</a>
+            <a href="https://os-desin.vercel.app/panar/panar.html">بنر و يفط</a>
+            <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
+            <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
+            <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
+        </div> 
+
+         <!-- أيقونة السلة -->
+
+    <!-- أيقونة السلة في الهيدر -->
+    <div class="cart-icon" onclick="toggleCart()">
+        <i class="fas fa-bag-shopping"></i>
+        <span class="cart-count" id="cart-count">0</span>
+    </div>
+    <div class="menu-icon" onclick="toggleNav()">☰</div>
+
+    <!-- السلة الجانبية (خارج الهيدر وليس داخله) -->
+    </div> <!-- نهاية .header -->
+
+    <!-- السلة الجانبية وعناصرها خارج الهيدر لتظهر فوق كل الصفحة -->
+    <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2>سلة المشتريات</h2>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cart-items" style="flex-direction: column;">
+            <!-- العناصر تظهر هنا -->
+        </div>
+        <div class="cart-total" style="position: sticky; bottom: 20px; left: 20px; right: 20px; background: #fff; padding: 15px 0 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.03); text-align: center;">
+            المجموع: <span id="cart-total">0</span> جنيه
+        </div>
+        <button id="send-order-btn" style="width:100%;background:#007bff;color:#fff;font-size:18px;padding:12px 0;border:none;border-radius:8px;cursor:pointer;margin-top:18px;transition:background 0.2s;">
+            <i class="fas fa-paper-plane" style="margin-left:8px;"></i>
+            <a href="https://os-desin.vercel.app/ordar/chekout-prodacts.html" style="text-decoration: none; color: white;">تاكيد الطلب</a>
+        </button>
+        
+        <script>
+            document.getElementById('send-order-btn').onmouseover = function() {
+                this.style.background = '#0056b3';
+            };
+            document.getElementById('send-order-btn').onmouseout = function() {
+                this.style.background = '#007bff';
+            };
+            </script>        
+    </div>  
+
+    
+      
+        </div>
+  <div class="header2" id="mainHeader">
+    <a class="Social" href="">   خدمات مدرسين </a>
+    <div class="header2-nav">
+    </div>
+  </div>
+
+
+
+  <div class="container">
+    <h1>طلب تقديم خدمات مدرسين</h1>
+
+    <form id="requestForm">
+
+    <div class="name">
+      <div class="form-group">
+        <input type="text" id="first"  placeholder="الاسم الاول">
+      </div>
+
+       <div class="form-group">
+        <input type="text" id="last"  placeholder="الاسم الثاني">
+      </div>
+    </div>
+
+      <div class="form-group">
+        <input type="email" id="email"  placeholder="البريد الالكتروني">
+      </div>
+
+      <div class="form-group">
+        <input type="tel" id="phone"  placeholder="رقم الهاتف" style="text-align: end;">
+      </div>
+
+<div class="form-group">
+  <select class="governorate" id="governorate" required>
+    <option value="">اختر المحافظة</option>
+    <option value="القاهرة">القاهرة</option>
+    <option value="الجيزة">الجيزة</option>
+    <option value="الإسكندرية">الإسكندرية</option>
+    <option value="الدقهلية">الدقهلية</option>
+    <option value="البحر الأحمر">البحر الأحمر</option>
+    <option value="البحيرة">البحيرة</option>
+    <option value="الفيوم">الفيوم</option>
+    <option value="الغربية">الغربية</option>
+    <option value="الإسماعيلية">الإسماعيلية</option>
+    <option value="المنوفية">المنوفية</option>
+    <option value="المنيا">المنيا</option>
+    <option value="القليوبية">القليوبية</option>
+    <option value="الوادي الجديد">الوادي الجديد</option>
+    <option value="السويس">السويس</option>
+    <option value="أسوان">أسوان</option>
+    <option value="أسيوط">أسيوط</option>
+    <option value="بني سويف">بني سويف</option>
+    <option value="بورسعيد">بورسعيد</option>
+    <option value="دمياط">دمياط</option>
+    <option value="الشرقية">الشرقية</option>
+    <option value="جنوب سيناء">جنوب سيناء</option>
+    <option value="كفر الشيخ">كفر الشيخ</option>
+    <option value="مطروح">مطروح</option>
+    <option value="الأقصر">الأقصر</option>
+    <option value="قنا">قنا</option>
+    <option value="شمال سيناء">شمال سيناء</option>
+    <option value="سوهاج">سوهاج</option>
+  </select>
+</div>
+
+
+ <div class="form-group">
+        <label for="details"></label>
+        <input class="city" id="city" placeholder="المدينه"></input>
+      </div>
+
+      <div class="form-group">
+        <label>نوع الخدمة المطلوبة:</label>
+
+        <div class="services-list">
+          <label class="service-item">
+            <input class="checkbox" type="checkbox" name="service" value="تصميم صفحة ويب"> تصميم صفحة ويب
+          </label> 
+
+          <label class="service-item">
+            <input class="checkbox" type="checkbox" name="service" value="تصميم و طباعه "> تصميم و طباعه 
+          </label>
+
+          <label class="service-item">
+            <input class="checkbox" type="checkbox" name="service" value=" تصوير و منتاج  "> تصوير و منتاج 
+          </label>
+
+        </div>
+      </div>
+
+     
+      <div class="form-group">
+        <label for="details">مدرس لماده</label>
+        <input class="checkbox" id="details"></input>
+      </div>
+
+     
+
+      <button type="submit">إرسال الطلب</button>
+    </form>
+
+
+
+
+
+
+    <div id="confirmation" class="confirmation">
+        <img src="logo.png" alt="OS Logo" class="logo">
+      <h2>شكراً لك! </h2>
+      <p>تم استلام طلبك بنجاح وسنتواصل معك من خلال رقم هاتفك او اليميل.</p>
+    </div>
+  </div>
+<footer class="footer">
+    <div class="footer-top">
+        <a href="os-desin.vercel.app" class="footer-logo">
+            <img src="logo.png" alt="OS Logo">
+        </a>
+        <span>اطلب اردرك بكل سهوله</span>
+    </div>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h4>الخدمات</h4>
+            <ul class="footer-list">
+                 <li><a href="https://os-desin.vercel.app/logo/logo.html">شعار</a></li>
+                <li><a href="https://os-desin.vercel.app/panar/panar.html">يفط و بنرات</a></li>
+                <li><a href="https://os-desin.vercel.app/Social-media/Social-media.html">Social media | اعلانات</a></li>
+                <li><a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">طباعه علي تيشرت</a></li>
+                <li><a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات ورقيه</a></li>
+            </ul>
+        </div>
+       
+         <div class="footer-column">
+            <h4>حسابات</h4>
+            <ul class="footer-list">
+                <li><a href="https://os-desin.vercel.app/login/login.html">الملف الشخصي</a></li>
+                <li><a href="https://os-desin.vercel.app/login/Create-Account/index.html">انشاء حساب جديد</a></li>
+                <li><a href="https://os-desin.vercel.app/login/login.html"> تسجيل دخول </a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>التواصل</h4>
+            <ul class="footer-list">
+                <li><a href="tel:01144898934">اتصل بنا</a></li>
+                <li><a href="https://wa.me/201144898934">تواصل واتساب</a></li>
+                <li><a href="mailto:samasemo5647@gmail.com">تواصل عبر البريد الالكتروني</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <span>OS-Designer. © 2025. العلامة التجارية وجميع الحقوق محفوظة.</span>
+        |
+        <a href="https://maps.app.goo.gl/7onyXFjDYGyX34rU6"> موقعنا</a>
+        <span class="country">مصر | Egypt</span>
+    </div>
+    </div>
+</footer>
+
+  <!-- Firebase -->
+<script type="module">
+  
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAIL9B-CijJ_1jQelALW0hdXV2bzqBhjnw",
+    authDomain: "storehub-manager.firebaseapp.com",
+    projectId: "storehub-manager",
+    storageBucket: "storehub-manager.appspot.com",
+    messagingSenderId: "584686051923",
+    appId: "1:584686051923:web:3aad37de33ccc43dfa1ca6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById("requestForm");
+  const confirmation = document.getElementById("confirmation");
+
+  const requiredFields = ["first", "last", "email", "phone", "governorate", "city", "details"];
+
+  // إضافة أحداث blur وinput لتلوين الحقول الفارغة باللون الأحمر
+  requiredFields.forEach((id) => {
+    const input = document.getElementById(id);
+
+    // عند مغادرة الحقل
+    input.addEventListener("blur", () => {
+      if (!input.value.trim()) {
+        input.classList.add("error");
+      } else {
+        input.classList.remove("error");
+      }
+    });
+
+    // عند الكتابة داخل الحقل
+    input.addEventListener("input", () => {
+      if (input.value.trim()) {
+        input.classList.remove("error");
+      }
+    });
+  });
+
+  // عند إرسال النموذج
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    let hasError = false;
+
+    // التحقق من الحقول الفارغة
+    requiredFields.forEach((id) => {
+      const input = document.getElementById(id);
+      if (!input.value.trim()) {
+        input.classList.add("error");
+        hasError = true;
+      } else {
+        input.classList.remove("error");
+      }
+    });
+
+    // التحقق من اختيار الخدمات
+    const selectedServices = Array.from(document.querySelectorAll("input[name='service']:checked"))
+      .map((checkbox) => checkbox.value);
+
+    if (selectedServices.length === 0) {
+      alert("يرجى اختيار نوع الخدمة المطلوبة.");
+      hasError = true;
+    }
+
+    // إذا كان هناك أخطاء، لا يتم الإرسال
+    if (hasError) {
+      alert("يرجى ملء جميع الحقول المطلوبة.");
+      return;
+    }
+
+    // جمع البيانات بعد التحقق
+    const first = document.getElementById("first").value.trim();
+    const last = document.getElementById("last").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const governorate = document.getElementById("governorate").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const details = document.getElementById("details").value.trim();
+
+    // إرسال البيانات إلى Firebase
+    try {
+      await addDoc(collection(db, "techar"), {
+        first,
+        last,
+        email,
+        phone,
+        governorate,
+        city,
+        details,
+        services: selectedServices,
+        createdAt: new Date()
+      });
+
+      form.style.display = "none";
+      confirmation.style.display = "block";
+    } catch (error) {
+      alert("حدث خطأ أثناء إرسال الطلب: " + error.message);
+    }
+  });
+</script>
+
+
+</body>
+</html>
