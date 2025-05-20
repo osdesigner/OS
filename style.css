@@ -189,10 +189,11 @@ button {
     color: #fff;
     font-size: 16px;
     font-style: bold
+    
 }
 
 .nav a:hover {
-    color: #8b8b8b
+    color: #e0e0e0
 }
 
 .menu-icon {
@@ -900,7 +901,7 @@ flex-direction: column;
             color: white;
             border: none;
             padding: 12px 30px;
-            border-radius: 20px;
+            border-radius: 25px;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -926,7 +927,7 @@ flex-direction: column;
             width: 100%;
         }
         .text-under-button p{
-            font-size: 19px;
+            font-size: 18px;
         }
         
 
@@ -965,7 +966,9 @@ flex-direction: column;
             .button-with-text {
                 align-items: center;
             }
-            
+              .text-under-button p{
+            font-size: 15px;
+        }
             .custom-button {
                 align-self: center;
             }
