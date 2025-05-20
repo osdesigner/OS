@@ -45,14 +45,14 @@
     padding: 7px 20px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     width: 100%;
     top: 0;
     z-index: 1000;
 }
 .logo {
-    margin-right: 10px;
-    height: 25px; /* ارتفاع الصورة */
+    margin: 10px;
+    align-items: center;
+    height: 40px; /* ارتفاع الصورة */
 }
 
 .nav {
@@ -62,36 +62,20 @@
 .nav a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 15px;
+    font-size: 40px;
     font-style: bold;
-}
-.menu-icon {
-    color: rgb(104, 104, 104);
-    display: none;
-    font-size: 24px;
-    cursor: pointer;
-    animation: move 2s ;
 }
 
 @media (max-width: 834px) {
     .nav {
-        display: none;
-        flex-direction: column;
-        background-color: #505050;
-        position: absolute;
-        top: 40px; /* علشان نبعد القائمة عن الهدر */
+        display: flex;
         right: 0;
-        width: 100%;
-        padding: 20px;
-        text-align: right; /* علشان نركز النص في شاشة الهاتف */
-   height: 100vh;
+        text-align: left; /* علشان نركز النص في شاشة الهاتف */
         overflow-y: auto;
         z-index: 1000;
     }
   
-    .nav.active {
-        display: flex;
-    }
+
     .menu-icon {
         display: block;
                 color: #ffffff;
@@ -99,13 +83,18 @@
     }
 }
 /* التعديل الجديد علشان الكلام يظهر في نص الشاشة */
-@media (min-width: 834px) {
+@media (max-width: 834px) {
     .header {
         justify-content: center; /* علشان نركز العناصر في المنتصف */
     }
     .nav {
         margin-right: 20px; /* علشان نبعد القائمة عن اللوجو */
     }
+    .nav a {
+    font-size: 30px;
+    margin: 10px 130px 10px 0 ;
+}
+
 }
 
 

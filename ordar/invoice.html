@@ -177,7 +177,6 @@
   <div class="invoice-container">
     <div class="invoice-header">
       <h1>فاتورة الطلب</h1>
-      <h2 id="order-id">رقم الفاتورة: ...</h2>
     </div>
     
     <div class="info-section">
@@ -227,7 +226,6 @@
     // استخراج رقم الطلب من الرابط
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get("id");
-    document.getElementById("order-id").textContent = `رقم الفاتورة: ${orderId}`;
 
     async function loadInvoice() {
       try {

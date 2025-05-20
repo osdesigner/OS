@@ -14,21 +14,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script>
-    function toggleNav() {
-    const nav = document.getElementById("nav");
-    const header2 = document.querySelector(".header2");
-
-    nav.classList.toggle("active");
-
-    if (nav.classList.contains("active")) {
-        header2.style.marginTop = "100vh"; // اجعل `header2` ينزل أسفل القائمة
-    } else {
-        header2.style.marginTop = "0px"; // أعد `header2` لمكانه الطبيعي عند إغلاق القائمة
-    }
-}
-
-
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const columns = document.querySelectorAll(".footer-column h4");
@@ -48,16 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
 <div class="header">
         <a href="https://os-desin.vercel.app"> <img src="logo.png" alt="لوجو الموقع" class="logo"> </a><!-- هنا ضع رابط الصورة -->
         <div class="nav" id="nav">
-           <a href="https://os-desin.vercel.app/logo/logo.html">logo</a>
-            <a href="https://os-desin.vercel.app/Social-media/Social-media.html">أعلانات</a>
-            <a href="https://os-desin.vercel.app/panar/panar.html">بنر و يفط</a>
-            <a href="https://os-desin.vercel.app/logo-Teshrt/t-shert.html">لوجو علي تيشرت</a>
-            <a href="https://os-desin.vercel.app/pepar/pepar.html">خدمات الورقيه</a>
-            <a href="https://os-desin.vercel.app/support/support.html">الدعم</a>
+          <a href="">checkout</a>
         </div> 
-            <!-- أيقونة السلة في الهيدر -->
-
-    <div class="menu-icon" onclick="toggleNav()">☰</div>
 </div>
 
 
@@ -351,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // حفظ البيانات المؤقتة
   const formFields = [
     "first-name", "last-name", "email", "phone", "address",
-    "city", "zip", "shipping-method", "shipping-ctey", "notes"
+    "city","notes"
   ];
 
   function setupFormListeners() {
@@ -397,8 +374,9 @@ document.addEventListener("DOMContentLoaded", function () {
   async function sendOrderToFirestore(data) {
     try {
       const docRef = await addDoc(collection(db, "orders"), data);
-      alert(`تم إرسال الطلب بنجاح! رقم الطلب: ${docRef.id}`);
-      localStorage.clear();
+      alert(`تم إرسال الطلب بنجاح دخول صفحه الفاتور`);
+      // إعادة توجيه المستخدم إلى صفحة الفاتورة
+      localStorage.removeItem("cart");
       window.location.href = `invoice.html?id=${docRef.id}`;
     } catch (err) {
       alert("فشل في إرسال الطلب إلى قاعدة البيانات");

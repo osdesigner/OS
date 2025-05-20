@@ -35,6 +35,8 @@ body{
 }
 
 .header {
+        background-color: #3f3f3f7e;
+
     color: white;
     padding: 7px 20px;
     display: flex;
