@@ -5,9 +5,9 @@ function toggleNav() {
     nav.classList.toggle("active");
 
     if (nav.classList.contains("active")) {
-        header2.style.marginTop = "100vh"; // اجعل `header2` ينزل أسفل القائمة
+        header.style.marginTop = "100vh"; // اجعل `header2` ينزل أسفل القائمة
     } else {
-        header2.style.marginTop = "0px"; // أعد `header2` لمكانه الطبيعي عند إغلاق القائمة
+        header.style.marginTop = "0px"; // أعد `header2` لمكانه الطبيعي عند إغلاق القائمة
     }
 }
 

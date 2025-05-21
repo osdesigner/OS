@@ -40,7 +40,7 @@ body {
         font-size: 22px;
         cursor: pointer;
         vertical-align: middle;
-        z-index: 1100;
+        z-index: 100;
     }
     .cart-count {
         position: absolute;
@@ -114,7 +114,7 @@ body {
 
 .header,
 .nav {
-    display: flex
+    display: flex;
 }
 
 .progct1 p,
@@ -162,7 +162,7 @@ button {
 }
 
 .header {
-    background-color: #3f3f3f7e;
+    background-color: #3f3f3fcb;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(5px);
     color: #fff;
@@ -208,22 +208,25 @@ button {
     .nav {
         display: none;
         flex-direction: column;
-        background-color: #5f5f5f;
-        backdrop-filter: blur(30px);
-        -webkit-backdrop-filter: blur(30px);
+        background-color: #272727;
         position: absolute;
-        top: 40px;
+        top: 45px;
         right: 0;
         width: 100%;
         padding: 30px;
         text-align: right;
-        height: 100vh;
-        font-size: 50px;
+        height: 550px;
+        z-index: 2000;
+        overflow-y:auto ;
     }
 
     .nav.active {
-        display: flex
+        display: flex;
     }
+
+    .nav a {
+    font-size: 20px;
+}
 
     .menu-icon {
         display: block
@@ -240,50 +243,10 @@ button {
     }
 
     .nav {
-        margin-right: 20px
+        margin-right: 25px
     }
 }
 
-.p-top {
-    font-size: 19px;
-    margin-top: 56px;
-    color: #414141;
-    text-align: center;
-    padding: 10px 0;
-    animation: 1.8s linear forwards changeColor
-}
-
-@keyframes changeColor {
-
-    0%,
-    50% {
-        background-color: #00b7ff
-    }
-
-    100% {
-        background-color: transparent
-    }
-}
-
-.p-top a {
-    color: #1f53ff
-}
-
-.p-top a:hover {
-    color: #1f53ff;
-    text-decoration: underline
-}
-
-.header+.p-top {
-    margin-top: 43px
-}
-
-@media (max-width:800px) {
-    .p-top {
-        margin-top: 48px;
-        font-size: 14px
-    }
-}
 
 
 
@@ -366,16 +329,6 @@ button {
 }
 
 @media (max-width:1200px) {
-    .sher {
-        padding: 15px 20px;
-        text-align: center;
-        border-radius: 0;
-        margin: 5px 0
-    }
-
-    .sher h2 {
-        font-size: 16px
-    }
     .progct1 img {
         max-width: 29%;
         margin: 5px;
