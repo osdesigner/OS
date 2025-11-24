@@ -26,6 +26,25 @@ header{
   padding: 10px 0;
 }
 
+.header-blur {
+  width: 100%;
+  height: 40px; 
+  opacity: 80%;
+  background: linear-gradient(
+    to right,
+    #009dff,
+    #00aeff,
+    #ff9900,
+    #ff3c00
+  );
+  filter: blur(15px);
+  top: 0;
+  left: 0;
+  pointer-events: none; /* عشان ميتضغطش عليه */
+  z-index: -1; /* تحت الهيدر */
+}
+
+
 .logo{
   display: block;
   width: 30px;
@@ -60,6 +79,9 @@ header a:hover{
   }
   .logo{
     margin: 0 ;
+  }
+  .header-blur{
+    height: 20px;
   }
 }
 
