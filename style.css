@@ -62,3 +62,115 @@ header a:hover{
     margin: 0 ;
   }
 }
+
+/* الحاوية العامة */
+.slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+/* الخط اللي فيه الكروت */
+.slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 10px;
+  scroll-snap-type: x mandatory;
+}
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+/* الكروت الأساسية */
+.card {
+  min-width: 260px;
+  height: 480px;
+  background: #fff;
+  border-radius: 25px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  align-items: flex-start;
+  cursor: pointer;
+  color: deepskyblue;
+  text-decoration: none;
+  scroll-snap-align: center;
+}
+
+/* كارت أول */
+.card.one {
+  margin-right: 40px;
+}
+
+/* كارت أخير */
+.card.end {
+  margin-left: 40px;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: deepskyblue;
+}
+
+.tex-prodactes{
+  padding: 0 20px;
+}
+
+/* الأسهم */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  padding: 12px 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  z-index: 30;      /* أعلى من كل حاجة */
+}
+.arrow svg {
+  width: 25px;
+  height: 25px;
+  fill: black;
+}
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
+.arrow:hover {
+  background: #eee;
+}
+
+/* صور وباقي عناصر الكارت */
+.card img {
+  width: 100%;
+  border-radius: 15px 15px 0 0;
+}
+
+
+
+.card h2 {
+  font-size: 15px;
+  margin: 10px 0;
+  color: #000;
+  text-align: right;
+  width: 100%;
+}
+
+.card p {
+  font-size: 12px;
+  margin: 10px 0;
+  color: #353535;
+  font-weight: 500;
+  text-align: right;
+  max-width: 250px;
+}
+
+.card h3 {
+  color: #b64400;
+  font-size: 14px;
+  margin: 10px 0 0 0;
+  font-weight: 400;
+}

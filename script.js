@@ -1,41 +1,25 @@
-// Firebase imports
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+const slider = document.getElementById("slider");
 
-// Your Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
-  authDomain: "stor-121.firebaseapp.com",
-  projectId: "stor-121",
-  storageBucket: "stor-121.firebasestorage.app",
-  messagingSenderId: "944316047610",
-  appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
-  measurementId: "G-F4JBRJKR1R"
+
+
+// موبايل Touch
+slider.addEventListener("touchstart", (e) => {
+  isDown = true;
+  startX = e.touches[0].pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
+});
+slider.addEventListener("touchend", () => { isDown = false; });
+slider.addEventListener("touchmove", (e) => {
+  if (!isDown) return;
+  const x = e.touches[0].pageX - slider.offsetLeft;
+  const walk = (x - startX) * 2;
+  slider.scrollLeft = scrollLeft - walk;
+});
+
+// الأسهم يمين / شمال
+document.querySelector(".right").onclick = () => {
+  slider.scrollLeft += 200;
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Fetch products
-async function loadProducts() {
-  const slider = document.getElementById("products-slider");
-  slider.innerHTML = "";
-
-  const querySnapshot = await getDocs(collection(db, "products"));
-
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-
-    slider.innerHTML += `
-      <div class="product-card">
-        <img src="${data.images[0]}" />
-        <h3>${data.title}</h3>
-        <p>${data.description}</p>
-        <div class="price">${data.price} جنيه</div>
-      </div>
-    `;
-  });
-}
-
-loadProducts();
+document.querySelector(".left").onclick = () => {
+  slider.scrollLeft -= 200;
+};
