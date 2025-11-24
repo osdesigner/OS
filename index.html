@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>OS-brand</title>
+<title>OS-brand phone</title>
 
 <!-- Basic SEO -->
 <meta name="description" content="اكتشف عالم OS المبتكر – متجر شامل للهواتف المحمولة والاكسسوارات الأصلية بأفضل سعر في مصر.">
@@ -51,83 +51,20 @@
 
 </head>
 <body>
-    <div class="hed">
-        <div class="contact">
-        <a href="tel:01144898934" >
-          <i class="fa-solid fa-phone" style="color:#1f1f1f; margin: 0 0 0 5px;"></i>
-          اتصل بنا للمساعده
-        </a>
-        <a href="https://wa.me/201144898934" >
-          <i class="fa-brands fa-whatsapp" style="color:#00c763; margin: 0 0 0 5px;"></i>
-          تواصل واتساب
-        </a>
-        </div>
-        <div class="logo">
-            <a href=""><img src="OS.png" ></a>
-        </div>   
-    </div>
 
+<header>
+  <div class="a-header">
+   <a href="">هواتف</a>
+   <a href="">اكسسوارات</a>
+   <a href="">ايربودز</a>
+  </div>
+  
+    <img src="https://os-br.pages.dev/icone.png" class="logo">
 
-    <header>
-        <a href="">
-            <img src="store-card-13-accessories-nav-202509.png" class="logo-header" > اكسسوارات 
-        </a>
-
-        <a href="">
-            <img src="store-card-13-iphone-nav-202509.png" class="logo-header" > هواتف 
-        </a>
-
-    </header>
-
-    <div class="products-slider" id="products-slider"></div>
-
-
+</header>
 
     <script src="script.js"></script>
-    <script>
-        // Firebase imports
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-
-// Your Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
-  authDomain: "stor-121.firebaseapp.com",
-  projectId: "stor-121",
-  storageBucket: "stor-121.firebasestorage.app",
-  messagingSenderId: "944316047610",
-  appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
-  measurementId: "G-F4JBRJKR1R"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Fetch products
-async function loadProducts() {
-  const slider = document.getElementById("products-slider");
-  slider.innerHTML = "";
-
-  const querySnapshot = await getDocs(collection(db, "products"));
-
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-
-    slider.innerHTML += `
-      <div class="product-card">
-        <img src="${data.images[0]}" />
-        <h3>${data.title}</h3>
-        <p>${data.description}</p>
-        <div class="price">${data.price} جنيه</div>
-      </div>
-    `;
-  });
-}
-
-loadProducts();
-
-    </script>
+   
 </body>
 
 </html>
