@@ -1,7 +1,5 @@
 const slider = document.getElementById("slider");
 
-
-
 // موبايل Touch
 slider.addEventListener("touchstart", (e) => {
   isDown = true;
@@ -23,3 +21,28 @@ document.querySelector(".right").onclick = () => {
 document.querySelector(".left").onclick = () => {
   slider.scrollLeft -= 200;
 };
+
+
+document.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("click", function (e) {
+        e.preventDefault(); // منع الانتقال
+
+        let product = {
+            id: this.dataset.id,
+            name: this.dataset.name,
+            img: this.dataset.img,
+            price: this.dataset.price
+        };
+
+        // قراءة السلة القديمة
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // إضافة المنتج
+        cart.push(product);
+
+        // حفظ السلة
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        alert("تمت إضافة المنتج إلى السلة!");
+    });
+});
