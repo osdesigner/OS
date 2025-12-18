@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختر محافظتك - مصر</title>
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+        font-family: "Zain", sans-serif;
+
+}
+        
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.4;
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+        
+        /* الهيدر */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #d2d2d7;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-size: 21px;
+            font-weight: 600;
+            color: #1d1d1f;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo svg {
+            margin-left: 8px;
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 48px 22px 0;
+        }
+        
+        .page-title {
+            font-size: 40px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            font-size: 21px;
+            font-weight: 400;
+            margin-bottom: 48px;
+            text-align: center;
+            color: #86868b;
+        }
+        
+        /* شبكة المحافظات */
+        .regions-container {
+            margin-bottom: 60px;
+        }
+        
+        .region-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #d2d2d7;
+            color: #1d1d1f;
+        }
+        
+        .governorates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1px;
+            background-color: #d2d2d7;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+        
+        .governorate-item {
+            background-color: #fff;
+            padding: 18px 20px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .governorate-item:hover {
+            background-color: #f5f5f7;
+        }
+        
+        .governorate-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .governorate-name-en {
+            font-size: 14px;
+            color: #86868b;
+        }
+        
+        /* الفوتر */
+        .footer {
+            background-color: #f5f5f7;
+            padding: 20px 22px;
+            border-top: 1px solid #d2d2d7;
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        .footer-links {
+            max-width: 980px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .footer-column h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 6px;
+        }
+        
+        .footer-column a {
+            color: #515154;
+            text-decoration: none;
+        }
+        
+        .footer-column a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            max-width: 980px;
+            margin: 0 auto;
+            padding-top: 16px;
+            border-top: 1px solid #d2d2d7;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .locale-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .locale-selector select {
+            background: transparent;
+            border: none;
+            color: #515154;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        
+        .copyright {
+            font-size: 12px;
+            color: #86868b;
+        }
+        
+        /* التأكيد عند النقر */
+        .confirmation-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            z-index: 100;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .confirmation-message h3 {
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+        
+        .confirmation-message p {
+            margin-bottom: 20px;
+            color: #515154;
+        }
+        
+        .confirmation-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .confirm-btn, .cancel-btn {
+            padding: 8px 20px;
+            border-radius: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .confirm-btn {
+            background-color: #007AFF;
+            color: white;
+        }
+        
+        .cancel-btn {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+        }
+        
+        /* التجاوب */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 32px;
+            }
+            
+            .page-subtitle {
+                font-size: 18px;
+            }
+            
+            .governorates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 28px;
+            }
+            
+            .region-title {
+                font-size: 24px;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الهيدر -->
+    <header class="header">
+        <a href="#" class="logo">
+           <img src="https://os-br.pages.dev/icone.png" style="width: 30px; margin: 0 20px;">
+            مصر
+        </a>
+    </header>
+    
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <h1 class="page-title">اختر محافظتك</h1>
+        <p class="page-subtitle">اختر محافظتك للحصول على تجربة مخصصة لمنطقتك.</p>
+        
+        <!-- محافظات الوجه البحري -->
+        <div class="regions-container">
+            <h2 class="region-title">محافظات الوجه البحري</h2>
+            <div class="governorates-grid" id="northern-governorates">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </div>
+        
+        <!-- محافظات الوجه القبلي -->
+        <div class="regions-container">
+            <h2 class="region-title">محافظات الوجه القبلي</h2>
+            <div class="governorates-grid" id="southern-governorates">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </div>
+        
+        <!-- محافظات القاهرة الكبرى والصحراء -->
+        <div class="regions-container">
+            <h2 class="region-title">القاهرة الكبرى والصحراء</h2>
+            <div class="governorates-grid" id="greater-cairo-governorates">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </div>
+        
+        <!-- محافظات القناة -->
+        <div class="regions-container">
+            <h2 class="region-title">محافظات قناة السويس</h2>
+            <div class="governorates-grid" id="canal-governorates">
+                <!-- سيتم ملؤها بواسطة JavaScript -->
+            </div>
+        </div>
+    </main>
+    
+    <!-- الفوتر -->
+    <footer class="footer">
+       
+        <div class="footer-bottom">
+            <div class="locale-selector">
+                <select id="language-select">
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                </select>
+                <span>|</span>
+                <span id="current-governorate">لم يتم اختيار محافظة بعد</span>
+            </div>
+            
+            <div class="copyright">
+                حقوق النشر © 2026  OS. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- نافذة التأكيد -->
+    <div class="overlay" id="overlay"></div>
+    <div class="confirmation-message" id="confirmation-message">
+        <h3 id="selected-governorate-name">القاهرة</h3>
+        <p>سيتم حفظ هذا الاختيار وتوجيهك إلى الرابط المخصص لمحافظتك.</p>
+        <div class="confirmation-buttons">
+            <button class="confirm-btn" id="confirm-btn">تأكيد</button>
+            <button class="cancel-btn" id="cancel-btn">إلغاء</button>
+        </div>
+    </div>
+    
+    <script>
+        // بيانات المحافظات المصرية
+        const governorates = {
+            "northern": [
+                { name: "الإسكندرية", nameEn: "Alexandria", code: "ALX" },
+                { name: "البحيرة", nameEn: "Beheira", code: "BH" },
+                { name: "كفر الشيخ", nameEn: "Kafr El Sheikh", code: "KFS" },
+                { name: "الدقهلية", nameEn: "Dakahlia", code: "DK" },
+                { name: "دمياط", nameEn: "Damietta", code: "DT" },
+                { name: "الغربية", nameEn: "Gharbia", code: "GH" },
+                { name: "المنوفية", nameEn: "Monufia", code: "MNF" },
+                { name: "القليوبية", nameEn: "Qalyubia", code: "KB" }
+            ],
+            "southern": [
+                { name: "أسوان", nameEn: "Aswan", code: "ASN" },
+                { name: "الأقصر", nameEn: "Luxor", code: "LX" },
+                { name: "قنا", nameEn: "Qena", code: "KN" },
+                { name: "سوهاج", nameEn: "Sohag", code: "SHG" },
+                { name: "أسيوط", nameEn: "Asyut", code: "AST" },
+                { name: "المنيا", nameEn: "Minya", code: "MN" },
+                { name: "بنى سويف", nameEn: "Beni Suef", code: "BNS" },
+                { name: "الفيوم", nameEn: "Faiyum", code: "FYM" }
+            ],
+            "greaterCairo": [
+                { name: "القاهرة", nameEn: "Cairo", code: "C" },
+                { name: "الجيزة", nameEn: "Giza", code: "GZ" },
+                { name: "القليوبية", nameEn: "Qalyubia", code: "KB" },
+                { name: "السادس من أكتوبر", nameEn: "6th of October", code: "SO" },
+                { name: "حلوان", nameEn: "Helwan", code: "HU" },
+                { name: "البدرشين", nameEn: "Badrashin", code: "BD" }
+            ],
+            "canal": [
+                { name: "بورسعيد", nameEn: "Port Said", code: "PTS" },
+                { name: "الإسماعيلية", nameEn: "Ismailia", code: "IS" },
+                { name: "السويس", nameEn: "Suez", code: "SUZ" },
+                { name: "شمال سيناء", nameEn: "North Sinai", code: "SIN" },
+                { name: "جنوب سيناء", nameEn: "South Sinai", code: "JS" }
+            ]
+        };
+        
+        // DOM العناصر
+        const northernGrid = document.getElementById('northern-governorates');
+        const southernGrid = document.getElementById('southern-governorates');
+        const greaterCairoGrid = document.getElementById('greater-cairo-governorates');
+        const canalGrid = document.getElementById('canal-governorates');
+        
+        const confirmationMessage = document.getElementById('confirmation-message');
+        const overlay = document.getElementById('overlay');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const selectedGovernorateName = document.getElementById('selected-governorate-name');
+        const currentGovernorateSpan = document.getElementById('current-governorate');
+        
+        // متغيرات للتخزين
+        let selectedGovernorate = null;
+        let selectedGovernorateCode = null;
+        
+        // دالة لإنشاء عناصر المحافظات
+        function createGovernorateElement(gov) {
+            const element = document.createElement('a');
+            element.href = '#';
+            element.className = 'governorate-item';
+            element.dataset.code = gov.code;
+            
+            element.innerHTML = `
+                <div class="governorate-name">${gov.name}</div>
+                <div class="governorate-name-en">${gov.nameEn}</div>
+            `;
+            
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
+                showConfirmation(gov);
+            });
+            
+            return element;
+        }
+        
+        // دالة لعرض تأكيد الاختيار
+        function showConfirmation(gov) {
+            selectedGovernorate = gov.name;
+            selectedGovernorateCode = gov.code;
+            selectedGovernorateName.textContent = gov.name;
+            
+            confirmationMessage.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+        
+        // دالة لإخفاء تأكيد الاختيار
+        function hideConfirmation() {
+            confirmationMessage.style.display = 'none';
+            overlay.style.display = 'none';
+            selectedGovernorate = null;
+            selectedGovernorateCode = null;
+        }
+        
+        // دالة لحفظ الاختيار والتوجيه
+        function saveAndRedirect() {
+            if (selectedGovernorateCode) {
+                // حفظ في localStorage
+                localStorage.setItem('selectedGovernorate', selectedGovernorate);
+                localStorage.setItem('selectedGovernorateCode', selectedGovernorateCode);
+                
+                // تحديث العرض في الفوتر
+                currentGovernorateSpan.textContent = selectedGovernorate;
+                
+                // التوجيه إلى الرابط المطلوب مع إضافة اسم المحافظة
+                window.location.href = `https://os-br.pages.dev/?gov=${selectedGovernorateCode}`;
+            }
+        }
+        
+        // تهيئة الصفحة
+        function initializePage() {
+            // ملء المحافظات
+            governorates.northern.forEach(gov => {
+                northernGrid.appendChild(createGovernorateElement(gov));
+            });
+            
+            governorates.southern.forEach(gov => {
+                southernGrid.appendChild(createGovernorateElement(gov));
+            });
+            
+            governorates.greaterCairo.forEach(gov => {
+                greaterCairoGrid.appendChild(createGovernorateElement(gov));
+            });
+            
+            governorates.canal.forEach(gov => {
+                canalGrid.appendChild(createGovernorateElement(gov));
+            });
+            
+            // التحقق مما إذا كان هناك محافظة محفوظة مسبقاً
+            const savedGovernorate = localStorage.getItem('selectedGovernorate');
+            const savedGovernorateCode = localStorage.getItem('selectedGovernorateCode');
+            
+            if (savedGovernorate) {
+                currentGovernorateSpan.textContent = savedGovernorate;
+            }
+            
+            // إضافة معالجات الأحداث للأزرار
+            confirmBtn.addEventListener('click', saveAndRedirect);
+            cancelBtn.addEventListener('click', hideConfirmation);
+            overlay.addEventListener('click', hideConfirmation);
+            
+            // معالج اختيار اللغة
+            const languageSelect = document.getElementById('language-select');
+            languageSelect.addEventListener('change', function() {
+                if (this.value === 'en') {
+                    // تغيير النصوص إلى الإنجليزية (يمكن تطوير هذا أكثر)
+                    document.querySelector('.page-title').textContent = 'Choose Your Governorate';
+                    document.querySelector('.page-subtitle').textContent = 'Select your governorate for a personalized experience.';
+                    document.querySelectorAll('.region-title')[0].textContent = 'Northern Governorates';
+                    document.querySelectorAll('.region-title')[1].textContent = 'Southern Governorates';
+                    document.querySelectorAll('.region-title')[2].textContent = 'Greater Cairo and Desert';
+                    document.querySelectorAll('.region-title')[3].textContent = 'Suez Canal Governorates';
+                } else {
+                    // العودة إلى العربية
+                    document.querySelector('.page-title').textContent = 'اختر محافظتك';
+                    document.querySelector('.page-subtitle').textContent = 'اختر محافظتك للحصول على تجربة مخصصة لمنطقتك.';
+                    document.querySelectorAll('.region-title')[0].textContent = 'محافظات الوجه البحري';
+                    document.querySelectorAll('.region-title')[1].textContent = 'محافظات الوجه القبلي';
+                    document.querySelectorAll('.region-title')[2].textContent = 'القاهرة الكبرى والصحراء';
+                    document.querySelectorAll('.region-title')[3].textContent = 'محافظات قناة السويس';
+                }
+            });
+        }
+        
+        // تشغيل التهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

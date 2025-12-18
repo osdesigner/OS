@@ -1,48 +1,77 @@
-const slider = document.getElementById("slider");
+const dropdown = document.getElementById("dropdown");
+const select = document.getElementById("country-select");
+const closeBtn = document.getElementById("close-dropdown");
 
-// موبايل Touch
-slider.addEventListener("touchstart", (e) => {
-  isDown = true;
-  startX = e.touches[0].pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
+// لو فيه بلد مخزنة قبل كده → نخفي الـ dropdown
+if (localStorage.getItem("country")) {
+  dropdown.style.display = "none";
+}
+
+// دالة اغلاق الـ dropdown (مش مخزن حاجة في اللوكل)
+function closeDropdown() {
+  dropdown.style.display = "none";
+}
+
+// تغيير النص حسب الاختيار
+select.addEventListener("change", () => {
+  const value = select.value;
+
+  if (value === "other") {
+    window.location.href = "other-country/index.html"; // نروح للصفحة التانية
+  }
 });
-slider.addEventListener("touchend", () => { isDown = false; });
-slider.addEventListener("touchmove", (e) => {
-  if (!isDown) return;
-  const x = e.touches[0].pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2;
-  slider.scrollLeft = scrollLeft - walk;
-});
 
-// الأسهم يمين / شمال
-document.querySelector(".right").onclick = () => {
-  slider.scrollLeft += 200;
-};
-document.querySelector(".left").onclick = () => {
-  slider.scrollLeft -= 200;
-};
+function continueSite() {
+  const country = select.value;
+  if (!country || country === "other") {
+    alert("اختار بلد صحيح أو اضغط Other للذهاب للصفحة التانية");
+    return;
+  }
+
+  localStorage.setItem("country", country); // نخزن البلد
+  dropdown.style.display = "none"; // نخفي الـ dropdown بعد الحفظ
+  alert("تم الحفظ!");
+}
+
+// ربط زر الإغلاق بالـ دالة
+closeBtn.addEventListener("click", closeDropdown);
 
 
-document.querySelectorAll(".card").forEach(card => {
-    card.addEventListener("click", function (e) {
-        e.preventDefault(); // منع الانتقال
 
-        let product = {
-            id: this.dataset.id,
-            name: this.dataset.name,
-            img: this.dataset.img,
-            price: this.dataset.price
-        };
 
-        // قراءة السلة القديمة
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        // إضافة المنتج
-        cart.push(product);
 
-        // حفظ السلة
-        localStorage.setItem("cart", JSON.stringify(cart));
 
-        alert("تمت إضافة المنتج إلى السلة!");
-    });
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// نجيب الوقت الحالي بالميلي ثانية
+const now = new Date().getTime();
+
+// نجيب آخر وقت زيارة مخزن
+const lastVisit = localStorage.getItem("lastVisit");
+
+// لو فيه وقت مخزن ومر عليه أكتر من 30 دقيقة → نعمل ريفرش
+if (lastVisit && now - lastVisit > 30 * 60 * 1000) { // 30 دقيقة × 60 ثانية × 1000 ملي
+  location.reload();
+}
+
+// نخزن الوقت الحالي كآخر زيارة
+localStorage.setItem("lastVisit", now);
