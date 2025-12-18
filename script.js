@@ -44,10 +44,6 @@ function continueSite() {
 }
 
 
-localStorage.removeItem("selectedGovernorateCode");
-localStorage.removeItem("country");
-
-
 
 
 
