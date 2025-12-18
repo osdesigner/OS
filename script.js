@@ -2,41 +2,50 @@ const dropdown = document.getElementById("dropdown");
 const select = document.getElementById("country-select");
 const closeBtn = document.getElementById("close-dropdown");
 
-// لو فيه بلد مخزنة قبل كده → نخفي الـ dropdown
-if (localStorage.getItem("country")) {
+// ===== إظهار / إخفاء حسب وجود محافظة =====
+const hasGovernorate =
+  localStorage.getItem("selectedGovernorateCode") ||
+  localStorage.getItem("country");
+
+if (hasGovernorate) {
   dropdown.style.display = "none";
+} else {
+  dropdown.style.display = "flex"; // أو block حسب الستايل عندك
 }
 
-// دالة اغلاق الـ dropdown (مش مخزن حاجة في اللوكل)
+// ===== إغلاق مؤقت بزر X =====
 function closeDropdown() {
   dropdown.style.display = "none";
 }
 
-// تغيير النص حسب الاختيار
+// ===== لو اختار Other =====
 select.addEventListener("change", () => {
-  const value = select.value;
-
-  if (value === "other") {
-    window.location.href = "other-country/index.html"; // نروح للصفحة التانية
+  if (select.value === "other") {
+    window.location.href = "other-country/index.html";
   }
 });
 
+// ===== حفظ الاختيار =====
 function continueSite() {
   const country = select.value;
+
   if (!country || country === "other") {
-    alert("اختار بلد صحيح أو اضغط Other للذهاب للصفحة التانية");
+    alert("اختار منطقه صحيحه");
     return;
   }
 
-  localStorage.setItem("country", country); // نخزن البلد
-  dropdown.style.display = "none"; // نخفي الـ dropdown بعد الحفظ
-  alert("تم الحفظ!");
+  // نخزن كـ محافظة
+  localStorage.setItem("selectedGovernorateCode", country);
+
+  // اختياري (لو محتاج country)
+  localStorage.setItem("country", country);
+
+  dropdown.style.display = "none";
 }
 
-// ربط زر الإغلاق بالـ دالة
-closeBtn.addEventListener("click", closeDropdown);
 
-
+localStorage.removeItem("selectedGovernorateCode");
+localStorage.removeItem("country");
 
 
 
