@@ -89,7 +89,7 @@ header a:hover{
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 20px;
 }
 
@@ -276,7 +276,7 @@ header a:hover{
 @media (max-width: 768px) {
   .products-grid {
     grid-template-columns: 1fr;
-    padding: 50px 0;
+    padding: 0px 0;
   }
 
   .product-card {
@@ -284,14 +284,14 @@ header a:hover{
     text-align: center;
   }
 
-  .product-card img,
+
   .product-card .text {
     max-width: 100%;
   }
 
   .product-card img {
-    width: 70%;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 0px;
   }
 
 
