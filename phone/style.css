@@ -348,7 +348,7 @@ header a:hover{
 @media (max-width: 470px){
   header{
     display: flex;
-    padding: 5px;
+    padding: 10px;
     justify-content: space-around;
   }
   header a{

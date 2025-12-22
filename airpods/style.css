@@ -55,20 +55,18 @@ header a:hover{
   justify-content: space-between;
   align-items: center ;
   text-align: center;
-  background-color: #ebebebfb;
+  background-color: #000000fb;
   padding:40px 90px;
 }
 
-#introVideo {
-  width: 25%;
-  object-fit: cover;
+.img-air{
+  width: 50%;
+  border-radius: 20px;
 }
 
-
-.img-air{
-  width: 30px;
+.img-icon{
+  width: 40px;
   margin-left: 10px;
-  margin-top: 15px;
 }
 
 .hed-text-top{
@@ -80,9 +78,18 @@ header a:hover{
   gap: 15px;
 }
 .hed-img-top h3{
-  font-size: 40px;
+  font-size: 50px;
+  padding: 0px 20px;
+  border-radius: 70px;
   align-self: center;
-  color: #070707;
+  color: #000000;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.hed-img-top h4{
+  font-size: 18px;
+  color: #ffffff;
   align-items: center;
 }
 
@@ -331,6 +338,7 @@ header a:hover{
   .hed-img-top{
     flex-direction: column;
     align-items: center;
+    padding: 20px ;
   }
 
 
@@ -340,11 +348,12 @@ header a:hover{
   }
 
   .hed-img-top h3{
-    font-size: 18px;
+    font-size: 25px;
   }
 
-  .hed-img-top p{
+  .hed-img-top h4{
     font-size: 12px;
+    margin-bottom: 20px;
   }
 
 
@@ -353,7 +362,7 @@ header a:hover{
 @media (max-width: 470px){
   header{
     display: flex;
-    padding: 5px;
+    padding: 10px;
     justify-content: space-around;
   }
   header a{
@@ -361,14 +370,15 @@ header a:hover{
     margin: 0 5px;
   }
 
-  .hed-img-top{
-    padding: 10px 20px;
-  }
-  #introVideo {
-  width: 80%;
-  object-fit: cover;
+.img-icon{
+  width: 18px;
+  margin-left: 10px;
 }
-
+  
+.img-air{
+  width: 100%;
+  border-radius: 10px;  
+}
   .brand-footer {
     padding: 30px 20px;
     border-radius: 20px 20px 0 0;
