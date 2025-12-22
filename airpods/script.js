@@ -54,19 +54,6 @@ function continueSite() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // نجيب الوقت الحالي بالميلي ثانية
 const now = new Date().getTime();
 

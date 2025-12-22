@@ -30,7 +30,6 @@
 <meta name="twitter:image" content="https://os-br.pages.dev/back-os-sochal.png">
 
 <!-- PWA / Mobile App Feel -->
-<link rel="manifest" href="/manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -38,7 +37,7 @@
 <link rel="apple-touch-icon" href="/icone.png">
 
 <!-- Preload main resources (سرعة أعلى) -->
-<link rel="preload" as="image" href="back-os-sochal.png">
+<link rel="preload" as="image" href="https://os-br.pages.dev/back-os-sochal.png">
 <link rel="preload" as="style" href="style.css">
 
 <!-- CSS + Icons -->
@@ -77,7 +76,7 @@
   <div class="a-header">
  <a href="tel:01144898934">
         <i class="fa-solid fa-phone"></i>
-        01144898934
+        اتصل بنا
       </a>
 
       <a href="https://wa.me/201144898934" target="_blank">
@@ -90,13 +89,55 @@
 
 </header>
 
+<div class="hed-img-top">
+<video
+  id="introVideo"
+  src="Pinterest.mp4"
+  autoplay
+  muted
+  playsinline
+  preload="auto"
+></video>
+<script>
+const video = document.getElementById("introVideo");
 
-<main>
- 
+// الوقت اللي عاوز الفيديو يقف عنده (بالثواني)
+const STOP_AT = 8; // غير الرقم حسب اللي انت عاوزه
+
+video.addEventListener("timeupdate", () => {
+  if (video.currentTime >= STOP_AT) {
+    video.pause();
+    video.currentTime = STOP_AT; // يثبت على آخر فريم
+  }
+});
+</script>
+
+<div class="hed-text-top">
+  <h3> <img src="/icone.png" class="img-air">Airpods </h3>
+  <p>من ايربودز pro الي.....................</p>
+  </div>
+</div>
+
+
+
+<main class="contenar" id="contenar">
+
+<div id="products" class="products-grid"></div>
+
+
+  
 </main>
 
 
+
+
 <footer class="brand-footer">
+
+ <div class="logo-ic-fo"> <img src="/icone.png" class="logo-fo"> <svg viewBox="0 0 32 32" class="logo-ic-fo-ri" xmlns="http://www.w3.org/2000/svg">
+    <path d="m22.5597 16.9375-5.5076-5.5c-.5854-.5854-1.5323-.5825-2.1157.0039-.5835.5869-.5815 1.5366.0039 2.1211l4.4438 4.4375-4.4438 4.4375c-.5854.5845-.5874 1.5342-.0039 2.1211.2922.2944.676.4414 1.0598.4414.3818 0 .7637-.1455 1.0559-.4375l5.5076-5.5c.2815-.2812.4403-.6636.4403-1.0625s-.1588-.7812-.4403-1.0625z"/>
+  </svg><p> ايربودز </p> </div>
+  
+  
 
   <p class="footer-note">
     نقوم بتحديد موقعك التقريبي اعتمادًا على عنوان الـ IP الخاص بالإنترنت أو
@@ -168,7 +209,83 @@
 
 </footer>
 
-<script src="script.js"></script>   
+<script src="script.js" ></script>   
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  where
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+  authDomain: "stor-121.firebaseapp.com",
+  projectId: "stor-121",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🛒 Local Storage
+function addToCart(product) {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existing = cart.find(item => item.id === product.id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ ...product, qty: 1 });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("تمت الإضافة إلى السلة ✅");
+}
+
+// 📦 Load Products (phones فقط)
+async function loadProducts() {
+  const productsDiv = document.getElementById("products");
+
+  const q = query(
+    collection(db, "products"),
+    where("type", "==", "Airpods"),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+
+    productsDiv.innerHTML += `
+      <div class="product-card">
+        <img src="${data.images[0]}" alt="${data.title}">
+        <div class="product-info">
+          <h3>${data.title}</h3>
+          <p>${data.description}</p>
+          <div class="price">${data.price} جنيه</div>
+          <button onclick='addToCart({
+            id: "${doc.id}",
+            title: "${data.title}",
+            price: ${data.price},
+            image: "${data.images[0]}",
+            serial: "${data.serial}"
+          })'>إضافة إلى السلة</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+window.addToCart = addToCart;
+loadProducts();
+</script>
+
+
+
 </body>
 
 </html>
