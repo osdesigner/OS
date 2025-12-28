@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الطلب - بيانات العميل</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #f2f2f2 0%, #d6d6d6 100%);
+    color: #2c2c2c;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+header h1 {
+    font-size: 28px;
+    color: #1f1f1f;
+}
+
+header p {
+    color: #777;
+    font-size: 16px;
+}
+
+/* Wrapper */
+.checkout-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+/* Cards */
+.products-section,
+.details-section {
+    flex: 1;
+    min-width: 300px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+}
+
+/* Titles */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2a2a2a;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ededed;
+}
+
+.section-title i {
+    color: #555;
+}
+
+/* Products */
+.products-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.product-card {
+    display: flex;
+    gap: 15px;
+    padding: 18px;
+    background: #f7f7f7;
+    border-radius: 14px;
+    border: 1px solid #e0e0e0;
+    transition: .3s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.product-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.product-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.product-price {
+    font-weight: 700;
+    font-size: 18px;
+    color: #333;
+}
+
+.product-qty {
+    background: #444;
+    color: #fff;
+    padding: 4px 14px;
+    margin: 0 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* Summary */
+.order-summary {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f4f4f4;
+    border-radius: 14px;
+    border: 1px dashed #bbb;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.summary-row.total {
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 50px 16px 16px;
+    border-radius: 12px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    transition: .3s;
+}
+
+.form-input:focus {
+    border-color: #555;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+    outline: none;
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+/* Buttons */
+.submit-btn {
+    width: 100%;
+    padding: 20px;
+    border-radius: 14px;
+    border: none;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(to right, #444, #1f1f1f);
+    transition: .3s;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 22px rgba(0,0,0,0.25);
+}
+
+/* Google */
+.google-btn {
+    width: 100%;
+    padding: 16px;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.google-btn:hover {
+    background: #f4f4f4;
+    border-color: #444;
+}
+
+/* User */
+.user-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid #444;
+    display: block;
+    margin: auto;
+}
+
+.user-info {
+    text-align: center;
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .checkout-wrapper {
+        flex-direction: column;
+    }
+
+    .product-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .product-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+
+.location-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                0 2px 8px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 400px;
+    width: 90%;
+}
+
+.location-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.location-toast.success {
+    background: linear-gradient(135deg, #1a5c36 0%, #0d3b1f 100%);
+    border-left: 4px solid #4ade80;
+}
+
+.location-toast.error {
+    background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+    border-left: 4px solid #ef4444;
+}
+
+.location-toast.info {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-left: 4px solid #3b82f6;
+}
+
+.location-toast .toast-icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.location-toast .toast-content {
+    flex: 1;
+    line-height: 1.5;
+}
+
+.location-toast .toast-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.location-toast .toast-button {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.location-toast .toast-button.allow {
+    background: #4ade80;
+    color: #052e16;
+}
+
+.location-toast .toast-button.deny {
+    background: #ef4444;
+    color: white;
+}
+
+.location-toast .toast-button.neutral {
+    background: #3b82f6;
+    color: white;
+}
+
+.location-toast .toast-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-user-circle"></i> بيانات العميل</h1>
+            <p>أكمل بياناتك الشخصية لمتابعة الطلب</p>
+        </header>
+        
+        <div class="checkout-wrapper">
+
+           <!-- قسم البيانات (على اليمين) -->
+            <section class="details-section">
+                <div class="section-title">
+                    <i class="fas fa-user-circle"></i>
+                    <h2>بيانات المستخدم</h2>
+                </div>
+                
+                <!-- قسم تسجيل الدخول -->
+                <div class="login-section" id="login-section">
+                    <div id="user-display" style="display: none;">
+                        <img id="userPhoto" class="user-avatar">
+                        <div class="user-info" style="display: none;">
+                            <div class="user-name" id="user-name"></div>
+                            <div class="user-email" id="user-email"></div>
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="google-btn" id="google-login-btn">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20">
+                        <span id="login-text">تسجيل الدخول باستخدام Google</span>
+                    </button>
+                </div>
+                
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label class="form-label field-required">الاسم الأول</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-user"></i>
+                            <input type="text" id="firstName" class="form-input" placeholder="أدخل اسمك الأول" required>
+                        </div>
+                    </div>
+                    
+                   
+                    
+                    <div class="form-group">
+                        <label class="form-label field-required">رقم الهاتف</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-phone"></i>
+                            <input type="tel" id="phone" class="form-input" placeholder="مثال: 01234567890" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label field-required">البريد الإلكتروني</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-envelope"></i>
+                            <input type="email" id="email" class="form-input" placeholder="example@email.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label field-required">العنوان</label>
+                        <div class="input-with-icon">
+                            <i class="input-icon fas fa-map-marker-alt"></i>
+                            <input type="text" id="address" class="form-input" placeholder="شارع، مدينة، منطقة" required>
+                        </div>
+                    </div>
+                    
+                    <div id="location-toast" class="location-toast">
+    <i class="fas fa-map-marker-alt"></i>
+    <span>يتم التحقق من الموقع…</span>
+</div>
+
+                    
+                    <!-- قسم البروموكود -->
+                    <div class="promo-section">
+                        <div class="promo-title">
+                            <i class="fas fa-tag"></i>
+                            <h3>هل لديك كود خصم؟</h3>
+                        </div>
+                        
+                        <div class="promo-input-group">
+                            <input type="text" id="promoCode" class="promo-input" placeholder="أدخل كود الخصم هنا">
+                            <button type="button" class="promo-btn" id="apply-promo">تطبيق</button>
+                        </div>
+                        
+                        <p id="promo-message" style="margin-top: 10px; font-size: 14px;"></p>
+                    </div>
+                    
+                    <button type="button" class="submit-btn" id="submit-order">
+                        <i class="fas fa-check-circle"></i> متابعة الطلب
+                    </button>
+                </form>
+            </section>
+            <!-- قسم المنتجات (على اليسار) -->
+            <section class="products-section">
+                <div class="section-title">
+                    <i class="fas fa-box-open"></i>
+                    <h2>منتجاتك المختارة</h2>
+                </div>
+                
+                <div class="products-list" id="products-list">
+                    <!-- المنتجات ستظهر هنا جافاسكريبت -->
+                </div>
+                
+                <div class="order-summary">
+                    <div class="summary-row">
+                        <span>المجموع الفرعي:</span>
+                        <span id="subtotal">0 جنيه</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>الخصم:</span>
+                        <span id="discount">0 جنيه</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>المبلغ الإجمالي:</span>
+                        <span id="total">0 جنيه</span>
+                    </div>
+                </div>
+            </section>
+            
+           
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+        import { 
+            getAuth, 
+            GoogleAuthProvider, 
+            signInWithPopup,
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_ycbGn27inIzFd-hkOxJ3aHauJTlc2IE",
+            authDomain: "ordar-and-bay.firebaseapp.com",
+            projectId: "ordar-and-bay",
+            storageBucket: "ordar-and-bay.firebasestorage.app",
+            messagingSenderId: "933547150906",
+            appId: "1:933547150906:web:d4bebfb4905b318769af03"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // المتغيرات
+        let userLocation = null;
+        let currentUser = null;
+        let discount = 0;
+        let savedItems = [];
+        
+        // أكواد الخصم المتاحة
+        const promoDiscounts = {
+            "WELCOME10": 10,
+            "SAVE20": 20,
+            "SPECIAL50": 50
+        };
+
+        // تحميل المنتجات من LocalStorage
+        function loadProducts() {
+            savedItems = JSON.parse(localStorage.getItem("saved_checkout")) || [];
+            displayProducts();
+        }
+
+        // عرض المنتجات
+        function displayProducts() {
+            const productsList = document.getElementById('products-list');
+            let subtotal = 0;
+            
+            productsList.innerHTML = '';
+            
+            if (savedItems.length === 0) {
+                productsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #7f8c8d;">
+                        <i class="fas fa-shopping-cart" style="font-size: 50px; margin-bottom: 15px;"></i>
+                        <h3>لا توجد منتجات في سلة المشتريات</h3>
+                    </div>
+                `;
+                updateTotals(0, discount);
+                return;
+            }
+            
+            savedItems.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+                
+                const productElement = document.createElement('div');
+                productElement.className = 'product-card';
+                productElement.innerHTML = `
+                    <img src="${item.image || 'https://via.placeholder.com/90x90?text=No+Image'}" alt="${item.title}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">${item.title}</h3>
+                        <p style="color: #7f8c8d; margin-bottom: 8px;">السريال: ${item.serial || 'N/A'}</p>
+                        <div class="product-details">
+                            <div>
+                                <span style="font-weight: 600; color: #2c3e50;">${item.price} جنيه</span>
+                            </div>
+                            <div class="product-qty">
+                                الكمية: ${item.qty}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                productsList.appendChild(productElement);
+            });
+            
+            updateTotals(subtotal, discount);
+        }
+
+        // تحديث المجموع
+        function updateTotals(subtotal, discountAmount) {
+            const discountValue = discountAmount;
+            const total = subtotal - discountValue;
+            
+            document.getElementById('subtotal').textContent = `${subtotal.toFixed(2)} جنيه`;
+            document.getElementById('discount').textContent = `${discountValue.toFixed(2)} جنيه`;
+            document.getElementById('total').textContent = `${total.toFixed(2)} جنيه`;
+        }
+
+        // تسجيل الدخول بـ Google
+        async function loginWithGoogle() {
+            try {
+                const provider = new GoogleAuthProvider();
+                const result = await signInWithPopup(auth, provider);
+                handleUserLogin(result.user);
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("❌ فشل تسجيل الدخول. حاول مرة أخرى.");
+            }
+        }
+
+        // تسجيل الخروج
+        async function logoutUser() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
+        }
+
+        // معالجة بيانات المستخدم بعد تسجيل الدخول
+        function handleUserLogin(user) {
+            currentUser = user;
+            
+            // تحديث واجهة المستخدم
+            document.getElementById('userPhoto').src = user.photoURL || 'https://via.placeholder.com/70x70?text=User';
+            document.getElementById('user-display').style.display = 'block';
+            
+            document.getElementById('user-name').textContent = user.displayName || 'مستخدم';
+            document.getElementById('user-email').textContent = user.email;
+            
+            // ملء حقول النموذج
+            const fullName = user.displayName || "";
+            const parts = fullName.split(" ");
+            
+            document.getElementById('firstName').value = parts[0] || "";
+            document.getElementById('email').value = user.email || "";
+            
+           const btn = document.getElementById('login-text').closest('button');
+
+btn.style.opacity = "0";
+btn.style.transform = "scale(0.9)";
+btn.style.pointerEvents = "none";
+
+setTimeout(() => {
+    btn.style.display = "none";
+}, 300);
+
+            
+            // إظهار رسالة الترحيب
+            showNotification(`مرحباً ${parts[0] || 'عزيزي'}! تم تسجيل دخولك بنجاح.`);
+        }
+
+        // إعادة تعيين النموذج
+        function resetUserForm() {
+            document.getElementById('user-display').style.display = 'none';
+            
+            document.getElementById('firstName').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('phone').value = "";
+            document.getElementById('address').value = "";
+            
+            document.getElementById('login-text').textContent = "تسجيل الدخول باستخدام Google";
+            document.getElementById('google-login-btn').onclick = loginWithGoogle;
+            
+            currentUser = null;
+        }
+
+       document.addEventListener("DOMContentLoaded", () => {
+
+    if (!navigator.geolocation) return;
+
+    const toast = document.getElementById("location-toast");
+
+    // إظهار الإشعار
+    toast.classList.add("show");
+
+    navigator.geolocation.getCurrentPosition(
+        () => {
+            toast.classList.add("success");
+            toast.querySelector("span").textContent = "تم السماح بالوصول إلى الموقع ✔️";
+
+            setTimeout(() => toast.remove(), 2500);
+        },
+        () => {
+            toast.classList.add("error");
+            toast.querySelector("span").textContent = "تم رفض الوصول إلى الموقع ❌";
+
+            setTimeout(() => toast.remove(), 3000);
+        },
+        {
+            enableHighAccuracy: false,
+            timeout: 8000,
+            maximumAge: 0
+        }
+    );
+
+});
+
+        // تطبيق البروموكود
+        document.getElementById('apply-promo').addEventListener('click', function() {
+            const promoCode = document.getElementById('promoCode').value.trim().toUpperCase();
+            const promoMessage = document.getElementById('promo-message');
+            
+            if (!promoCode) {
+                promoMessage.textContent = "الرجاء إدخال كود الخصم";
+                promoMessage.style.color = "#e74c3c";
+                return;
+            }
+            
+            if (promoDiscounts[promoCode]) {
+                discount = promoDiscounts[promoCode];
+                promoMessage.textContent = `تم تطبيق خصم ${discount} جنيه!`;
+                promoMessage.style.color = "#27ae60";
+                
+                // إعادة حساب المجموع
+                const subtotal = savedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                updateTotals(subtotal, discount);
+            } else {
+                promoMessage.textContent = "كود الخصم غير صالح أو منتهي الصلاحية";
+                promoMessage.style.color = "#e74c3c";
+                discount = 0;
+                
+                // إعادة حساب المجموع
+                const subtotal = savedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                updateTotals(subtotal, discount);
+            }
+        });
+
+        // إرسال البيانات
+        document.getElementById('submit-order').addEventListener('click', async function() {
+            // التحقق من صحة البيانات
+            const firstName = document.getElementById('firstName').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const promoCode = document.getElementById('promoCode').value.trim();
+            
+            if (!firstName || !phone || !email || !address) {
+                alert("❌ الرجاء تعبئة جميع الحقول الإلزامية");
+                return;
+            }
+            
+            if (savedItems.length === 0) {
+                alert("❌ لا توجد منتجات في الطلب");
+                return;
+            }
+            
+            // تعطيل زر الإرسال أثناء المعالجة
+            const submitBtn = document.getElementById('submit-order');
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المعالجة...';
+            submitBtn.disabled = true;
+            
+            // حساب المجموع
+            const subtotal = savedItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const total = subtotal - discount;
+            
+            // إعداد بيانات الطلب
+            const orderData = {
+                customer: {
+                    firstName: firstName,
+                    email: email,
+                    phone: phone,
+                    address: address,
+                    uid: currentUser ? currentUser.uid : null,
+                    photoURL: currentUser ? currentUser.photoURL : null
+                },
+                promoCode: promoCode || "",
+                discount: discount,
+                subtotal: subtotal,
+                total: total,
+                location: userLocation,
+                items: savedItems,
+                status: "pending",
+                paymentStatus: "pending",
+                createdAt: serverTimestamp(),
+                source: "customer_info_page"
+            };
+            
+            try {
+                // حفظ في Firebase Firestore
+                const docRef = await addDoc(collection(db, "orders"), orderData);
+                
+                console.log("Order saved with ID:", docRef.id);
+                
+                // عرض رسالة النجاح
+                alert("🎉 تم حفظ بياناتك بنجاح! جاري توجيهك لصفحة الدفع...");
+                
+                // حفظ بيانات الطلب في LocalStorage للمراحل التالية
+                localStorage.setItem("customer_order", JSON.stringify({
+                    ...orderData,
+                    firestoreId: docRef.id,
+                    timestamp: new Date().toISOString()
+                }));
+                
+                // مسح سلة المشتريات
+                localStorage.removeItem("saved_checkout");
+                
+                // توجيه المستخدم لصفحة الدفع
+                setTimeout(() => {
+                    window.location.href = "payment.html"; // غير هذا الرابط حسب حاجتك
+                }, 1500);
+                
+            } catch (error) {
+                console.error("Error saving order:", error);
+                alert("❌ حدث خطأ أثناء حفظ البيانات. حاول مرة أخرى.");
+                
+                // إعادة تمكين الزر
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // عرض الإشعارات
+        function showNotification(message) {
+            // يمكنك استبدال هذا بنظام إشعارات أكثر تطوراً
+            alert(message);
+        }
+
+        // مراقبة حالة المصادقة
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                handleUserLogin(user);
+            } else {
+                resetUserForm();
+            }
+        });
+
+
+        class LocationToast {
+    constructor() {
+        this.toast = null;
+        this.createToast();
+    }
+
+    createToast() {
+        this.toast = document.createElement('div');
+        this.toast.className = 'location-toast';
+        this.toast.innerHTML = `
+            <div class="toast-icon">📍</div>
+            <div class="toast-content">
+                <div class="toast-message"></div>
+                <div class="toast-actions" style="display: none;">
+                    <button class="toast-button allow">✅ السماح</button>
+                    <button class="toast-button deny">❌ رفض</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(this.toast);
+        
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        const allowBtn = this.toast.querySelector('.toast-button.allow');
+        const denyBtn = this.toast.querySelector('.toast-button.deny');
+        
+        allowBtn.addEventListener('click', () => this.handleAllow());
+        denyBtn.addEventListener('click', () => this.handleDeny());
+    }
+
+    showPermissionRequest() {
+        this.show('يحتاج الموقع إلى معرفة موقعك الجغرافي', 'info', true);
+    }
+
+    show(message, type = 'info', showActions = false) {
+        const messageEl = this.toast.querySelector('.toast-message');
+        const actionsEl = this.toast.querySelector('.toast-actions');
+        
+        messageEl.textContent = message;
+        this.toast.className = 'location-toast';
+        this.toast.classList.add(type);
+        
+        if (showActions) {
+            actionsEl.style.display = 'flex';
+        } else {
+            actionsEl.style.display = 'none';
+        }
+        
+        this.toast.classList.add('show');
+        
+        if (!showActions) {
+            setTimeout(() => {
+                this.hide();
+            }, 3000);
+        }
+    }
+
+    hide() {
+        this.toast.classList.remove('show');
+    }
+
+    async handleAllow() {
+        try {
+            const position = await this.getLocation();
+            this.show('✅ تم الحصول على موقعك بنجاح!', 'success');
+            // إرسال الموقع للسيرفر أو استخدامه
+            console.log('الموقع:', position.coords);
+        } catch (error) {
+            this.show('❌ لم نتمكن من الحصول على موقعك', 'error');
+        }
+    }
+
+    handleDeny() {
+        this.show('تم رفض طلب الموقع الجغرافي', 'error');
+    }
+
+    getLocation() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error('المتصفح لا يدعم تحديد الموقع'));
+            }
+            
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            });
+        });
+    }
+
+    // دالة لبدء طلب الموقع
+    requestLocation() {
+        this.showPermissionRequest();
+    }
+}
+
+// طريقة الاستخدام:
+const locationToast = new LocationToast();
+
+// لطلب إذن الموقع:
+// locationToast.requestLocation();
+
+// لإظهار رسالة نجاح:
+// locationToast.show('تم الحفظ بنجاح', 'success');
+
+// لإظهار رسالة خطأ:
+// locationToast.show('حدث خطأ', 'error');
+
+
+        // تهيئة الصفحة عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            
+            // تحميل بيانات المستخدم إذا كان مسجلاً الدخول
+            if (auth.currentUser) {
+                handleUserLogin(auth.currentUser);
+            }
+            
+            // تحميل بيانات سابقة إذا كانت موجودة
+            const savedOrder = JSON.parse(localStorage.getItem("customer_order"));
+            if (savedOrder && savedOrder.customer) {
+                document.getElementById('firstName').value = savedOrder.customer.firstName || "";
+                document.getElementById('phone').value = savedOrder.customer.phone || "";
+                document.getElementById('email').value = savedOrder.customer.email || "";
+                document.getElementById('address').value = savedOrder.customer.address || "";
+            }
+        });
+    </script>
+</body>
+</html>
