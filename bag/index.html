@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>براند فون | OS</title>
+<title>bag</title>
 
 <!-- Basic SEO -->
 <meta name="description" content="اكتشف عالم OS المبتكر – متجر شامل للهواتف المحمولة والاكسسوارات الأصلية بأفضل سعر في مصر.">
@@ -17,7 +17,7 @@
 <meta property="og:title" content="OS Store – أقوى متجر هواتف واكسسوارات">
 <meta property="og:description" content="متجر OS يقدم أفضل موبايلات واكسسوارات أصلية بضمان وسعر منافس.">
 <meta property="og:image" content="https://os-br.pages.dev/back-os-sochal.png">
-<meta property="og:image:width" content="1200"> 
+<meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://os-br.pages.dev">
 <meta property="og:type" content="website">
@@ -25,7 +25,7 @@
 
 <!-- Twitter Cards -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="اكتشف عالم OS المبتكر – متجر شامل للهواتف المحمولة والاكسسوارات الأصلية بأفضل سعر في مصر.">
+<meta name="twitter:title" content="OS Store – أقوى متجر هواتف واكسسوارات">
 <meta name="twitter:description" content="متجر OS يقدم أفضل موبايلات واكسسوارات أصلية بضمان وسعر منافس.">
 <meta name="twitter:image" content="https://os-br.pages.dev/back-os-sochal.png">
 
@@ -38,14 +38,14 @@
 <link rel="apple-touch-icon" href="/icone.png">
 
 <!-- Preload main resources (سرعة أعلى) -->
-<link rel="preload" as="image" href="back-os-sochal.png">
+<link rel="preload" as="image" href="https://os-br.pages.dev/back-os-sochal.png">
 <link rel="preload" as="style" href="style.css">
 
 <!-- CSS + Icons -->
 <link rel="icon" href="icone.png" type="image/png">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="contanr.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <!-- Security Headers (خفيفة بدون سيرفر) -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -74,215 +74,71 @@
 
 
 <header>
-
   <div class="a-header">
-  <h1>عرض المنتجات</h1>
+
+    <!-- زر الموبايل -->
+     <button class="menu-btn" id="menuBtn" aria-label="menu">
+       <svg class="icon" width="18" height="18" viewBox="0 0 18 18">
+         <!-- خط فوق -->
+         <line class="line line1" x1="2" y1="6" x2="16" y2="6"/>
+         <!-- خط تحت -->
+         <line class="line line2" x1="2" y1="12" x2="16" y2="12"/>
+       </svg>
+     </button>
+
+
+    <a href="https://os-br.pages.dev/bag/" class="cart"> 
+      <img width="22" height="22" src="https://img.icons8.com/deco/48/shopping-bag.png">
+    </a>
+
+    <a href="#" class="cart"> 
+      <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/search--v1.png">
+    </a>
+
+    <!-- منيو الديسكتوب -->
+    <div class="a-nav">
+      <a href="https://os-br.pages.dev/phone/">هواتف</a>
+      <a href="https://os-br.pages.dev/accessories/">اكسسوارات</a>
+      <a href="https://os-br.pages.dev/haed-phons/">هيدفونز</a>
+      <a href="https://os-br.pages.dev/airpods/">ايربودز</a>
+    </div>
   </div>
 
-    <img src="https://os-br.pages.dev/icone.png" class="logo">
+  <!-- منيو الموبايل -->
+  <div class="mnu-mobile" id="mnu-mobile">
+    <a href="https://os-br.pages.dev/phone/">هواتف</a>
+    <a href="https://os-br.pages.dev/accessories/">اكسسوارات</a>
+    <a href="https://os-br.pages.dev/haed-phons/">هيدفونز</a>
+    <a href="https://os-br.pages.dev/airpods/">ايربودز</a>
+  </div>
 
+  <img src="https://os-br.pages.dev/icone.png" class="logo">
 </header>
 
 
 
-   <div class="cart-container">
-        <div class="cart-header">
 
-            <h1><i class="fa-solid fa-cart-plus"></i> سلة المشتريات</h1>
-        </div>
-        
-        <div id="message" class="message"></div>
-        
-        <div id="cartProducts"></div>
-        <div id="cartTotal"></div>
-        
-        <div class="cart-actions">
-            <button class="action-btn save-btn" id="saveCheckout">
-              <i class="fa-solid fa-basket-shopping"></i>
-            </button>
-            <button class="action-btn clear-btn" id="clearCart">
-                <i class="fa-solid fa-trash-can"></i>
- تفريغ السلة
-            </button>
+<section class="bag-show">
+    <h1>راجع حقيبتك</h1>
+    <div id="products"></div>
+    
+    <div class="total">
+    
+     <div class="cart-total">
+       الإجمالي: <span id="totalPrice">0</span> $
+     </div>
 
-        </div>
-    </div>
+     <button id="saveOrder" class="confirm-btn">
+  تأكيد الطلب
+</button>
 
-    <script>
-document.getElementById("saveCheckout").addEventListener("click", () => {
-    // جلب السلة من LocalStorage
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // لو السلة فاضية
-    if (cart.length === 0) {
-        return;
-    }
-
-    // لو فيها منتجات → روح على صفحة الشيك اوت
-    window.location.href = "py/";
-});
-</script>
+</div>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // عناصر الصفحة
-            const productsBox = document.getElementById("cartProducts");
-            const totalBox = document.getElementById("cartTotal");
-            const saveCheckoutBtn = document.getElementById("saveCheckout");
-            const clearCartBtn = document.getElementById("clearCart");
-            const messageBox = document.getElementById("message");
-            
-            // تحميل العربة من localStorage
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-            
-            // عرض الرسالة
-            function showMessage(text, type = "success") {
-                messageBox.textContent = text;
-                messageBox.className = `message ${type}`;
-                messageBox.style.display = "block";
-                
-                setTimeout(() => {
-                    messageBox.style.display = "none";
-                }, 2000);
-            }
-            
-            // تحديث عرض العربة
-            function updateCartDisplay() {
-                productsBox.innerHTML = "";
-                totalBox.innerHTML = "";
-                
-                // إذا كانت العربة فارغة
-                if (cart.length === 0) {
-                    productsBox.innerHTML = `
-                        <div class="empty-cart">
-                            <p><i class="fa-solid fa-cart-plus"></i>   سلة المشتريات فارغة</p>
-                        </div>
-                    `;
-                    
-                    totalBox.innerHTML = `
-                        <div class="cart-summary">
-                            <h2>إجمالي السلة: 0 جنيه</h2>
-                        </div>
-                    `;
-                    
-                    return;
-                }
-                
-                let total = 0;
-                
-                // عرض كل منتج في العربة
-                cart.forEach((item, index) => {
-                    const itemTotal = item.price * item.qty;
-                    total += itemTotal;
-                    
-                    const itemElement = document.createElement("div");
-                    itemElement.className = "cart-item";
-                    itemElement.innerHTML = `
-                        <div class="img-box">                    
-                        <img src="${item.image}" alt="${item.title}">
-                        </div>
-                        <div class="item-info">
-                            <h3>${item.title}</h3>
-                            <p>السعر: ${item.price} جنيه</p>
-                            <div class="item-controls">
-                                <div class="quantity-control">
-                                    <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
-                                    <span class="qty-display">${item.qty}</span>
-                                    <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
-                                </div>
-                                <button class="remove-btn" onclick="removeFromCart(${index})">حذف</button>
-                            </div>
-                            <p class="item-total">الإجمالي: ${itemTotal} جنيه</p>
-                        </div>
-                    `;
-                    
-                    productsBox.appendChild(itemElement);
-                });
-                
-                // عرض إجمالي الطلب
-                totalBox.innerHTML = `
-                    <div class="cart-summary">
-                        <div class="summary-details">
-                            <span>عدد المنتجات:</span>
-                            <span>${cart.length}</span>
-                        </div>
-                        <h2>إجمالي السلة: ${total} جنيه</h2>
-                    </div>
-                `;
-            }
-            
-            // تحديث كمية منتج
-            window.updateQuantity = function(index, change) {
-                if (cart[index]) {
-                    cart[index].qty += change;
-                    
-                    // التأكد من أن الكمية لا تقل عن 1
-                    if (cart[index].qty < 1) {
-                        cart[index].qty = 1;
-                    }
-                    
-                    // حفظ في localStorage
-                    localStorage.setItem("cart", JSON.stringify(cart));
-                    
-                    // تحديث العرض
-                    updateCartDisplay();
-                    
-                    showMessage("تم تحديث الكمية بنجاح");
-                }
-            };
-            
-            // حذف منتج من العربة
-            window.removeFromCart = function(index) {
-                if (cart[index]) {
-                    cart.splice(index, 1);
-                    
-                    // حفظ في localStorage
-                    localStorage.setItem("cart", JSON.stringify(cart));
-                    
-                    // تحديث العرض
-                    updateCartDisplay();
-                    
-                    showMessage("تم حذف المنتج من السلة", "success");
-                }
-            };
-            
-            // حفظ في الشكاوت
-            saveCheckoutBtn.addEventListener("click", () => {
-                if (cart.length === 0) {
-                    showMessage("السلة فارغة، لا يمكن حفظ الطلب", "error");
-                    return;
-                }
-                
-                // هنا يمكن إضافة منطق الحفظ في قاعدة البيانات أو إرسال الطلب
-                // لمثالنا، سنقوم فقط بحفظ في localStorage باسم مختلف
-                localStorage.setItem("saved_checkout", JSON.stringify(cart));
-                
-                showMessage("تم حفظ الطلب في الشكاوت بنجاح");
-                
-                // في التطبيق الحقيقي، قد نرسل البيانات إلى الخادم
-                // fetch('/api/save-checkout', { method: 'POST', body: JSON.stringify(cart) })
-            });
-            
-            // تفريغ السلة
-            clearCartBtn.addEventListener("click", () => {
-                if (cart.length === 0) {
-                    showMessage("السلة فارغة بالفعل", "error");
-                    return;
-                }
-                
-                if (confirm("هل أنت متأكد من تفريغ سلة المشتريات بالكامل؟")) {
-                    cart = [];
-                    localStorage.setItem("cart", JSON.stringify(cart));
-                    updateCartDisplay();
-                    showMessage("تم تفريغ سلة المشتريات بنجاح", "success");
-                }
-            });
-            
-            // التحميل الأولي للعربة
-            updateCartDisplay();
-        });
-    </script>
+</section>
+
+
+
 
 
 

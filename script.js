@@ -59,17 +59,6 @@ menuBtn.addEventListener("click", () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // نجيب الوقت الحالي بالميلي ثانية
 const now = new Date().getTime();
 
