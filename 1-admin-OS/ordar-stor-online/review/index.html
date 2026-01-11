@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تفاصيل الطلب</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+        font-family: "Zain", sans-serif;
+
+}
+  body {
+            font-family: "Zain", sans-serif;
+
+    background: #f4f6f8;
+    margin: 0;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    margin-bottom: 20px;
+    background: #ffffff;
+  }
+
+  .logo {
+    height: 50px;
+  }
+
+  .card {
+    max-width: 650px;
+    background: #ffffff;
+    margin: auto;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+  }
+
+  .title {
+    font-size: 25px;
+    font-weight: bold;
+  }
+
+  .sub {
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .section {
+    margin-top: 25px;
+  }
+
+  .section h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  table th {
+    background: #f0f2f5;
+    padding: 10px;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  .total {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0a7cff;
+  }
+
+  .info {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-size: 14px;
+  }
+
+  .status {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #888;
+    font-size: 13px;
+  }
+  @media (max-width: 700px) {
+    body{
+        padding: 0;
+    }
+    .card {
+      padding: 40px 10px;
+    }
+    header h1 {
+        font-size: 18px;
+    }
+
+      .title {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .logo {
+    height: 35px;
+  }
+  .sub {
+    font-size: 12px;
+  }
+
+  }
+</style>
+</head>
+
+<body>
+
+    <header>
+     <div class="title">تفاصيل الطلب</div>
+     <img src="https://os-br.pages.dev/icone.png" class="logo">
+    </header>   
+
+<div class="card" id="orderBox">
+  جاري تحميل الطلب...
+</div>
+
+<script type="module" src="order.js"></script>
+</body>
+</html>
