@@ -146,7 +146,7 @@ section{
 /* ===== responsive ===== */
 @media (max-width: 600px) {
   .form-section, #sendOrderBtn, #ordersContainer {
-    padding: 15px;
+    font-size: 12px;
   }
 
   .h1-top{
