@@ -22,14 +22,16 @@ const db = getFirestore(app);
 
 const box = document.getElementById("orderBox");
 
-// 🔹 جلب رقم آخر طلب من LocalStorage
-const lastOrderId = Number(localStorage.getItem("lastOrderId"));
+// 🔹 جلب رقم الفاتورة من الرابط ?id=
+const params = new URLSearchParams(window.location.search);
+const orderId = Number(params.get("id"));
 
-if (!lastOrderId) {
-  box.innerHTML = "❌ لا يوجد طلب محفوظ";
+if (!orderId) {
+  box.innerHTML = "❌ رقم الفاتورة غير موجود في الرابط";
 } else {
-  loadOrder(lastOrderId);
+  loadOrder(orderId);
 }
+
 
 async function loadOrder(orderId) {
   const q = query(
