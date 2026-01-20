@@ -91,7 +91,7 @@ bag.forEach(item => {
     <option value="10" ${item.qty>=10?'selected':''}>+10</option>
   </select>
 
-  <span class="price">$${item.price}.00</span>
+  <span class="price">$${item.sellPrice}.00</span>
 
   <!-- زر الحذف -->
   <button class="remove-btn" data-id="${item.id}">حذف</button>

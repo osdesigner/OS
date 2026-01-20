@@ -522,10 +522,16 @@
           <textarea id="description" placeholder="أدخل وصف المنتج"></textarea>
         </div>
 
-        <div class="input-group">
-          <label>السعر (بالجنيه)</label>
-          <input type="number" id="price" placeholder="أدخل السعر">
-        </div>
+       <div class="input-group">
+  <label>سعر الشراء </label>
+  <input type="number" id="buyPrice" placeholder="سعر شراء المنتج">
+</div>
+
+<div class="input-group">
+  <label>سعر البيع </label>
+  <input type="number" id="sellPrice" placeholder="سعر البيع للعميل">
+</div>
+
 
         <div class="input-group">
           <label>النوع</label>
@@ -726,7 +732,8 @@
       try {
         const title = document.getElementById("title").value;
         const description = document.getElementById("description").value;
-        const price = document.getElementById("price").value;
+        const buyPrice = document.getElementById("buyPrice").value;
+        const sellPrice = document.getElementById("sellPrice").value;
         const type = document.getElementById("type").value;
         const quantity = document.getElementById("quantity").value;
         const serial = document.getElementById("serial").value;
@@ -735,21 +742,24 @@
           .map(input => input.value.trim())
           .filter(v => v !== "");
 
-        if (!title || !description || !price || !quantity || !serial) {
+        if (!title || !description || !buyPrice || !sellPrice || !quantity || !serial) {
           showAlert('error', 'برجاء ملء جميع الحقول المطلوبة');
           return;
         }
+
 
         await addDoc(collection(db, "products"), {
           title,
           description,
           images,
-          price: parseFloat(price),
+          buyPrice: parseFloat(buyPrice),   // ✅ سعر الشراء
+          sellPrice: parseFloat(sellPrice), // ✅ سعر البيع
           quantity: parseInt(quantity),
           serial,
           type,
           createdAt: new Date()
         });
+
 
         showAlert('success', 'تم حفظ المنتج بنجاح ✔');
         clearForm();
@@ -814,7 +824,13 @@
             <div class="product-info">
               <h3 class="product-title">${product.title}</h3>
               <p class="product-description">${product.description}</p>
-              <div class="product-price">${product.price} جنيه</div>
+              <div class="product-price">
+                سعر البيع: ${product.sellPrice} جنيه
+              </div>
+              <p style="font-size:13px;color:#777">
+                سعر الشراء: ${product.buyPrice} جنيه
+              </p>
+
               <p class="product-quantity">الكمية: ${product.quantity}</p>
                <p class="product-serial">السيريال: ${product.serial}</p>
                <span class="product-type">${product.type}</span>
@@ -851,11 +867,11 @@
           // Fill form with existing data
           document.getElementById('edit-title').value = product.title || '';
           document.getElementById('edit-description').value = product.description || '';
-          document.getElementById('edit-price').value = product.price || '';
+          document.getElementById('edit-buyPrice').value = product.buyPrice || 0;
+          document.getElementById('edit-sellPrice').value = product.sellPrice || 0;
           document.getElementById('edit-type').value = product.type || 'phones';
           document.getElementById('edit-quantity').value = product.quantity || 0;
           document.getElementById('edit-serial').value = product.serial || '';
-
           
           // Store current images
           currentProductImages = product.images || [];
@@ -925,12 +941,13 @@
       try {
         const title = document.getElementById("edit-title").value;
         const description = document.getElementById("edit-description").value;
-        const price = document.getElementById("edit-price").value;
+        const buyPrice = document.getElementById("edit-buyPrice").value;
+        const sellPrice = document.getElementById("edit-sellPrice").value;
         const quantity = document.getElementById("edit-quantity").value;
         const serial = document.getElementById("edit-serial").value;
         const type = document.getElementById("edit-type").value;
         
-       if (!title || !description || !price || !quantity || !serial) {
+       if (!title || !description || !buyPrice || !sellPrice || !quantity || !serial) {
           showAlert('error', 'برجاء ملء جميع الحقول المطلوبة');
           return;
         }

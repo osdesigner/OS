@@ -45,7 +45,7 @@ orders.forEach(order => {
       <img src="${item.image}">
       <div class="item-details">
         <div>اسم المنتج: ${item.title}</div>
-        <div>السعر: ${item.price}</div>
+        <div>السعر: ${item.sellPrice}</div>
         <div>الكمية: ${item.qty}</div>
       </div>
     `;
