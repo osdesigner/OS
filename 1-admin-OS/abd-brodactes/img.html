@@ -477,249 +477,234 @@
     <i class="fas fa-check-circle"></i>
     <span id="notificationText"></span>
   </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  getDocs, 
+  query, 
+  orderBy, 
+  serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-  <script>
-    // بيانات التطبيق
-    const CLOUD_NAME = "drecaomkp";
-    const UPLOAD_PRESET = "prodactes";
-    
-    // عناصر DOM
-    const gallery = document.getElementById("gallery");
-    const imageInput = document.getElementById("imageInput");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const uploadArea = document.getElementById("uploadArea");
-    const fileInfo = document.getElementById("fileInfo");
-    const fileName = document.getElementById("fileName");
-    const fileSize = document.getElementById("fileSize");
-    const emptyState = document.getElementById("emptyState");
-    const notification = document.getElementById("notification");
-    const notificationText = document.getElementById("notificationText");
-    const sortNewest = document.getElementById("sortNewest");
-    const sortOldest = document.getElementById("sortOldest");
-    
-    // مصفوفة لتخزين الصور
-    let images = JSON.parse(localStorage.getItem('galleryImages')) || [];
-    
-    // تهيئة التطبيق
-    document.addEventListener('DOMContentLoaded', () => {
-      renderGallery();
-      
-      // إضافة مستمعي الأحداث
-      uploadArea.addEventListener('click', () => imageInput.click());
-      uploadArea.addEventListener('dragover', handleDragOver);
-      uploadArea.addEventListener('drop', handleDrop);
-      imageInput.addEventListener('change', handleFileSelect);
-      uploadBtn.addEventListener('click', uploadImage);
-      sortNewest.addEventListener('click', () => sortImages('newest'));
-      sortOldest.addEventListener('click', () => sortImages('oldest'));
+// 🟢 إعداد Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+  authDomain: "stor-121.firebaseapp.com",
+  projectId: "stor-121",
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🌐 إعداد Cloudinary
+const CLOUD_NAME = "drecaomkp";
+const UPLOAD_PRESET = "prodactes";
+
+// 🎨 عناصر الصفحة
+const gallery = document.getElementById("gallery");
+const imageInput = document.getElementById("imageInput");
+const uploadBtn = document.getElementById("uploadBtn");
+const uploadArea = document.getElementById("uploadArea");
+const fileInfo = document.getElementById("fileInfo");
+const fileName = document.getElementById("fileName");
+const fileSize = document.getElementById("fileSize");
+const emptyState = document.getElementById("emptyState");
+const notification = document.getElementById("notification");
+const notificationText = document.getElementById("notificationText");
+const sortNewest = document.getElementById("sortNewest");
+const sortOldest = document.getElementById("sortOldest");
+
+// 🟢 تهيئة الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  loadGalleryFromFirebase();
+
+  uploadArea.addEventListener("click", () => imageInput.click());
+  uploadArea.addEventListener("dragover", handleDragOver);
+  uploadArea.addEventListener("drop", handleDrop);
+  imageInput.addEventListener("change", handleFileSelect);
+  uploadBtn.addEventListener("click", uploadImage);
+  sortNewest.addEventListener("click", () => loadGalleryFromFirebase("desc"));
+  sortOldest.addEventListener("click", () => loadGalleryFromFirebase("asc"));
+});
+
+// 🖱 التعامل مع السحب والإفلات
+function handleDragOver(e) {
+  e.preventDefault();
+  uploadArea.style.borderColor = 'var(--primary)';
+  uploadArea.style.backgroundColor = '#f0f4ff';
+}
+function handleDrop(e) {
+  e.preventDefault();
+  uploadArea.style.borderColor = '#d1d5db';
+  uploadArea.style.backgroundColor = '#f9fafb';
+  if (e.dataTransfer.files.length) {
+    imageInput.files = e.dataTransfer.files;
+    handleFileSelect();
+  }
+}
+
+// 📂 التعامل مع اختيار الملف
+function handleFileSelect() {
+  const file = imageInput.files[0];
+  if (!file) return;
+
+  if (!file.type.match('image.*')) {
+    showNotification('⚠️ يرجى اختيار ملف صورة فقط', 'error');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showNotification('⚠️ الحد الأقصى 10MB', 'error');
+    return;
+  }
+
+  fileName.textContent = file.name;
+  fileSize.textContent = formatFileSize(file.size);
+  fileInfo.classList.add("active");
+}
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' بايت';
+  else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
+  else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
+}
+
+// ☁️ رفع الصورة إلى Cloudinary و Firebase
+async function uploadImage() {
+  const file = imageInput.files[0];
+  if (!file) {
+    showNotification('⚠️ اختر صورة أولاً', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  try {
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: "POST",
+      body: formData
     });
-    
-    // التعامل مع سحب وإفلات الملفات
-    function handleDragOver(e) {
-      e.preventDefault();
-      uploadArea.style.borderColor = 'var(--primary)';
-      uploadArea.style.backgroundColor = '#f0f4ff';
-    }
-    
-    function handleDrop(e) {
-      e.preventDefault();
-      uploadArea.style.borderColor = '#d1d5db';
-      uploadArea.style.backgroundColor = '#f9fafb';
-      
-      if (e.dataTransfer.files.length) {
-        imageInput.files = e.dataTransfer.files;
-        handleFileSelect();
-      }
-    }
-    
-    // التعامل مع اختيار الملف
-    function handleFileSelect() {
-      const file = imageInput.files[0];
-      if (!file) return;
-      
-      // التحقق من نوع الملف
-      if (!file.type.match('image.*')) {
-        showNotification('⚠️ يرجى اختيار ملف صورة فقط', 'error');
-        return;
-      }
-      
-      // التحقق من حجم الملف (10MB كحد أقصى)
-      if (file.size > 10 * 1024 * 1024) {
-        showNotification('⚠️ حجم الملف كبير جداً (الحد الأقصى 10MB)', 'error');
-        return;
-      }
-      
-      // عرض معلومات الملف
-      fileName.textContent = file.name;
-      fileSize.textContent = formatFileSize(file.size);
-      fileInfo.classList.add('active');
-    }
-    
-    // تنسيق حجم الملف
-    function formatFileSize(bytes) {
-      if (bytes < 1024) return bytes + ' بايت';
-      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' كيلوبايت';
-      else return (bytes / 1048576).toFixed(1) + ' ميجابايت';
-    }
-    
-    // رفع الصورة إلى Cloudinary
-    async function uploadImage() {
-      const file = imageInput.files[0];
-      if (!file) {
-        showNotification('⚠️ يرجى اختيار صورة للرفع', 'error');
-        return;
-      }
-      
-      const fileName = file.name.split('.')[0];
-      const fileExt = file.name.split('.').pop();
-      
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", UPLOAD_PRESET);
-      formData.append("public_id", fileName);
-      
-      try {
-        uploadBtn.disabled = true;
-        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
-        
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-          method: "POST",
-          body: formData
-        });
-        
-        const data = await res.json();
-        
-        if (data.secure_url) {
-          // إضافة الصورة إلى المعرض
-          const imageData = {
-            id: Date.now(),
-            name: fileName,
-            ext: fileExt,
-            url: data.secure_url,
-            timestamp: new Date().toISOString()
-          };
-          
-          images.unshift(imageData);
-          saveToLocalStorage();
-          renderGallery();
-          
-          showNotification('✅ تم رفع الصورة بنجاح', 'success');
-          resetUploadForm();
-        } else {
-          throw new Error(data.error?.message || 'فشل في رفع الصورة');
-        }
-      } catch (error) {
-        console.error(error);
-        showNotification('❌ حدث خطأ أثناء رفع الصورة', 'error');
-      } finally {
-        uploadBtn.disabled = false;
-        uploadBtn.innerHTML = '<i class="fas fa-upload"></i> رفع الصورة إلى المنصة';
-      }
-    }
-    
-    // إعادة تعيين نموذج الرفع
-    function resetUploadForm() {
-      imageInput.value = '';
-      fileInfo.classList.remove('active');
-    }
-    
-    // عرض الإشعارات
-    function showNotification(message, type) {
-      notificationText.textContent = message;
-      notification.className = `notification ${type} show`;
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-      }, 4000);
-    }
-    
-    // عرض المعرض
-    function renderGallery() {
-      if (images.length === 0) {
-        emptyState.style.display = 'block';
-        gallery.innerHTML = '';
-        gallery.appendChild(emptyState);
-        return;
-      }
-      
-      emptyState.style.display = 'none';
-      gallery.innerHTML = '';
-      
-      images.forEach(image => {
-        const thumbUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/w_400,q_auto,f_auto/${image.name}.${image.ext}`;
-        const fullUrl = `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/${image.name}.${image.ext}`;
-        
-        const card = document.createElement('div');
-        card.className = 'img-card';
-        card.innerHTML = `
-          <div class="img-container">
-            <img src="${thumbUrl}" alt="${image.name}" loading="lazy">
-            <div class="img-overlay">
-              <div class="img-action" onclick="copyToClipboard('${fullUrl}')" title="نسخ الرابط">
-                <i class="fas fa-link"></i>
-              </div>
-              <div class="img-action" onclick="viewImage('${fullUrl}')" title="عرض الصورة">
-                <i class="fas fa-expand"></i>
-              </div>
-              <div class="img-action" onclick="deleteImage(${image.id})" title="حذف الصورة">
-                <i class="fas fa-trash"></i>
-              </div>
-            </div>
+
+    const data = await res.json();
+
+    if (!data.secure_url) throw new Error("Upload failed");
+
+    // ✅ إرسال اللينك فقط إلى Firebase
+    await addDoc(collection(db, "images"), {
+      url: data.secure_url,
+      createdAt: serverTimestamp()
+    });
+
+    showNotification("✅ تم رفع الصورة بنجاح", "success");
+    resetUploadForm();
+    loadGalleryFromFirebase(); // إعادة تحميل المعرض بعد الإضافة
+
+  } catch (err) {
+    console.error(err);
+    showNotification("❌ فشل الرفع", "error");
+  } finally {
+    uploadBtn.disabled = false;
+    uploadBtn.innerHTML = '<i class="fas fa-upload"></i> رفع الصورة';
+  }
+}
+
+// 🔄 إعادة تعيين نموذج الرفع
+function resetUploadForm() {
+  imageInput.value = "";
+  fileInfo.classList.remove("active");
+}
+
+// 💬 عرض إشعارات
+function showNotification(message, type) {
+  notificationText.textContent = message;
+  notification.className = `notification ${type} show`;
+  setTimeout(() => notification.classList.remove("show"), 4000);
+}
+
+// 📷 تحميل الصور من Firebase وعرضها
+async function loadGalleryFromFirebase(order="desc") {
+  gallery.innerHTML = "";
+  const q = query(collection(db, "images"), orderBy("createdAt", order));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    emptyState.style.display = "block";
+    return;
+  }
+  emptyState.style.display = "none";
+
+  snapshot.forEach(doc => {
+    const img = doc.data();
+    const card = document.createElement("div");
+    card.className = "img-card";
+    card.innerHTML = `
+      <div class="img-container">
+        <img src="${img.url}" loading="lazy">
+        <div class="img-overlay">
+          <div class="img-action" onclick="copyToClipboard('${img.url}')" title="نسخ الرابط">
+            <i class="fas fa-link"></i>
           </div>
-          <div class="img-details">
-            <div class="img-name">${image.name}.${image.ext}</div>
-            <div class="img-link" onclick="copyToClipboard('${fullUrl}')">
-              <i class="fas fa-copy"></i>
-              <span>نسخ الرابط</span>
-            </div>
+          <div class="img-action" onclick="viewImage('${img.url}')" title="عرض الصورة">
+            <i class="fas fa-expand"></i>
           </div>
-        `;
-        
-        gallery.appendChild(card);
-      });
-    }
-    
-    // نسخ الرابط إلى الحافظة
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        showNotification('✅ تم نسخ الرابط إلى الحافظة', 'success');
-      }).catch(err => {
-        console.error('فشل في نسخ الرابط: ', err);
-        showNotification('❌ فشل في نسخ الرابط', 'error');
-      });
-    }
-    
-    // عرض الصورة في نافذة جديدة
-    function viewImage(url) {
-      window.open(url, '_blank');
-    }
-    
-    // حذف الصورة
-    function deleteImage(id) {
-      if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-        images = images.filter(img => img.id !== id);
-        saveToLocalStorage();
-        renderGallery();
-        showNotification('🗑️ تم حذف الصورة', 'success');
-      }
-    }
-    
-    // ترتيب الصور
-    function sortImages(order) {
-      if (order === 'newest') {
-        images.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      } else {
-        images.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-      }
-      
-      renderGallery();
-    }
-    
-    // حفظ في التخزين المحلي
-    function saveToLocalStorage() {
-      localStorage.setItem('galleryImages', JSON.stringify(images));
-    }
-  </script>
+        </div>
+      </div>
+    `;
+    gallery.appendChild(card);
+  });
+}
+
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    // الطريقة الحديثة
+    navigator.clipboard.writeText(text).then(() => {
+      showNotification('✅ تم نسخ الرابط بنجاح', 'success');
+    }).catch(() => {
+      fallbackCopyTextToClipboard(text);
+    });
+  } else {
+    // fallback للمتصفحات القديمة أو غير الآمنة
+    fallbackCopyTextToClipboard(text);
+  }
+}
+
+// الطريقة الاحتياطية للنسخ
+function fallbackCopyTextToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";  // لتجنب التمرير
+  textArea.style.left = "-9999px";    // خارج الشاشة
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) showNotification('✅ تم نسخ الرابط بنجاح', 'success');
+    else showNotification('❌ فشل النسخ', 'error');
+  } catch (err) {
+    console.error('Fallback: فشل النسخ', err);
+    showNotification('❌ فشل النسخ', 'error');
+  }
+
+  document.body.removeChild(textArea);
+}
+
+
+// 🔍 عرض الصورة في نافذة جديدة
+function viewImage(url) {
+  window.open(url, "_blank");
+}
+
+window.copyToClipboard = copyToClipboard;
+window.viewImage = viewImage;
+
+</script>
 
 </body>
 </html>
