@@ -46,6 +46,9 @@
       padding: 15px 0;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       margin-bottom: 30px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-content {
@@ -278,6 +281,9 @@
       overflow: hidden;
       box-shadow: var(--box-shadow);
       transition: var(--transition);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     .product-card:hover {
@@ -287,11 +293,15 @@
 
     .product-image {
       width: 100%;
+      height: 200px;
       object-fit: cover;
     }
 
     .product-info {
       padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .product-title {
@@ -309,13 +319,22 @@
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      flex: 1;
     }
 
     .product-price {
       font-size: 20px;
       font-weight: 700;
       color: var(--primary);
-      margin-bottom: 15px;
+      margin-bottom: 10px;
+    }
+
+    .product-meta {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
     }
 
     .product-type {
@@ -326,12 +345,13 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
+      margin-bottom: 15px;
     }
 
     .product-actions {
       display: flex;
       gap: 10px;
-      margin-top: 15px;
+      margin-top: auto;
     }
 
     .product-actions .btn {
@@ -349,11 +369,14 @@
       overflow-x: auto;
       padding: 10px 0;
       margin-bottom: 15px;
+      height: 200px;
+      align-items: center;
+      background: #f9f9f9;
     }
 
     .product-gallery img {
-      height: 80px;
-      width: 80px;
+      height: 180px;
+      width: 180px;
       object-fit: cover;
       border-radius: 8px;
       border: 1px solid #eee;
@@ -456,6 +479,64 @@
       font-size: 12px;
     }
 
+    .price-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .price-row .input-group {
+      flex: 1;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      text-align: center;
+      box-shadow: var(--box-shadow);
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: var(--gray);
+      font-size: 14px;
+    }
+
+    /* Loading Animation */
+    .loading {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .header-content {
@@ -470,6 +551,26 @@
       .modal-content {
         width: 95%;
         padding: 15px;
+      }
+      
+      .price-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .nav-buttons {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .product-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -522,37 +623,39 @@
           <textarea id="description" placeholder="أدخل وصف المنتج"></textarea>
         </div>
 
-       <div class="input-group">
-  <label>سعر الشراء </label>
-  <input type="number" id="buyPrice" placeholder="سعر شراء المنتج">
-</div>
+        <div class="price-row">
+          <div class="input-group">
+            <label>سعر الشراء (جنيه)</label>
+            <input type="number" id="buyPrice" placeholder="سعر شراء المنتج">
+          </div>
 
-<div class="input-group">
-  <label>سعر البيع </label>
-  <input type="number" id="sellPrice" placeholder="سعر البيع للعميل">
-</div>
-
+          <div class="input-group">
+            <label>سعر البيع (جنيه)</label>
+            <input type="number" id="sellPrice" placeholder="سعر البيع للعميل">
+          </div>
+        </div>
 
         <div class="input-group">
           <label>النوع</label>
           <select id="type">
             <option value="phones">هواتف</option>
             <option value="accessories">اكسسوارات</option>
-            <option value="Airpods">ايربودز </option>
+            <option value="Airpods">ايربودز</option>
             <option value="head phone">هيد فون</option>
           </select>
         </div>
 
-        <div class="input-group">
-          <label>الكمية</label>
-          <input type="number" id="quantity" placeholder="أدخل الكمية المتاحة">
+        <div class="price-row">
+          <div class="input-group">
+            <label>الكمية</label>
+            <input type="number" id="quantity" placeholder="أدخل الكمية المتاحة">
+          </div>
+          
+          <div class="input-group">
+            <label>السيريال</label>
+            <input type="text" id="serial" placeholder="أدخل رقم السيريال">
+          </div>
         </div>
-        
-        <div class="input-group">
-          <label>السيريال</label>
-          <input type="text" id="serial" placeholder="أدخل رقم السيريال">
-        </div>
-        
 
         <button class="submit-btn" onclick="saveProduct()">
           <i class="fas fa-save"></i> حفظ المنتج
@@ -566,6 +669,11 @@
     <!-- Products List -->
     <div id="products-page" style="display: none;">
       <h2 class="page-title">المنتجات المضافة</h2>
+      
+      <div class="stats-container" id="stats-container">
+        <!-- Statistics will be loaded here -->
+      </div>
+      
       <div class="products-grid" id="products-container">
         <!-- Products will be loaded here -->
       </div>
@@ -590,27 +698,37 @@
         <textarea id="edit-description"></textarea>
       </div>
       
-      <div class="input-group">
-        <label>السعر (بالجنيه)</label>
-        <input type="number" id="edit-price">
+      <div class="price-row">
+        <div class="input-group">
+          <label>سعر الشراء (جنيه)</label>
+          <input type="number" id="edit-buyPrice">
+        </div>
+        
+        <div class="input-group">
+          <label>سعر البيع (جنيه)</label>
+          <input type="number" id="edit-sellPrice">
+        </div>
       </div>
 
-      <div class="input-group">
-        <label>الكمية</label>
-        <input type="number" id="edit-quantity">
-      </div>
-      
-      <div class="input-group">
-        <label>السيريال</label>
-        <input type="text" id="edit-serial">
+      <div class="price-row">
+        <div class="input-group">
+          <label>الكمية</label>
+          <input type="number" id="edit-quantity">
+        </div>
+        
+        <div class="input-group">
+          <label>السيريال</label>
+          <input type="text" id="edit-serial">
+        </div>
       </div>
 
-      
       <div class="input-group">
         <label>النوع</label>
         <select id="edit-type">
           <option value="phones">هواتف</option>
           <option value="accessories">اكسسوارات</option>
+          <option value="Airpods">ايربودز</option>
+          <option value="head phone">هيد فون</option>
         </select>
       </div>
       
@@ -682,6 +800,7 @@
       document.getElementById('add-product-page').style.display = 'none';
       document.getElementById('products-page').style.display = 'block';
       loadProducts();
+      loadStats();
     }
 
     // Image fields management
@@ -747,22 +866,31 @@
           return;
         }
 
+        if (parseFloat(sellPrice) <= parseFloat(buyPrice)) {
+          showAlert('error', 'سعر البيع يجب أن يكون أكبر من سعر الشراء');
+          return;
+        }
 
         await addDoc(collection(db, "products"), {
           title,
           description,
           images,
-          buyPrice: parseFloat(buyPrice),   // ✅ سعر الشراء
-          sellPrice: parseFloat(sellPrice), // ✅ سعر البيع
+          buyPrice: parseFloat(buyPrice),
+          sellPrice: parseFloat(sellPrice),
           quantity: parseInt(quantity),
           serial,
           type,
+          profit: parseFloat(sellPrice) - parseFloat(buyPrice),
           createdAt: new Date()
         });
 
-
         showAlert('success', 'تم حفظ المنتج بنجاح ✔');
         clearForm();
+        
+        // Switch to products page after 2 seconds
+        setTimeout(() => {
+          showProductsPage();
+        }, 2000);
         
       } catch (e) {
         console.error(e);
@@ -770,49 +898,87 @@
       }
     }
 
+    // Load statistics
+    async function loadStats() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        let totalProducts = 0;
+        let totalValue = 0;
+        let totalProfit = 0;
+        
+        querySnapshot.forEach((doc) => {
+          const product = doc.data();
+          totalProducts++;
+          totalValue += (product.sellPrice || 0) * (product.quantity || 0);
+          totalProfit += (product.profit || 0) * (product.quantity || 0);
+        });
+        
+        const statsContainer = document.getElementById("stats-container");
+        statsContainer.innerHTML = `
+          <div class="stat-card">
+            <div class="stat-number">${totalProducts}</div>
+            <div class="stat-label">عدد المنتجات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalValue.toLocaleString('ar-EG')} ج</div>
+            <div class="stat-label">القيمة الإجمالية</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${totalProfit.toLocaleString('ar-EG')} ج</div>
+            <div class="stat-label">إجمالي الربح</div>
+          </div>
+        `;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     // Load products
     async function loadProducts() {
       const container = document.getElementById("products-container");
-      container.innerHTML = '<p>جاري تحميل المنتجات...</p>';
+      container.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>جاري تحميل المنتجات...</p>
+        </div>
+      `;
       
       try {
         const querySnapshot = await getDocs(collection(db, "products"));
         container.innerHTML = '';
         
         if (querySnapshot.empty) {
-          container.innerHTML = '<p>لا توجد منتجات مضافة بعد.</p>';
+          container.innerHTML = '<p class="alert alert-error" style="display:block; grid-column:1/-1">لا توجد منتجات مضافة بعد.</p>';
           return;
         }
         
         querySnapshot.forEach((doc) => {
           const product = doc.data();
           const productId = doc.id;
+          const profit = product.sellPrice - product.buyPrice;
+          const profitMargin = ((profit / product.buyPrice) * 100).toFixed(1);
           
           const productCard = document.createElement("div");
           productCard.className = "product-card";
           
-          // Handle multiple images
           let imageContent = '';
           if (product.images && product.images.length > 0) {
             if (product.images.length === 1) {
-              // Single image
               imageContent = `
                 <img src="${product.images[0]}" alt="${product.title}" class="product-image" 
                      onerror="this.src='https://via.placeholder.com/300x200?text=خطأ+في+الصورة'">
               `;
             } else {
-              // Multiple images - show gallery
               imageContent = `
                 <div class="product-gallery">
                   ${product.images.map(img => 
                     `<img src="${img}" alt="${product.title}" 
-                          onerror="this.src='https://via.placeholder.com/80x80?text=خطأ'">`
+                          onerror="this.src='https://via.placeholder.com/180x180?text=خطأ'">`
                   ).join('')}
                 </div>
               `;
             }
           } else {
-            // No images
             imageContent = `
               <img src="https://via.placeholder.com/300x200?text=لا+توجد+صورة" 
                    alt="لا توجد صورة" class="product-image">
@@ -823,18 +989,25 @@
             ${imageContent}
             <div class="product-info">
               <h3 class="product-title">${product.title}</h3>
-              <p class="product-description">${product.description}</p>
+              <p class="product-description">${product.description || 'لا يوجد وصف'}</p>
+              
               <div class="product-price">
-                سعر البيع: ${product.sellPrice} جنيه
+                سعر البيع: ${product.sellPrice?.toLocaleString('ar-EG') || 0} جنيه
               </div>
-              <p style="font-size:13px;color:#777">
-                سعر الشراء: ${product.buyPrice} جنيه
-              </p>
-
-              <p class="product-quantity">الكمية: ${product.quantity}</p>
-               <p class="product-serial">السيريال: ${product.serial}</p>
-               <span class="product-type">${product.type}</span>
-                <div class="product-actions">
+              
+              <div class="product-meta">
+                <span>الشراء: ${product.buyPrice?.toLocaleString('ar-EG') || 0} ج</span>
+                <span>الربح: ${profit.toLocaleString('ar-EG')} ج (${profitMargin}%)</span>
+              </div>
+              
+              <div class="product-meta">
+                <span>الكمية: ${product.quantity || 0}</span>
+                <span>السيريال: ${product.serial || 'غير محدد'}</span>
+              </div>
+              
+              <span class="product-type">${getTypeArabic(product.type)}</span>
+              
+              <div class="product-actions">
                 <button class="btn btn-warning" onclick="openEditModal('${productId}')">
                   <i class="fas fa-edit"></i> تعديل
                 </button>
@@ -849,8 +1022,18 @@
         });
       } catch (e) {
         console.error(e);
-        container.innerHTML = '<p class="alert alert-error">حدث خطأ في تحميل المنتجات</p>';
+        container.innerHTML = '<p class="alert alert-error" style="display:block; grid-column:1/-1">حدث خطأ في تحميل المنتجات</p>';
       }
+    }
+
+    function getTypeArabic(type) {
+      const types = {
+        'phones': 'هواتف',
+        'accessories': 'اكسسوارات',
+        'Airpods': 'ايربودز',
+        'head phone': 'هيد فون'
+      };
+      return types[type] || type;
     }
 
     // Edit product
@@ -864,7 +1047,6 @@
         if (docSnap.exists()) {
           const product = docSnap.data();
           
-          // Fill form with existing data
           document.getElementById('edit-title').value = product.title || '';
           document.getElementById('edit-description').value = product.description || '';
           document.getElementById('edit-buyPrice').value = product.buyPrice || 0;
@@ -873,13 +1055,9 @@
           document.getElementById('edit-quantity').value = product.quantity || 0;
           document.getElementById('edit-serial').value = product.serial || '';
           
-          // Store current images
           currentProductImages = product.images || [];
-          
-          // Display current images
           displayEditImages();
           
-          // Show modal
           document.getElementById('edit-modal').style.display = 'flex';
         } else {
           showAlert('error', 'المنتج غير موجود');
@@ -947,8 +1125,13 @@
         const serial = document.getElementById("edit-serial").value;
         const type = document.getElementById("edit-type").value;
         
-       if (!title || !description || !buyPrice || !sellPrice || !quantity || !serial) {
+        if (!title || !description || !buyPrice || !sellPrice || !quantity || !serial) {
           showAlert('error', 'برجاء ملء جميع الحقول المطلوبة');
+          return;
+        }
+
+        if (parseFloat(sellPrice) <= parseFloat(buyPrice)) {
+          showAlert('error', 'سعر البيع يجب أن يكون أكبر من سعر الشراء');
           return;
         }
         
@@ -957,15 +1140,18 @@
           title,
           description,
           images: currentProductImages,
-          price: parseFloat(price),
+          buyPrice: parseFloat(buyPrice),
+          sellPrice: parseFloat(sellPrice),
           quantity: parseInt(quantity),
           serial,
           type,
+          profit: parseFloat(sellPrice) - parseFloat(buyPrice),
           updatedAt: new Date()
         });
         
         closeEditModal();
         loadProducts();
+        loadStats();
         showAlert('success', 'تم تحديث المنتج بنجاح');
         
       } catch (e) {
@@ -976,10 +1162,11 @@
 
     // Delete product
     window.deleteProduct = async function(productId) {
-      if (confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
+      if (confirm('هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.')) {
         try {
           await deleteDoc(doc(db, "products", productId));
           loadProducts();
+          loadStats();
           showAlert('success', 'تم حذف المنتج بنجاح');
         } catch (e) {
           console.error(e);
@@ -1002,11 +1189,12 @@
     function clearForm() {
       document.getElementById("title").value = '';
       document.getElementById("description").value = '';
-      document.getElementById("price").value = '';
+      document.getElementById("buyPrice").value = '';
+      document.getElementById("sellPrice").value = '';
       document.getElementById("quantity").value = '';
       document.getElementById("serial").value = '';
+      document.getElementById("type").value = 'phones';
 
-      
       const imageContainer = document.getElementById("images-container");
       imageContainer.innerHTML = `
         <div class="image-field-container">
