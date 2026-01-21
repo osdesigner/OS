@@ -217,7 +217,7 @@ button#continue-btn:hover {
   justify-content: space-between;
   text-align: center;
   background-color: #000000;
-  padding: 0 30px;
+  padding: 0 100px;
 }
 
 .hed-img-top img{
@@ -234,9 +234,14 @@ button#continue-btn:hover {
   gap: 15px;
 }
 
-.hed-text-top h4{
+.hed-text-top h3{
   color: #ffffff;
-  font-size: 24px;
+  font-size: 30px;
+}
+
+.hed-text-top p{
+  color: #cccccc;
+  font-size: 16px;
 }
 
 .dropdown-container {

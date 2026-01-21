@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OS Store - هيدفونز</title>
+    <title>airpods</title>
     
     <!-- تحسين SEO -->
     <meta name="description" content="اكتشف أفضل تشكيلة من الهيدفونز في مصر - صوت استثنائي وراحة فائقة بتصميمات حديثة من أشهر الماركات العالمية">
@@ -348,10 +348,10 @@
 
     <!-- بانر الصفحة -->
     <div class="hed-img-top">
-        <img src="airpods-max-select-202409-midnight.png" alt="هيدفونز عالية الجودة">
+        <img src="Apple AirPods Pro 2.jfif" alt="هيدفونز عالية الجودة">
         <div class="hed-text-top">
-            <h3>هيدفونز</h3>
-            <p>صوت استثنائي، بطارية تدوم، واستايل يليق بذوقك</p>
+            <h3>اكسسوارات</h3>
+            <p>اشكال و الوان هتعجبك</p>
         </div>
     </div>
 
@@ -361,8 +361,8 @@
         
         <!-- حالة عدم وجود منتجات -->
         <div id="noProducts" style="display: none; text-align: center; padding: 50px; grid-column: 1 / -1;">
-            <i class="fas fa-headphones" style="font-size: 50px; color: #ddd; margin-bottom: 20px;"></i>
-            <h3>لا توجد هيدفونز متاحة حالياً</h3>
+            <i  class="fas fa-store" style="font-size: 50px; color: #ddd; margin-bottom: 20px;"></i>
+            <h3>لا توجد اكسسوارات متاحة حالياً</h3>
             <p>سنقوم بإضافة منتجات جديدة قريباً</p>
         </div>
     </main>
@@ -374,7 +374,7 @@
             <svg viewBox="0 0 32 32" class="logo-ic-fo-ri" xmlns="http://www.w3.org/2000/svg">
                 <path d="m22.5597 16.9375-5.5076-5.5c-.5854-.5854-1.5323-.5825-2.1157.0039-.5835.5869-.5815 1.5366.0039 2.1211l4.4438 4.4375-4.4438 4.4375c-.5854.5845-.5874 1.5342-.0039 2.1211.2922.2944.676.4414 1.0598.4414.3818 0 .7637-.1455 1.0559-.4375l5.5076-5.5c.2815-.2812.4403-.6636.4403-1.0625s-.1588-.7812-.4403-1.0625z"/>
             </svg>
-            <p>هيدفونز</p>
+            <p>AirPods</p>
         </div>
 
         <p class="footer-note">
@@ -439,10 +439,8 @@
                 
                 <!-- وسائل التواصل الاجتماعي -->
                 <div class="social-icons">
-                    <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
-                    <a href="#" aria-label="انستجرام"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
-                    <a href="#" aria-label="تيك توك"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.facebook.com/groups/osshop" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+                    
                 </div>
             </div>
         </div>
@@ -450,9 +448,7 @@
         <div class="footer-bottom">
             <span>© 2025 OS Store. جميع الحقوق محفوظة.</span>
             <div class="footer-links">
-                <a href="#">سياسة الخصوصية</a>
-                <a href="#">الشروط والأحكام</a>
-                <a href="#">الأسئلة الشائعة</a>
+              
             </div>
         </div>
     </footer>
@@ -578,7 +574,7 @@
             try {
                 const q = query(
                     collection(db, "products"),
-                    where("type", "==", "head phone"),
+                    where("type", "==", "Airpods"),
                     orderBy("createdAt", "desc")
                 );
 
@@ -595,7 +591,7 @@
                     
                     productsDiv.innerHTML += `
                         <div class="product-card">
-                            ${data.sellPrice > 3000 ? '<span class="badge">فاخر</span>' : ''}
+                            ${data.sellPrice > 400 ? '<span class="badge">فاخر</span>' : ''}
                             ${data.sellPrice < 500 ? '<span class="badge">عرض خاص</span>' : ''}
                             
                             <img src="${data.images[0]}" alt="${data.title}" loading="lazy">
