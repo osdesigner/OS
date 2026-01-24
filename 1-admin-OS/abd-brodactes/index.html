@@ -574,7 +574,7 @@
     }
   </style>
 </head>
-<body>
+ <body>
   <header>
     <div class="container">
       <div class="header-content">
@@ -667,14 +667,62 @@
 
     <!-- Products List -->
     <div id="products-page" style="display: none;">
-      <h2 class="page-title">المنتجات المضافة</h2>
+      <div class="page-header">
+        <h2 class="page-title">المنتجات المضافة</h2>
+        
+        <!-- Search and Filter Section -->
+        <div class="search-filter-container">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-input" placeholder="ابحث عن منتج بالاسم أو الوصف أو السيريال...">
+            <button class="clear-search" id="clear-search" style="display: none;">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <div class="filter-controls">
+            <select id="filter-type" class="filter-select">
+              <option value="">جميع الأنواع</option>
+              <option value="phones">هواتف</option>
+              <option value="accessories">اكسسوارات</option>
+              <option value="Airpods">ايربودز</option>
+              <option value="head phone">هيد فون</option>
+            </select>
+            
+            <select id="filter-sort" class="filter-select">
+              <option value="newest">الأحدث أولاً</option>
+              <option value="oldest">الأقدم أولاً</option>
+              <option value="price-high">السعر الأعلى أولاً</option>
+              <option value="price-low">السعر الأدنى أولاً</option>
+              <option value="profit-high">الأعلى ربحاً</option>
+              <option value="quantity-high">الكمية الأكبر</option>
+            </select>
+            
+            <button class="btn btn-outline" id="refresh-btn">
+              <i class="fas fa-sync-alt"></i> تحديث
+            </button>
+          </div>
+        </div>
+      </div>
       
       <div class="stats-container" id="stats-container">
         <!-- Statistics will be loaded here -->
       </div>
       
+      <div class="products-info-bar">
+        <span id="products-count">جاري التحميل...</span>
+        <div class="pagination-controls" id="pagination-controls">
+          <!-- Pagination will be added here -->
+        </div>
+      </div>
+      
       <div class="products-grid" id="products-container">
         <!-- Products will be loaded here -->
+      </div>
+      
+      <div class="loading-more" id="loading-more" style="display: none;">
+        <div class="spinner"></div>
+        <p>جاري تحميل المزيد...</p>
       </div>
     </div>
   </div>
@@ -761,7 +809,9 @@
       getDoc,
       doc, 
       updateDoc, 
-      deleteDoc
+      deleteDoc,
+      query,
+      orderBy
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -776,8 +826,15 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    
+    // Global variables
     let currentEditId = null;
     let currentProductImages = [];
+    let allProducts = [];
+    let currentPage = 1;
+    const productsPerPage = 12;
+    let isLoading = false;
+    let hasMoreProducts = true;
 
     // Navigation
     document.getElementById('view-products-btn').addEventListener('click', function(e) {
@@ -790,6 +847,30 @@
       showAddProductPage();
     });
 
+    // Search and Filter Event Listeners
+    document.getElementById('search-input').addEventListener('input', function(e) {
+      const clearBtn = document.getElementById('clear-search');
+      clearBtn.style.display = this.value.trim() ? 'flex' : 'none';
+      
+      // Debounce search
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        filterAndDisplayProducts();
+      }, 300);
+    });
+
+    document.getElementById('clear-search').addEventListener('click', function() {
+      document.getElementById('search-input').value = '';
+      this.style.display = 'none';
+      filterAndDisplayProducts();
+    });
+
+    document.getElementById('filter-type').addEventListener('change', filterAndDisplayProducts);
+    document.getElementById('filter-sort').addEventListener('change', filterAndDisplayProducts);
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+      loadAllProducts();
+    });
+
     function showAddProductPage() {
       document.getElementById('add-product-page').style.display = 'block';
       document.getElementById('products-page').style.display = 'none';
@@ -798,8 +879,11 @@
     function showProductsPage() {
       document.getElementById('add-product-page').style.display = 'none';
       document.getElementById('products-page').style.display = 'block';
-      loadProducts();
-      loadStats();
+      if (allProducts.length === 0) {
+        loadAllProducts();
+      } else {
+        filterAndDisplayProducts();
+      }
     }
 
     // Image fields management
@@ -825,7 +909,6 @@
       fieldContainer.appendChild(removeBtn);
       container.appendChild(fieldContainer);
       
-      // Show remove buttons if there's more than one field
       if (container.children.length > 1) {
         const removeButtons = container.querySelectorAll('.remove-image');
         removeButtons.forEach(btn => btn.style.display = 'flex');
@@ -837,7 +920,6 @@
       if (container.children.length > 1) {
         button.parentElement.remove();
         
-        // Hide remove buttons if there's only one field left
         if (container.children.length === 1) {
           const removeButton = container.querySelector('.remove-image');
           removeButton.style.display = 'none';
@@ -886,9 +968,10 @@
         showAlert('success', 'تم حفظ المنتج بنجاح ✔');
         clearForm();
         
-        // Switch to products page after 2 seconds
+        // Refresh products list
         setTimeout(() => {
           showProductsPage();
+          loadAllProducts();
         }, 2000);
         
       } catch (e) {
@@ -897,19 +980,258 @@
       }
     }
 
+    // Load all products from Firestore
+    async function loadAllProducts() {
+      if (isLoading) return;
+      isLoading = true;
+      
+      const container = document.getElementById("products-container");
+      const loadingMore = document.getElementById("loading-more");
+      
+      if (allProducts.length === 0) {
+        container.innerHTML = `
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل المنتجات...</p>
+          </div>
+        `;
+      } else {
+        loadingMore.style.display = 'block';
+      }
+      
+      try {
+        const productsQuery = query(collection(db, "products"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(productsQuery);
+        
+        allProducts = [];
+        querySnapshot.forEach((doc) => {
+          allProducts.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        
+        filterAndDisplayProducts();
+        loadStats();
+        
+      } catch (e) {
+        console.error(e);
+        container.innerHTML = '<p class="alert alert-error" style="display:block; grid-column:1/-1">حدث خطأ في تحميل المنتجات</p>';
+      } finally {
+        isLoading = false;
+        loadingMore.style.display = 'none';
+      }
+    }
+
+    // Filter and display products
+    function filterAndDisplayProducts() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+      const filterType = document.getElementById('filter-type').value;
+      const sortBy = document.getElementById('filter-sort').value;
+      
+      let filteredProducts = [...allProducts];
+      
+      // Apply search filter
+      if (searchTerm) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.title?.toLowerCase().includes(searchTerm) ||
+          product.description?.toLowerCase().includes(searchTerm) ||
+          product.serial?.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Apply type filter
+      if (filterType) {
+        filteredProducts = filteredProducts.filter(product => product.type === filterType);
+      }
+      
+      // Apply sorting
+      filteredProducts.sort((a, b) => {
+        switch (sortBy) {
+          case 'newest':
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          case 'oldest':
+            return new Date(a.createdAt) - new Date(b.createdAt);
+          case 'price-high':
+            return (b.sellPrice || 0) - (a.sellPrice || 0);
+          case 'price-low':
+            return (a.sellPrice || 0) - (b.sellPrice || 0);
+          case 'profit-high':
+            return ((b.sellPrice || 0) - (b.buyPrice || 0)) - ((a.sellPrice || 0) - (a.buyPrice || 0));
+          case 'quantity-high':
+            return (b.quantity || 0) - (a.quantity || 0);
+          default:
+            return 0;
+        }
+      });
+      
+      displayProducts(filteredProducts);
+      updatePagination(filteredProducts.length);
+      updateProductsCount(filteredProducts.length);
+    }
+
+    // Display products in grid
+    function displayProducts(products) {
+      const container = document.getElementById("products-container");
+      container.innerHTML = '';
+      
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div class="no-products" style="grid-column:1/-1; text-align:center; padding:3rem;">
+            <i class="fas fa-search" style="font-size:4rem; color:#ccc; margin-bottom:1rem;"></i>
+            <h3>لا توجد منتجات مطابقة للبحث</h3>
+            <p>حاول تغيير كلمات البحث أو الفلاتر</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Display only products for current page
+      const startIndex = (currentPage - 1) * productsPerPage;
+      const endIndex = startIndex + productsPerPage;
+      const productsToDisplay = products.slice(startIndex, endIndex);
+      
+      productsToDisplay.forEach((product) => {
+        const productId = product.id;
+        const profit = (product.sellPrice || 0) - (product.buyPrice || 0);
+        const profitMargin = product.buyPrice ? ((profit / product.buyPrice) * 100).toFixed(1) : '0';
+        
+        const productCard = document.createElement("div");
+        productCard.className = "product-card";
+        
+        let imageContent = '';
+        if (product.images && product.images.length > 0) {
+          const firstImage = product.images[0];
+          imageContent = `
+            <img src="${firstImage}" alt="${product.title}" class="product-image lazy"
+                 data-src="${firstImage}"
+                 onerror="this.src='https://via.placeholder.com/300x200?text=خطأ+في+الصورة'">
+          `;
+        } else {
+          imageContent = `
+            <img src="https://via.placeholder.com/300x200?text=لا+توجد+صورة" 
+                 alt="لا توجد صورة" class="product-image">
+          `;
+        }
+        
+        productCard.innerHTML = `
+          ${imageContent}
+          <div class="product-info">
+            <h3 class="product-title">${product.title}</h3>
+            <p class="product-description">${product.description || 'لا يوجد وصف'}</p>
+            
+            <div class="product-price">
+              سعر البيع: ${(product.sellPrice || 0).toLocaleString('ar-EG')} جنيه
+            </div>
+            
+            <div class="product-meta">
+              <span>الشراء: ${(product.buyPrice || 0).toLocaleString('ar-EG')} ج</span>
+              <span>الربح: ${profit.toLocaleString('ar-EG')} ج (${profitMargin}%)</span>
+            </div>
+            
+            <div class="product-meta">
+              <span>الكمية: ${product.quantity || 0}</span>
+              <span>السيريال: ${product.serial || 'غير محدد'}</span>
+            </div>
+            
+            <span class="product-type">${getTypeArabic(product.type)}</span>
+            
+            <div class="product-actions">
+              <button class="btn btn-warning" onclick="openEditModal('${productId}')">
+                <i class="fas fa-edit"></i> تعديل
+              </button>
+              <button class="btn btn-danger" onclick="deleteProduct('${productId}')">
+                <i class="fas fa-trash"></i> حذف
+              </button>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(productCard);
+      });
+      
+      // Initialize lazy loading for images
+      initLazyLoading();
+    }
+
+    // Update products count
+    function updateProductsCount(count) {
+      document.getElementById('products-count').textContent = 
+        `عرض ${Math.min((currentPage - 1) * productsPerPage + 1, count)}-${Math.min(currentPage * productsPerPage, count)} من ${count} منتج`;
+    }
+
+    // Update pagination controls
+    function updatePagination(totalProducts) {
+      const totalPages = Math.ceil(totalProducts / productsPerPage);
+      const paginationContainer = document.getElementById('pagination-controls');
+      
+      if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+      }
+      
+      let paginationHTML = '';
+      
+      // Previous button
+      paginationHTML += `
+        <button class="pagination-btn ${currentPage === 1 ? 'disabled' : ''}" 
+                onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      `;
+      
+      // Page numbers
+      const maxVisiblePages = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHTML += `
+          <button class="pagination-btn ${currentPage === i ? 'active' : ''}" 
+                  onclick="changePage(${i})">
+            ${i}
+          </button>
+        `;
+      }
+      
+      // Next button
+      paginationHTML += `
+        <button class="pagination-btn ${currentPage === totalPages ? 'disabled' : ''}" 
+                onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      `;
+      
+      paginationContainer.innerHTML = paginationHTML;
+    }
+
+    // Change page function
+    window.changePage = function(page) {
+      currentPage = page;
+      filterAndDisplayProducts();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // Load statistics
     async function loadStats() {
       try {
-        const querySnapshot = await getDocs(collection(db, "products"));
         let totalProducts = 0;
         let totalValue = 0;
         let totalProfit = 0;
+        let lowStockCount = 0;
         
-        querySnapshot.forEach((doc) => {
-          const product = doc.data();
+        allProducts.forEach((product) => {
           totalProducts++;
           totalValue += (product.sellPrice || 0) * (product.quantity || 0);
           totalProfit += (product.profit || 0) * (product.quantity || 0);
+          
+          if (product.quantity <= 5) {
+            lowStockCount++;
+          }
         });
         
         const statsContainer = document.getElementById("stats-container");
@@ -926,102 +1248,13 @@
             <div class="stat-number">${totalProfit.toLocaleString('ar-EG')} ج</div>
             <div class="stat-label">إجمالي الربح</div>
           </div>
+          <div class="stat-card ${lowStockCount > 0 ? 'stat-warning' : ''}">
+            <div class="stat-number">${lowStockCount}</div>
+            <div class="stat-label">منتجات قليلة المخزون</div>
+          </div>
         `;
       } catch (e) {
         console.error(e);
-      }
-    }
-
-    // Load products
-    async function loadProducts() {
-      const container = document.getElementById("products-container");
-      container.innerHTML = `
-        <div class="loading">
-          <div class="spinner"></div>
-          <p>جاري تحميل المنتجات...</p>
-        </div>
-      `;
-      
-      try {
-        const querySnapshot = await getDocs(collection(db, "products"));
-        container.innerHTML = '';
-        
-        if (querySnapshot.empty) {
-          container.innerHTML = '<p class="alert alert-error" style="display:block; grid-column:1/-1">لا توجد منتجات مضافة بعد.</p>';
-          return;
-        }
-        
-        querySnapshot.forEach((doc) => {
-          const product = doc.data();
-          const productId = doc.id;
-          const profit = product.sellPrice - product.buyPrice;
-          const profitMargin = ((profit / product.buyPrice) * 100).toFixed(1);
-          
-          const productCard = document.createElement("div");
-          productCard.className = "product-card";
-          
-          let imageContent = '';
-          if (product.images && product.images.length > 0) {
-            if (product.images.length === 1) {
-              imageContent = `
-                <img src="${product.images[0]}" alt="${product.title}" class="product-image" 
-                     onerror="this.src='https://via.placeholder.com/300x200?text=خطأ+في+الصورة'">
-              `;
-            } else {
-              imageContent = `
-                <div class="product-gallery">
-                  ${product.images.map(img => 
-                    `<img src="${img}" alt="${product.title}" 
-                          onerror="this.src='https://via.placeholder.com/180x180?text=خطأ'">`
-                  ).join('')}
-                </div>
-              `;
-            }
-          } else {
-            imageContent = `
-              <img src="https://via.placeholder.com/300x200?text=لا+توجد+صورة" 
-                   alt="لا توجد صورة" class="product-image">
-            `;
-          }
-          
-          productCard.innerHTML = `
-            ${imageContent}
-            <div class="product-info">
-              <h3 class="product-title">${product.title}</h3>
-              <p class="product-description">${product.description || 'لا يوجد وصف'}</p>
-              
-              <div class="product-price">
-                سعر البيع: ${product.sellPrice?.toLocaleString('ar-EG') || 0} جنيه
-              </div>
-              
-              <div class="product-meta">
-                <span>الشراء: ${product.buyPrice?.toLocaleString('ar-EG') || 0} ج</span>
-                <span>الربح: ${profit.toLocaleString('ar-EG')} ج (${profitMargin}%)</span>
-              </div>
-              
-              <div class="product-meta">
-                <span>الكمية: ${product.quantity || 0}</span>
-                <span>السيريال: ${product.serial || 'غير محدد'}</span>
-              </div>
-              
-              <span class="product-type">${getTypeArabic(product.type)}</span>
-              
-              <div class="product-actions">
-                <button class="btn btn-warning" onclick="openEditModal('${productId}')">
-                  <i class="fas fa-edit"></i> تعديل
-                </button>
-                <button class="btn btn-danger" onclick="deleteProduct('${productId}')">
-                  <i class="fas fa-trash"></i> حذف
-                </button>
-              </div>
-            </div>
-          `;
-          
-          container.appendChild(productCard);
-        });
-      } catch (e) {
-        console.error(e);
-        container.innerHTML = '<p class="alert alert-error" style="display:block; grid-column:1/-1">حدث خطأ في تحميل المنتجات</p>';
       }
     }
 
@@ -1035,7 +1268,33 @@
       return types[type] || type;
     }
 
-    // Edit product
+    // Lazy loading for images
+    function initLazyLoading() {
+      const lazyImages = document.querySelectorAll('img.lazy');
+      
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.classList.remove('lazy');
+              imageObserver.unobserve(img);
+            }
+          });
+        });
+        
+        lazyImages.forEach(img => imageObserver.observe(img));
+      } else {
+        // Fallback for older browsers
+        lazyImages.forEach(img => {
+          img.src = img.dataset.src;
+          img.classList.remove('lazy');
+        });
+      }
+    }
+
+    // Edit product functions
     window.openEditModal = async function(productId) {
       currentEditId = productId;
       
@@ -1149,8 +1408,7 @@
         });
         
         closeEditModal();
-        loadProducts();
-        loadStats();
+        loadAllProducts();
         showAlert('success', 'تم تحديث المنتج بنجاح');
         
       } catch (e) {
@@ -1164,8 +1422,7 @@
       if (confirm('هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء.')) {
         try {
           await deleteDoc(doc(db, "products", productId));
-          loadProducts();
-          loadStats();
+          loadAllProducts();
           showAlert('success', 'تم حذف المنتج بنجاح');
         } catch (e) {
           console.error(e);
@@ -1208,5 +1465,155 @@
     // Initialize the page
     showAddProductPage();
   </script>
+
+  <style>
+    /* Additional CSS for new features */
+    .search-filter-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .search-box {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    
+    .search-box i {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 12px 45px 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+    
+    .clear-search {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #eee;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #666;
+    }
+    
+    .clear-search:hover {
+      background: #ddd;
+    }
+    
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    .filter-select {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+    
+    .products-info-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0 0.5rem;
+    }
+    
+    .pagination-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .pagination-btn {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .pagination-btn:hover:not(.disabled) {
+      background: #f5f5f5;
+    }
+    
+    .pagination-btn.active {
+      background: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    
+    .pagination-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .loading-more {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+    
+    .loading-more .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4CAF50;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    .stat-warning {
+      border-color: #ff9800;
+      background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    }
+    
+    .stat-warning .stat-number {
+      color: #ff9800;
+    }
+    
+    img.lazy {
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    img.lazy.loaded {
+      opacity: 1;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </body>
 </html>
