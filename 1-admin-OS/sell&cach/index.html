@@ -21,11 +21,6 @@
         <img src="https://os-br.pages.dev/icone.png" class="logo" alt="شعار الريان">
     </header>
 
-    <div class="bu">
-      <a href="" class="activ">مبيعات</a>
-      <a href="Returns/" class="go">مرتجعات</a>
-      <a href="Commitments/" class="go">التزاماتي</a>
-    </div>
 
 
 
@@ -33,17 +28,7 @@
 
 
     <div class="container">
-        <!-- معلومات البائع -->
-        <div class="employee-info" id="employeeInfo">
-            <div>
-                <i class="fas fa-user"></i>
-                <span id="employeeName">جاري التحميل...</span>
-            </div>
-            <div>
-                <i class="fas fa-phone"></i>
-                <span id="employeePhone">جاري التحميل...</span>
-            </div>
-        </div>
+
 
         <!-- معلومات الفاتورة -->
         <div class="invoice-info" id="invoiceInfo">
@@ -313,8 +298,6 @@ import {
           const printBtn = document.getElementById('printBtn');
           const printBuyerName = document.getElementById('printBuyerName');
           const printBuyerPhone = document.getElementById('printBuyerPhone');
-          const employeeName = document.getElementById('employeeName');
-          const employeePhone = document.getElementById('employeePhone');
           const invoiceNumber = document.getElementById('invoiceNumber');
           const invoiceDate = document.getElementById('invoiceDate');
           const notification = document.getElementById('notification');
@@ -559,26 +542,7 @@ window.selectCustomer = function(name, phone) {
           // تحميل بيانات البائع - الإصلاح
 function loadEmployeeData() {
     try {
-        const employee = JSON.parse(localStorage.getItem('currentEmployee'));
-        if (employee) {
-            currentEmployee = {
-                id: employee.id || 'unknown',
-                title: employee.title || employee.name || 'غير معروف',
-                phone: employee.phone || 'غير معروف'
-            };
-            
-            employeeName.textContent = currentEmployee.title;
-            employeePhone.textContent = currentEmployee.phone;
-            
-            // تحديث بيانات الطباعة
-            printSellerName.textContent = currentEmployee.title;
-            
-            console.log('Employee loaded:', currentEmployee);
-        } else {
-            showNotification('لم يتم العثور على بيانات البائع. الرجاء تسجيل الدخول مرة أخرى.', 'error');
-            // إعادة توجيه لصفحة تسجيل الدخول إذا لزم الأمر
-            // window.location.href = 'login.html';
-        }
+       
     } catch (error) {
         console.error('Error loading employee data:', error);
         showNotification('حدث خطأ في تحميل بيانات البائع', 'error');
@@ -1226,7 +1190,7 @@ window.sendInvoiceWhatsApp = function() {
     } else if (paymentDetails.method === 'vodafone') {
         message += ` فودافون كاش\n`;
         message += ` المبلغ: ${totalAmount.toLocaleString()} جنيه\n`;
-        message += ` الرقم: 01000000000\n`; // ضع رقم الفودافون كاش الخاص بك
+        message += ` الرقم: 01144898934\n`; // ضع رقم الفودافون كاش الخاص بك
     } else if (paymentDetails.method === 'mixed') {
         message += ` مختلط\n`;
         message += ` نقدي: ${paymentDetails.cashAmount} جنيه\n`;
@@ -1239,14 +1203,14 @@ window.sendInvoiceWhatsApp = function() {
     
     message += '\n────────────────\n';
     message += ` *البائع:* ${currentEmployee?.title || 'بائع النظام'}\n`;
-    message += ` *اتصل بنا:* 01000000000\n`; // ضع رقمك
+    message += ` *اتصل بنا:* 01144898934\n`; // ضع رقمك
     
     // تشفير الرسالة للواتساب
     const encodedMessage = encodeURIComponent(message);
     
-    // إنشاء رابط الواتساب
+    // إنشاء رابط الواتساب  
     const whatsappNumber = buyerPhone.replace(/\D/g, '');
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    const whatsappLink = `https://wa.me/2${whatsappNumber}?text=${encodedMessage}`;
     
     // فتح نافذة جديدة
     window.open(whatsappLink, '_blank');
