@@ -985,17 +985,7 @@ async function loadCustomers() {
       const paymentDetails = getPaymentDetails();
 
 
-    // تحقق جيد من بيانات البائع
-    if (!currentEmployee || !currentEmployee.title || currentEmployee.title === 'غير معروف') {
-        showNotification('بيانات البائع غير صالحة. الرجاء تسجيل الدخول مرة أخرى.', 'error');
-        
-        // محاولة إعادة تحميل البيانات
-        loadEmployeeData();
-        
-        if (!currentEmployee || !currentEmployee.title) {
-            return; // توقف إذا لا تزال البيانات غير صالحة
-        }
-    }
+   
 
 
     if (cart.length === 0) {
@@ -1003,10 +993,6 @@ async function loadCustomers() {
         return;
     }
 
-    if (!currentEmployee) {
-        showNotification('لا يوجد بيانات بائع صالحة', 'error');
-        return;
-    }
 
     const buyerName = document.getElementById('buyerNameInput').value.trim();
     const buyerPhone = document.getElementById('buyerPhoneInput').value.trim();
@@ -1072,14 +1058,12 @@ async function loadCustomers() {
                 name: buyerName || 'مشتري',
                 phone: buyerPhone || 'غير محدد'
             },
-            seller: {
-                name: currentEmployee.title,
-                phone: currentEmployee.phone
-            },
+           
             items: invoiceItems,
             totalAmount,
             payment: paymentDetails, // أضف تفاصيل الدفع
             createdAt: now,
+            storeName: "OS Store",
             date: new Date().toLocaleDateString('ar-EG'),
             time: new Date().toLocaleTimeString('ar-EG'),
             status: 'completed',
@@ -1386,13 +1370,6 @@ function getPaymentDetails() {
         };
     }
 }
-
-
-
-
-
-
-
 
 
 
