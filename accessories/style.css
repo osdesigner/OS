@@ -492,9 +492,9 @@ button#continue-btn:hover {
 /* ===== موبايل ===== */
 @media (max-width: 768px) {
   .products-grid {
-    grid-template-columns: 1fr;
-    padding: 0px 0;
-  }
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0;
+    } 
 
   .product-card {
     flex-direction: column;
@@ -559,6 +559,25 @@ button#continue-btn:hover {
   .hed-img-top p{
     font-size: 12px;
   }
+
+  .contenar{
+  width: 100%;
+  margin: 40px auto;
+  padding: 0px 10px;
+}
+
+.product-info{
+  padding: 10px;
+}
+
+.product-info button {
+  margin: 0 0 10px 0;
+
+}
+
+.product-info h3 {
+  font-size: 14px;
+}
 
 
 }
