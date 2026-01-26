@@ -1142,52 +1142,56 @@ window.sendInvoiceWhatsApp = function() {
         }
     }
     
-    let message = `🎫 *فاتورة شراء - براند فون OS*\n`;
-    message += `📋 رقم الفاتورة: #${currentInvoiceNumber}\n`;
-    message += `📅 التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n`;
-    
-    message += `👤 *العميل:* ${buyerName || 'مشتري'}\n`;
-    message += `📱 *الهاتف:* ${buyerPhone}\n\n`;
-    
-    message += `🛒 *المنتجات:*\n`;
-    message += '────────────────\n';
-    
-    cart.forEach((item, index) => {
-        const itemTotal = item.sellPrice * item.cartQuantity;
-        message += `${index + 1}. ${item.title}\n`;
-        message += `    الكمية: ${item.cartQuantity}\n`;
-        message += `    السعر: ${item.sellPrice} جنيه\n`;
-        message += `    الإجمالي: ${itemTotal} جنيه\n`;
-        message += `    السيريال: ${item.serial}\n\n`;
-    });
-    
-    message += '────────────────\n';
-    const totalAmount = calculateTotalAmount();
-    message += ` *الإجمالي:* ${totalAmount.toLocaleString()} جنيه\n\n`;
-    
-    // تفاصيل الدفع
-    message += ` *طريقة الدفع:*\n`;
-    if (paymentDetails.method === 'cash') {
-        message += ` دفع نقدي\n`;
-        message += ` المبلغ: ${totalAmount.toLocaleString()} جنيه\n`;
-    } else if (paymentDetails.method === 'vodafone') {
-        message += ` فودافون كاش\n`;
-        message += ` المبلغ: ${totalAmount.toLocaleString()} جنيه\n`;
-        message += ` الرقم: 01144898934\n`; // ضع رقم الفودافون كاش الخاص بك
-    } else if (paymentDetails.method === 'mixed') {
-        message += ` مختلط\n`;
-        message += ` نقدي: ${paymentDetails.cashAmount} جنيه\n`;
-        message += ` فودافون: ${paymentDetails.vodafoneAmount} جنيه\n`;
-        
-        if (paymentDetails.remaining > 0) {
-            message += ` *المتبقي:* ${paymentDetails.remaining} جنيه\n`;
-        }
+    let message = `فاتورة شراء - براند فون OS\n`;
+message += `رقم الفاتورة: ${currentInvoiceNumber}\n`;
+message += `التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n`;
+
+message += `بيانات العميل\n`;
+message += `الاسم: ${buyerName || 'مشتري'}\n`;
+message += `رقم الهاتف: ${buyerPhone}\n\n`;
+
+message += `تفاصيل المنتجات\n`;
+message += `--------------------------------\n`;
+
+cart.forEach((item, index) => {
+    const itemTotal = item.sellPrice * item.cartQuantity;
+    message += `${index + 1}- اسم المنتج: ${item.title}\n`;
+    message += `الكمية: ${item.cartQuantity}\n`;
+    message += `سعر الوحدة: ${item.sellPrice} جنيه\n`;
+    message += `الإجمالي: ${itemTotal} جنيه\n`;
+    message += `السيريال: ${item.serial}\n\n`;
+});
+
+message += `--------------------------------\n`;
+const totalAmount = calculateTotalAmount();
+message += `إجمالي الفاتورة: ${totalAmount.toLocaleString()} جنيه\n\n`;
+
+// تفاصيل الدفع
+message += `طريقة الدفع\n`;
+
+if (paymentDetails.method === 'cash') {
+    message += `الدفع: نقدي\n`;
+    message += `المبلغ المدفوع: ${totalAmount.toLocaleString()} جنيه\n`;
+} 
+else if (paymentDetails.method === 'vodafone') {
+    message += `الدفع: فودافون كاش\n`;
+    message += `المبلغ المدفوع: ${totalAmount.toLocaleString()} جنيه\n`;
+    message += `رقم التحويل: 01144898934\n`;
+} 
+else if (paymentDetails.method === 'mixed') {
+    message += `الدفع: نقدي + فودافون كاش\n`;
+    message += `المبلغ النقدي: ${paymentDetails.cashAmount} جنيه\n`;
+    message += `مبلغ فودافون كاش: ${paymentDetails.vodafoneAmount} جنيه\n`;
+
+    if (paymentDetails.remaining > 0) {
+        message += `المبلغ المتبقي: ${paymentDetails.remaining} جنيه\n`;
     }
-    
-    message += '\n────────────────\n';
-    message += ` *البائع:* ${currentEmployee?.title || 'بائع النظام'}\n`;
-    message += ` *اتصل بنا:* 01144898934\n`; // ضع رقمك
-    
+}
+
+message += `\n--------------------------------\n`;
+message += `تم تنفيذ عملية البيع بواسطة: ${currentEmployee?.title || 'إدارة المتجر'}\n`;
+message += `نشكركم على ثقتكم في براند فون OS`;
+
     // تشفير الرسالة للواتساب
     const encodedMessage = encodeURIComponent(message);
     
