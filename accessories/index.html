@@ -286,6 +286,44 @@
                 z-index: 999;
             }
         }
+
+
+
+        .search-box {
+    margin: 20px 0;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.keywords {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.keywords span {
+    padding: 6px 12px;
+    background: #f2f2f2;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.keywords span:hover {
+    background: #000;
+    color: #fff;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -354,9 +392,30 @@
             <p>اشكال و الوان هتعجبك</p>
         </div>
     </div>
+    
 
     <!-- المنتجات -->
     <main class="contenar" id="contenar">
+
+<div class="search-box">
+    <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="ابحث عن شاحن، وصلة، سماعة..."
+        oninput="filterProducts()"
+    >
+
+    <div class="keywords">
+        <span onclick="setKeyword('شاحن')">شاحن</span>
+        <span onclick="setKeyword('وصله')">وصلة</span>
+        <span onclick="setKeyword('سماعه')">سماعة</span>
+        <span onclick="setKeyword('راس')">راس شاحن</span>
+        <span onclick="setKeyword('65W')">65W</span>
+        <span onclick="setKeyword('راس')">راس</span>
+    </div>
+</div>
+
+
         <div id="products" class="products-grid"></div>
         
         <!-- حالة عدم وجود منتجات -->
@@ -564,74 +623,110 @@
             updateCartCount();
         }
 
-        
+        let allProducts = [];
 
-        // تحميل المنتجات
+
         async function loadProducts() {
-            const productsDiv = document.getElementById("products");
-            const noProductsDiv = document.getElementById("noProducts");
-            
-            try {
-                const q = query(
-                    collection(db, "products"),
-                    where("type", "==", "accessories"),
-                    orderBy("createdAt", "desc")
-                );
+    const productsDiv = document.getElementById("products");
+    const noProductsDiv = document.getElementById("noProducts");
 
-                const snapshot = await getDocs(q);
-                
-                if (snapshot.empty) {
-                    productsDiv.style.display = 'none';
-                    noProductsDiv.style.display = 'block';
-                    return;
-                }
+    allProducts = []; // تفريغ قبل التحميل
 
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    
-                    productsDiv.innerHTML += `
-                        <div class="product-card">
-                            ${data.sellPrice > 3000 ? '<span class="badge">فاخر</span>' : ''}
-                            ${data.sellPrice < 500 ? '<span class="badge">عرض خاص</span>' : ''}
-                            
-                            <img src="${data.images[0]}" alt="${data.title}" loading="lazy">
-                            <div class="product-info">
-                                <h3>${data.title}</h3>
-                                <p>${data.description || 'جودة صوت عالية وراحة طويلة الأمد'}</p>
-                                <div class="price">${data.sellPrice} جنيه</div>
-                                ${data.originalPrice ? `<div class="original-price" style="text-decoration: line-through; color: #999; font-size: 12px;">${data.originalPrice} جنيه</div>` : ''}
-                                
-                                <div class="product-actions">
-                                   
-                                    <button onclick='addToCart({
-                                        id: "${doc.id}",
-                                        title: "${data.title}",
-                                        sellPrice: ${data.sellPrice},
-                                        image: "${data.images[0]}",
-                                        serial: "${data.serial || ""}"
-                                    })'>إضافة إلى السلة</button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-            } catch (error) {
-                console.error("Error loading products:", error);
-                showNotification('حدث خطأ في تحميل المنتجات', 'error');
-                productsDiv.style.display = 'none';
-                noProductsDiv.style.display = 'block';
-            } finally {
-                // إخفاء شاشة التحميل
-                setTimeout(() => {
-                    const loadingOverlay = document.getElementById('loadingOverlay');
-                    loadingOverlay.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingOverlay.style.display = 'none';
-                    }, 500);
-                }, 500);
-            }
+    try {
+        const q = query(
+            collection(db, "products"),
+            where("type", "==", "accessories"),
+            orderBy("createdAt", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            productsDiv.style.display = "none";
+            noProductsDiv.style.display = "block";
+            return;
         }
+
+        snapshot.forEach(doc => {
+            allProducts.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+
+        // عرض كل المنتجات أول مرة
+        renderProducts(allProducts);
+
+    } catch (error) {
+        console.error(error);
+        showNotification("حدث خطأ في تحميل المنتجات", "error");
+        productsDiv.style.display = "none";
+        noProductsDiv.style.display = "block";
+    } finally {
+        setTimeout(() => {
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            loadingOverlay.style.opacity = "0";
+            setTimeout(() => loadingOverlay.style.display = "none", 500);
+        }, 500);
+    }
+}
+
+
+        function renderProducts(products) {
+    const productsDiv = document.getElementById("products");
+    const noProductsDiv = document.getElementById("noProducts");
+
+    productsDiv.innerHTML = "";
+
+    if (products.length === 0) {
+        productsDiv.style.display = "none";
+        noProductsDiv.style.display = "block";
+        return;
+    }
+
+    productsDiv.style.display = "grid";
+    noProductsDiv.style.display = "none";
+
+    products.forEach(data => {
+        productsDiv.innerHTML += `
+            <div class="product-card">
+                ${data.sellPrice > 3000 ? '<span class="badge">فاخر</span>' : ''}
+                ${data.sellPrice < 500 ? '<span class="badge">عرض خاص</span>' : ''}
+
+                <img src="${data.images[0]}" alt="${data.title}">
+                <div class="product-info">
+                    <h3>${data.title}</h3>
+                    <p>${data.description || ''}</p>
+                    <div class="price">${data.sellPrice} جنيه</div>
+
+                    <button onclick='addToCart({
+                        id: "${data.id}",
+                        title: "${data.title}",
+                        sellPrice: ${data.sellPrice},
+                        image: "${data.images[0]}"
+                    })'>إضافة إلى السلة</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function filterProducts() {
+    const value = document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered = allProducts.filter(product =>
+        product.title.toLowerCase().includes(value) ||
+        (product.description && product.description.toLowerCase().includes(value))
+    );
+
+    renderProducts(filtered);
+}
+
+function setKeyword(word) {
+    document.getElementById("searchInput").value = word;
+    filterProducts();
+}
+
 
         // العلامات المفضلة
         function toggleWishlist(productId) {
@@ -663,6 +758,29 @@
             loadProducts();
             updateCartCount();
         });
+
+        window.filterProducts = function () {
+    const value = document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered = allProducts.filter(product =>
+        product.title.toLowerCase().includes(value) ||
+        (product.description && product.description.toLowerCase().includes(value))
+    );
+
+    renderProducts(filtered);
+};
+
     </script>
+
+    <script>
+    function setKeyword(word) {
+        const input = document.getElementById("searchInput");
+        if (!input) return;
+
+        input.value = word;
+        filterProducts();
+    }
+</script>
+
 </body>
 </html>
