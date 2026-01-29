@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تقارير المبيعات المتقدمة | OS Store</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    *{box-sizing:border-box;font-family:'Cairo',sans-serif}
+    body{margin:0;background:#f4f6f8;color:#222}
+
+    header{
+      background:linear-gradient(135deg,#000,#222);
+      color:#fff;padding:18px 25px;
+      display:flex;justify-content:space-between;align-items:center
+    }
+    header h1{margin:0;font-size:22px}
+
+    .container{padding:20px}
+
+    .section-title{
+      font-size:18px;font-weight:700;margin:20px 0 15px;color:#333;
+      border-right:4px solid #000;padding-right:10px;
+      display:flex;justify-content:space-between;align-items:center
+    }
+
+    .month-selector{
+      background:#fff;border-radius:14px;padding:15px;margin-bottom:20px;
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center
+    }
+    .month-selector select{
+      padding:10px 15px;border-radius:10px;border:1px solid #ddd;font-size:14px;
+      min-width:180px;background:#fff;cursor:pointer
+    }
+    .month-selector button{
+      padding:10px 25px;border:none;border-radius:10px;
+      background:#000;color:#fff;cursor:pointer;font-weight:600;
+      transition:background 0.3s
+    }
+    .month-selector button:hover{background:#333}
+
+    .stats-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-bottom:20px
+    }
+    .stat{
+      background:#fff;border-radius:16px;padding:18px;
+      box-shadow:0 8px 20px rgba(0,0,0,.06);
+      transition:transform 0.3s, box-shadow 0.3s;
+      position:relative;
+    }
+    .stat:hover{
+      transform:translateY(-5px);
+      box-shadow:0 12px 25px rgba(0,0,0,.1)
+    }
+
+    .stat h3{margin:0;font-size:14px;color:#ffffff}
+    .stat p{
+      margin:10px 0 0;font-size:26px;font-weight:700;
+      color:#fff
+    }
+    
+    .stat-btn{
+      position:absolute;
+      top:10px;
+      left:10px;
+      background:rgba(255,255,255,0.2);
+      border:none;
+      color:#fff;
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      transition:all 0.3s;
+    }
+    
+    .stat-btn:hover{
+      background:rgba(255,255,255,0.3);
+      transform:scale(1.1);
+    }
+    
+    .today-stats .stat{background:linear-gradient(135deg,#3b3939,#000000)}
+    .monthly-stats .stat{background:linear-gradient(135deg,#c23737,#ff0000) ;color:#fff}
+
+    .charts{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-bottom:25px
+    }
+    .chart-box{
+      background:#fff;border-radius:16px;padding:20px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);
+      position:relative
+    }
+    .chart-box h4{
+      margin:0 0 15px;font-size:16px;color:#444;
+      display:flex;align-items:center;gap:8px
+    }
+    
+    .chart-btn{
+      position:absolute;
+      top:15px;
+      left:15px;
+      background:#f0f0f0;
+      border:none;
+      color:#333;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:16px;
+      transition:all 0.3s;
+    }
+    
+    .chart-btn:hover{
+      background:#e0e0e0;
+      transform:scale(1.05);
+    }
+
+    .top-products{
+      background:#fff;border-radius:16px;padding:20px;margin-bottom:25px;
+      box-shadow:0 4px 12px rgba(0,0,0,.05);
+      position:relative
+    }
+    .top-products h3{
+      margin:0 0 15px;font-size:16px;color:#444;
+      display:flex;align-items:center;gap:8px
+    }
+    .product-item{
+      display:flex;justify-content:space-between;padding:12px 15px;
+      border-bottom:1px solid #eee;transition:background 0.3s;
+      position:relative
+    }
+    .product-item:hover{background:#f8f9fa}
+    .product-item:last-child{border-bottom:none}
+    
+    .product-btn{
+      background:transparent;
+      border:none;
+      color:#666;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:4px;
+      font-size:12px;
+      transition:all 0.3s;
+    }
+    
+    .product-btn:hover{
+      background:#f0f0f0;
+      color:#000;
+    }
+
+    .buttons-container{
+      display:flex;gap:15px;margin:20px 0;flex-wrap:wrap
+    }
+    .action-btn{
+      padding:12px 25px;border:none;border-radius:10px;
+      background:#000;color:#fff;cursor:pointer;font-weight:600;
+      font-size:14px;transition:background 0.3s;display:flex;
+      align-items:center;gap:8px
+    }
+    .action-btn:hover{background:#333}
+    .action-btn.detailed{background:#2563eb}
+    .action-btn.detailed:hover{background:#1d4ed8}
+    .action-btn.refresh{background:#16a34a}
+    .action-btn.refresh:hover{background:#15803d}
+    
+    .action-btn.export{background:#9333ea}
+    .action-btn.export:hover{background:#7c3aed}
+
+    @media(max-width:768px){
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .month-selector{flex-direction:column;align-items:stretch}
+      .month-selector select{width:100%}
+      .buttons-container{flex-direction:column}
+      .action-btn{width:100%;justify-content:center}
+    }
+
+    .report-box{
+      margin-top:20px;
+      padding:15px;
+      background:#f9f9f9;
+      border:1px solid #ddd;
+      border-radius:8px;
+    }
+    
+    .modal {
+      display:none;
+      position:fixed;
+      z-index:1000;
+      left:0;
+      top:0;
+      width:100%;
+      height:100%;
+      background-color:rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+      background-color:#fff;
+      margin:5% auto;
+      padding:20px;
+      border-radius:10px;
+      width:80%;
+      max-width:600px;
+      max-height:80%;
+      overflow-y:auto;
+      box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    }
+    
+    .close {
+      color:#aaa;
+      float:left;
+      font-size:28px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    
+    .close:hover {
+      color:#000;
+    }
+    
+    .notification {
+      position:fixed;
+      top:20px;
+      right:20px;
+      background:#16a34a;
+      color:white;
+      padding:15px 20px;
+      border-radius:8px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.15);
+      z-index:1001;
+      display:none;
+      align-items:center;
+      gap:10px;
+      animation:slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {transform:translateX(100%); opacity:0;}
+      to {transform:translateX(0); opacity:1;}
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📊 لوحة التقارير الشهرية واليومية</h1>
+  <span>OS Store</span>
+</header>
+
+<div class="container">
+  <!-- اختيار الشهر -->
+  <div class="month-selector">
+    <select id="monthSelect">
+      <option value="">اختر الشهر...</option>
+    </select>
+    <button onclick="loadSelectedMonth()">
+      📅 عرض تقرير الشهر
+    </button>
+    <button onclick="refreshData()" style="background:#16a34a">
+      🔄 تحديث البيانات
+    </button>
+  </div>
+
+  <!-- إحصائيات اليوم -->
+  <h3 class="section-title">📈 إحصائيات اليوم</h3>
+  <div class="stats-grid today-stats">
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('todaySales')" title="عرض التفاصيل">📊</button>
+      <h3>مبيعات اليوم</h3>
+      <p id="todaySales">0 ج</p>
+    </div>
+    
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('todayProfit')" title="عرض التفاصيل">💰</button>
+      <h3>أرباح اليوم</h3>
+      <p id="todayProfit">0 ج</p>
+    </div>
+    
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('todayInvoices')" title="عرض التفاصيل">🧾</button>
+      <h3>فواتير اليوم</h3>
+      <p id="todayInvoices">0</p>
+    </div>
+  </div>
+
+  <!-- إحصائيات الشهر -->
+  <h3 class="section-title">📊 إحصائيات الشهر المحدد</h3>
+  <div class="stats-grid monthly-stats">
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('monthlySales')" title="عرض التفاصيل">📊</button>
+      <h3>إجمالي مبيعات الشهر</h3>
+      <p id="monthlySales">0 ج</p>
+    </div>
+    
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('monthlyProfit')" title="عرض التفاصيل">💰</button>
+      <h3>أرباح الشهر</h3>
+      <p id="monthlyProfit">0 ج</p>
+    </div>
+    
+    <div class="stat">
+      <button class="stat-btn" onclick="showStatDetails('monthlyInvoices')" title="عرض التفاصيل">🧾</button>
+      <h3>عدد فواتير الشهر</h3>
+      <p id="monthlyInvoices">0</p>
+    </div>
+  </div>
+
+  <!-- المنتجات الأكثر مبيعاً -->
+  <div class="top-products">
+    <h3>🏆 المنتجات الأكثر مبيعاً هذا الشهر</h3>
+    <button class="chart-btn" onclick="exportTopProducts()" title="تصدير القائمة">📤</button>
+    <div id="topProductsList"></div>
+  </div>
+
+  <!-- الرسوم البيانية -->
+  <div class="charts">
+    <div class="chart-box">
+      <h4>📈 توزيع المبيعات خلال الشهر</h4>
+      <button class="chart-btn" onclick="exportChart('monthlyChart')" title="حفظ الرسم البياني">💾</button>
+      <canvas id="monthlyChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>💳 طرق الدفع</h4>
+      <button class="chart-btn" onclick="exportChart('paymentChart')" title="حفظ الرسم البياني">💾</button>
+      <canvas id="paymentChart"></canvas>
+    </div>
+  </div>
+
+  <!-- الأزرار الإضافية -->
+  <div class="buttons-container">
+    <button class="action-btn detailed" onclick="showDetailedReport()">
+      📋 عرض تقرير تفصيلي للشهر
+    </button>
+    <button class="action-btn export" onclick="exportMonthlyReport()">
+      📤 تصدير تقرير PDF
+    </button>
+    <button class="action-btn" onclick="printDashboard()">
+      🖨️ طباعة اللوحة
+    </button>
+  </div>
+  
+  <div id="monthlyReport" class="report-box" style="display:none;"></div>
+</div>
+
+<!-- نافذة التفاصيل -->
+<div id="detailsModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- إشعار -->
+<div id="notification" class="notification">
+  <span id="notificationText"></span>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+    authDomain: "stor-121.firebaseapp.com",
+    projectId: "stor-121",
+    storageBucket: "stor-121.firebasestorage.app",
+    messagingSenderId: "944316047610",
+    appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
+    measurementId: "G-F4JBRJKR1R"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let monthlyStats = {};
+  let selectedMonth = '';
+  let todayStats = { sales: 0, profit: 0, invoices: 0 };
+  let monthlyChart, paymentChart;
+
+  // دالة للحصول على تاريخ اليوم بالعربية
+  function isToday(timestamp) {
+    if (!timestamp) return false;
+
+    const today = new Date();
+    const d = timestamp.toDate();
+
+    return (
+      d.getDate() === today.getDate() &&
+      d.getMonth() === today.getMonth() &&
+      d.getFullYear() === today.getFullYear()
+    );
+  }
+
+  // دالة لاستخراج مفتاح الشهر من التاريخ
+  function getMonthKey(dateStr) {
+    if (!dateStr || typeof dateStr !== 'string') return '';
+    const parts = dateStr.split('/');
+    if (parts.length < 3) return '';
+    return `${parts[1]}/${parts[2]}`.trim();
+  }
+
+  // دالة لاستخراج اليوم من التاريخ
+  function getDayFromDate(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('/');
+    return parts[0] || '';
+  }
+
+  // تحميل كل المبيعات من Firebase
+  async function loadAllSales() {
+    try {
+      monthlyStats = {}; // إعادة تعيين الإحصائيات
+      todayStats = { sales: 0, profit: 0, invoices: 0 }; // إعادة تعيين إحصائيات اليوم
+      
+      const monthSelect = document.getElementById('monthSelect');
+      monthSelect.innerHTML = '<option value="">اختر الشهر...</option>';
+
+      const snap = await getDocs(collection(db, 'sales'));
+      const monthsSet = new Set();
+
+      snap.forEach(doc => {
+        const data = doc.data();
+        if (!data || !data.date) return;
+
+        // حساب إحصائيات اليوم
+        if (isToday(data.createdAt)) {
+          const saleAmount =
+            Number(data.totalAmount) ||
+            Number(data.payment?.total) ||
+            0;
+
+          todayStats.sales += saleAmount;
+          todayStats.invoices++;
+
+          let invoiceProfit = 0;
+          if (Array.isArray(data.items)) {
+            data.items.forEach(item => {
+              const quantity = Number(item.quantity) || 0;
+              const buyPrice = Number(item.buyPrice) || 0;
+              const price = Number(item.price) || 0;
+              invoiceProfit += (price - buyPrice) * quantity;
+            });
+          }
+
+          todayStats.profit += invoiceProfit;
+        }
+
+        const monthKey = getMonthKey(data.date);
+        if (!monthKey) return;
+
+        // إضافة الشهر إلى القائمة
+        monthsSet.add(monthKey);
+
+        // تهيئة إحصائيات الشهر إن لم تكن موجودة
+        if (!monthlyStats[monthKey]) {
+          monthlyStats[monthKey] = {
+            sales: 0,
+            profit: 0,
+            invoices: 0,
+            dailySales: {},
+            paymentMethods: {},
+            products: {}
+          };
+        }
+
+        // زيادة إجمالي المبيعات
+        const saleAmount = parseFloat(data.totalAmount) || 0;
+        monthlyStats[monthKey].sales += saleAmount;
+        monthlyStats[monthKey].invoices++;
+
+        // حساب الأرباح
+        let invoiceProfit = 0;
+        if (Array.isArray(data.items)) {
+          data.items.forEach(item => {
+            const quantity = parseInt(item.quantity) || 0;
+            const buyPrice = parseFloat(item.buyPrice) || 0;
+            const price = parseFloat(item.price) || 0;
+            
+            // حساب ربح المنتج
+            invoiceProfit += (price - buyPrice) * quantity;
+
+            // إحصائيات المنتجات
+            if (item.name) {
+              const productName = item.name;
+              if (!monthlyStats[monthKey].products[productName]) {
+                monthlyStats[monthKey].products[productName] = {
+                  quantity: 0,
+                  revenue: 0
+                };
+              }
+              monthlyStats[monthKey].products[productName].quantity += quantity;
+              monthlyStats[monthKey].products[productName].revenue += (price * quantity);
+            }
+          });
+        }
+        monthlyStats[monthKey].profit += invoiceProfit;
+
+        // إحصائيات المبيعات اليومية
+        const day = getDayFromDate(data.date);
+        if (day) {
+          monthlyStats[monthKey].dailySales[day] = 
+            (monthlyStats[monthKey].dailySales[day] || 0) + saleAmount;
+        }
+
+        // إحصائيات طرق الدفع
+        const paymentMethod = data.payment?.method || 'غير محدد';
+        monthlyStats[monthKey].paymentMethods[paymentMethod] = 
+          (monthlyStats[monthKey].paymentMethods[paymentMethod] || 0) + saleAmount;
+      });
+
+      // تحديث إحصائيات اليوم
+      updateTodayStats();
+
+      // إضافة الأشهر إلى القائمة المنسقة
+      const sortedMonths = Array.from(monthsSet).sort((a, b) => {
+        const [monthA, yearA] = a.split('/').map(num => parseInt(num));
+        const [monthB, yearB] = b.split('/').map(num => parseInt(num));
+        
+        if (yearA !== yearB) return yearB - yearA;
+        return monthB - monthA;
+      });
+
+      sortedMonths.forEach(month => {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = `شهر ${month}`;
+        monthSelect.appendChild(option);
+      });
+
+      // إذا كان هناك أشهر، اختيار أول شهر تلقائياً
+      if (sortedMonths.length > 0) {
+        selectedMonth = sortedMonths[0];
+        monthSelect.value = selectedMonth;
+        loadMonthData(selectedMonth);
+      }
+
+    } catch (error) {
+      console.error('Error loading sales:', error);
+      showNotification('حدث خطأ في تحميل البيانات', 'error');
+    }
+  }
+
+  // تحديث إحصائيات اليوم
+  function updateTodayStats() {
+    document.getElementById('todaySales').textContent = todayStats.sales.toFixed(2) + ' ج';
+    document.getElementById('todayProfit').textContent = todayStats.profit.toFixed(2) + ' ج';
+    document.getElementById('todayInvoices').textContent = todayStats.invoices;
+  }
+
+  // تحميل بيانات شهر محدد
+  function loadMonthData(monthKey) {
+    const data = monthlyStats[monthKey];
+    if (!data) {
+      // إعادة تعيين البيانات إذا لم يكن هناك بيانات
+      document.getElementById('monthlySales').textContent = '0 ج';
+      document.getElementById('monthlyProfit').textContent = '0 ج';
+      document.getElementById('monthlyInvoices').textContent = '0';
+      document.getElementById('topProductsList').innerHTML = '<p style="text-align:center;color:#777;padding:20px">لا توجد بيانات لهذا الشهر</p>';
+      return;
+    }
+
+    // تحديث الإحصائيات
+    document.getElementById('monthlySales').textContent = data.sales.toFixed(2) + ' ج';
+    document.getElementById('monthlyProfit').textContent = data.profit.toFixed(2) + ' ج';
+    document.getElementById('monthlyInvoices').textContent = data.invoices;
+
+    // عرض المنتجات الأكثر مبيعاً
+    displayTopProducts(data.products);
+
+    // رسم الرسوم البيانية
+    renderCharts(data);
+  }
+
+  // عرض المنتجات الأكثر مبيعاً
+  function displayTopProducts(products) {
+    const container = document.getElementById('topProductsList');
+    container.innerHTML = '';
+
+    if (!products || Object.keys(products).length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:#777;padding:20px">لا توجد منتجات مباعة</p>';
+      return;
+    }
+
+    // تحويل المنتجات إلى مصفوفة وترتيبها حسب الكمية
+    const productsArray = Object.entries(products).map(([name, data]) => ({
+      name,
+      quantity: data.quantity,
+      revenue: data.revenue
+    }));
+
+    // ترتيب تنازلي حسب الكمية
+    productsArray.sort((a, b) => b.quantity - a.quantity);
+
+    // عرض أول 10 منتجات فقط
+    const topProducts = productsArray.slice(0, 10);
+
+    topProducts.forEach((product, index) => {
+      const div = document.createElement('div');
+      div.className = 'product-item';
+      
+      const medal = index < 3 ? ['🥇', '🥈', '🥉'][index] : `${index + 1}.`;
+      
+      div.innerHTML = `
+        <span>${medal} ${product.name}</span>
+        <div>
+          <strong>${product.quantity}</strong> قطعة (${product.revenue.toFixed(2)} ج)
+          <button class="product-btn" onclick="showProductDetails('${product.name}', ${product.quantity}, ${product.revenue})" title="عرض التفاصيل">🔍</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  // رسم الرسوم البيانية
+  function renderCharts(data) {
+    const monthlyCtx = document.getElementById('monthlyChart');
+    const paymentCtx = document.getElementById('paymentChart');
+    
+    // تدمير الرسوم البيانية القديمة
+    if (monthlyChart) monthlyChart.destroy();
+    if (paymentChart) paymentChart.destroy();
+
+    // رسم بياني للمبيعات اليومية خلال الشهر
+    const days = Object.keys(data.dailySales).sort((a, b) => a - b);
+    const dailySales = days.map(day => data.dailySales[day]);
+
+    monthlyChart = new Chart(monthlyCtx, {
+      type: 'bar',
+      data: {
+        labels: days.map(day => `يوم ${day}`),
+        datasets: [{
+          label: 'المبيعات اليومية',
+          data: dailySales,
+          backgroundColor: '#2563eb',
+          borderColor: '#1d4ed8',
+          borderWidth: 1,
+          borderRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return value + ' ج';
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            rtl: true,
+            labels: {
+              font: {
+                family: 'Cairo',
+                size: 14
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // رسم بياني لطرق الدفع
+    const paymentMethods = Object.keys(data.paymentMethods);
+    const paymentAmounts = paymentMethods.map(method => data.paymentMethods[method]);
+
+    paymentChart = new Chart(paymentCtx, {
+      type: 'pie',
+      data: {
+        labels: paymentMethods,
+        datasets: [{
+          data: paymentAmounts,
+          backgroundColor: [
+            '#16a34a',
+            '#2563eb',
+            '#dc2626',
+            '#9333ea',
+            '#ea580c',
+            '#0891b2',
+            '#7c3aed',
+            '#db2777'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            rtl: true,
+            labels: {
+              font: {
+                family: 'Cairo',
+                size: 14
+              },
+              padding: 20
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = Math.round((value / total) * 100);
+                return `${label}: ${value.toFixed(2)} ج (${percentage}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // تحميل بيانات الشهر المحدد من القائمة
+  function loadSelectedMonth() {
+    const monthSelect = document.getElementById('monthSelect');
+    selectedMonth = monthSelect.value;
+    
+    if (!selectedMonth) {
+      showNotification('الرجاء اختيار شهر', 'warning');
+      return;
+    }
+    
+    loadMonthData(selectedMonth);
+    showNotification(`تم تحميل بيانات شهر ${selectedMonth}`, 'success');
+  }
+
+  // عرض تفاصيل الإحصائية
+  function showStatDetails(statId) {
+    let title = '';
+    let content = '';
+    
+    switch(statId) {
+      case 'todaySales':
+        title = 'تفاصيل مبيعات اليوم';
+        content = `
+          <h3>مبيعات اليوم</h3>
+          <p><strong>المبلغ:</strong> ${todayStats.sales.toFixed(2)} جنيهاً</p>
+          <p><strong>عدد الفواتير:</strong> ${todayStats.invoices}</p>
+          <p><strong>متوسط قيمة الفاتورة:</strong> ${(todayStats.invoices > 0 ? todayStats.sales / todayStats.invoices : 0).toFixed(2)} ج</p>
+        `;
+        break;
+        
+      case 'todayProfit':
+        title = 'تفاصيل أرباح اليوم';
+        content = `
+          <h3>أرباح اليوم</h3>
+          <p><strong>إجمالي الأرباح:</strong> ${todayStats.profit.toFixed(2)} جنيهاً</p>
+          <p><strong>نسبة الربح:</strong> ${(todayStats.sales > 0 ? (todayStats.profit / todayStats.sales * 100) : 0).toFixed(2)}%</p>
+          <p><strong>متوسط الربح للفاتورة:</strong> ${(todayStats.invoices > 0 ? todayStats.profit / todayStats.invoices : 0).toFixed(2)} ج</p>
+        `;
+        break;
+        
+      case 'todayInvoices':
+        title = 'تفاصيل فواتير اليوم';
+        content = `
+          <h3>فواتير اليوم</h3>
+          <p><strong>عدد الفواتير:</strong> ${todayStats.invoices}</p>
+          <p><strong>إجمالي المبيعات:</strong> ${todayStats.sales.toFixed(2)} جنيهاً</p>
+          <p><strong>متوسط قيمة الفاتورة:</strong> ${(todayStats.invoices > 0 ? todayStats.sales / todayStats.invoices : 0).toFixed(2)} ج</p>
+        `;
+        break;
+        
+      case 'monthlySales':
+        if (!selectedMonth || !monthlyStats[selectedMonth]) {
+          showNotification('لا توجد بيانات لهذا الشهر', 'warning');
+          return;
+        }
+        title = 'تفاصيل مبيعات الشهر';
+        const monthData = monthlyStats[selectedMonth];
+        content = `
+          <h3>مبيعات شهر ${selectedMonth}</h3>
+          <p><strong>إجمالي المبيعات:</strong> ${monthData.sales.toFixed(2)} جنيهاً</p>
+          <p><strong>عدد الفواتير:</strong> ${monthData.invoices}</p>
+          <p><strong>متوسط المبيعات اليومية:</strong> ${(Object.keys(monthData.dailySales).length > 0 ? monthData.sales / Object.keys(monthData.dailySales).length : 0).toFixed(2)} ج</p>
+          <p><strong>متوسط قيمة الفاتورة:</strong> ${(monthData.invoices > 0 ? monthData.sales / monthData.invoices : 0).toFixed(2)} ج</p>
+        `;
+        break;
+        
+      default:
+        showNotification('تفاصيل غير متوفرة', 'info');
+        return;
+    }
+    
+    showModal(title, content);
+  }
+
+  // عرض تفاصيل المنتج
+  function showProductDetails(name, quantity, revenue) {
+    const title = 'تفاصيل المنتج';
+    const content = `
+      <h3>${name}</h3>
+      <p><strong>الكمية المباعة:</strong> ${quantity} قطعة</p>
+      <p><strong>إجمالي الإيرادات:</strong> ${revenue.toFixed(2)} جنيهاً</p>
+      <p><strong>متوسط سعر القطعة:</strong> ${(quantity > 0 ? revenue / quantity : 0).toFixed(2)} ج</p>
+    `;
+    
+    showModal(title, content);
+  }
+
+  // عرض تقرير تفصيلي
+  function showDetailedReport() {
+    if (!selectedMonth) {
+      showNotification('الرجاء اختيار شهر أولاً', 'warning');
+      return;
+    }
+
+    const data = monthlyStats[selectedMonth];
+    if (!data) {
+      showNotification('لا توجد بيانات لهذا الشهر', 'warning');
+      return;
+    }
+
+    // تحضير التقرير التفصيلي
+    const reportDiv = document.getElementById('monthlyReport');
+    
+    // تحضير المنتجات الأكثر مبيعاً
+    let productsHTML = '';
+    const productsArray = Object.entries(data.products)
+      .map(([name, info]) => ({ name, quantity: info.quantity, revenue: info.revenue }))
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 10);
+
+    if (productsArray.length > 0) {
+      productsHTML = '<h4>🏆 المنتجات الأكثر مبيعاً:</h4>';
+      productsArray.forEach((product, index) => {
+        productsHTML += `<p>${index + 1}. ${product.name}: ${product.quantity} قطعة (${product.revenue.toFixed(2)} ج)</p>`;
+      });
+    }
+
+    // تحضير طرق الدفع
+    let paymentsHTML = '';
+    const paymentEntries = Object.entries(data.paymentMethods)
+      .sort((a, b) => b[1] - a[1]);
+
+    if (paymentEntries.length > 0) {
+      paymentsHTML = '<h4>💳 توزيع طرق الدفع:</h4>';
+      paymentEntries.forEach(([method, amount], index) => {
+        const percentage = Math.round((amount / data.sales) * 100);
+        paymentsHTML += `<p>${method}: ${amount.toFixed(2)} ج (${percentage}%)</p>`;
+      });
+    }
+
+    // تحضير المبيعات اليومية
+    let dailySalesHTML = '';
+    const days = Object.keys(data.dailySales).sort((a, b) => a - b);
+    if (days.length > 0) {
+      dailySalesHTML = '<h4>📈 المبيعات اليومية:</h4>';
+      days.forEach(day => {
+        dailySalesHTML += `<p>يوم ${day}: ${data.dailySales[day].toFixed(2)} ج</p>`;
+      });
+    }
+
+    reportDiv.innerHTML = `
+      <div style="background:#fff;padding:20px;border-radius:10px;margin-top:20px">
+        <h3>📋 التقرير التفصيلي لشهر ${selectedMonth}</h3>
+        <hr>
+        <h4>📊 إحصائيات عامة:</h4>
+        <p><strong>إجمالي المبيعات:</strong> ${data.sales.toFixed(2)} ج</p>
+        <p><strong>الأرباح:</strong> ${data.profit.toFixed(2)} ج</p>
+        <p><strong>عدد الفواتير:</strong> ${data.invoices}</p>
+        <p><strong>متوسط قيمة الفاتورة:</strong> ${(data.invoices > 0 ? data.sales / data.invoices : 0).toFixed(2)} ج</p>
+        <p><strong>نسبة الربح:</strong> ${(data.sales > 0 ? (data.profit / data.sales * 100) : 0).toFixed(2)}%</p>
+        
+        ${productsHTML}
+        ${paymentsHTML}
+        ${dailySalesHTML}
+        
+        <button onclick="hideDetailedReport()" style="background:#dc2626;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;margin-top:20px">
+          إغلاق التقرير
+        </button>
+      </div>
+    `;
+    
+    reportDiv.style.display = 'block';
+    showNotification('تم عرض التقرير التفصيلي', 'success');
+  }
+
+  // إخفاء التقرير التفصيلي
+  function hideDetailedReport() {
+    const reportDiv = document.getElementById('monthlyReport');
+    reportDiv.style.display = 'none';
+  }
+
+  // تحديث البيانات
+  function refreshData() {
+    loadAllSales();
+    showNotification('✅ تم تحديث البيانات بنجاح', 'success');
+  }
+
+  // تصدير الرسوم البيانية
+  function exportChart(chartId) {
+    const chartCanvas = document.getElementById(chartId);
+    if (!chartCanvas) {
+      showNotification('الرسم البياني غير موجود', 'error');
+      return;
+    }
+    
+    const link = document.createElement('a');
+    link.download = `chart-${chartId}-${new Date().toISOString().slice(0,10)}.png`;
+    link.href = chartCanvas.toDataURL('image/png');
+    link.click();
+    
+    showNotification('تم حفظ الرسم البياني كصورة', 'success');
+  }
+
+  // تصدير قائمة المنتجات
+  function exportTopProducts() {
+    if (!selectedMonth || !monthlyStats[selectedMonth]) {
+      showNotification('لا توجد بيانات للتصدير', 'warning');
+      return;
+    }
+
+    const products = monthlyStats[selectedMonth].products;
+    if (!products || Object.keys(products).length === 0) {
+      showNotification('لا توجد منتجات للتصدير', 'warning');
+      return;
+    }
+
+    const productsArray = Object.entries(products)
+      .map(([name, info]) => ({ name, quantity: info.quantity, revenue: info.revenue }))
+      .sort((a, b) => b.quantity - a.quantity);
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "الترتيب,اسم المنتج,الكمية,الإيرادات\n";
+    
+    productsArray.forEach((product, index) => {
+      csvContent += `${index + 1},${product.name},${product.quantity},${product.revenue.toFixed(2)}\n`;
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `top-products-${selectedMonth}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showNotification('تم تصدير قائمة المنتجات', 'success');
+  }
+
+  // تصدير تقرير PDF (محاكاة)
+  function exportMonthlyReport() {
+    if (!selectedMonth) {
+      showNotification('الرجاء اختيار شهر أولاً', 'warning');
+      return;
+    }
+    
+    showNotification('جاري تحضير التقرير للطباعة...', 'info');
+    
+    // محاكاة لتصدير PDF
+    setTimeout(() => {
+      window.print();
+      showNotification('يمكنك استخدام خاصية الطباعة للحصول على نسخة PDF', 'info');
+    }, 1000);
+  }
+
+  // طباعة اللوحة
+  function printDashboard() {
+    window.print();
+    showNotification('جاري التحضير للطباعة...', 'info');
+  }
+
+  // عرض نافذة تفاعلية
+  function showModal(title, content) {
+    const modal = document.getElementById('detailsModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    modalContent.innerHTML = `
+      <h2 style="margin-top:0">${title}</h2>
+      <div>${content}</div>
+      <div style="margin-top:20px;text-align:left">
+        <button onclick="closeModal()" style="background:#2563eb;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer">
+          إغلاق
+        </button>
+      </div>
+    `;
+    
+    modal.style.display = 'block';
+  }
+
+  // إغلاق النافذة التفاعلية
+  function closeModal() {
+    document.getElementById('detailsModal').style.display = 'none';
+  }
+
+  // عرض إشعار
+  function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notificationText');
+    
+    // تحديد لون الإشعار حسب النوع
+    let backgroundColor = '#2563eb'; // معلومات
+    if (type === 'success') backgroundColor = '#16a34a';
+    if (type === 'error') backgroundColor = '#dc2626';
+    if (type === 'warning') backgroundColor = '#ea580c';
+    
+    notification.style.backgroundColor = backgroundColor;
+    notificationText.textContent = message;
+    notification.style.display = 'flex';
+    
+    // إخفاء الإشعار تلقائياً بعد 3 ثواني
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+
+  // تحميل البيانات عند فتح الصفحة
+  document.addEventListener('DOMContentLoaded', loadAllSales);
+
+  // إضافة تفاعل للأزرار
+  window.onload = function() {
+    // جعل الأزرار تفاعلية
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+      button.addEventListener('click', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 150);
+      });
+    });
+    
+    // إغلاق النافذة عند النقر خارجها
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('detailsModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    });
+  };
+
+  // ربط الدوال بالـ window
+  window.showDetailedReport = showDetailedReport;
+  window.hideDetailedReport = hideDetailedReport;
+  window.refreshData = refreshData;
+  window.loadSelectedMonth = loadSelectedMonth;
+  window.showStatDetails = showStatDetails;
+  window.showProductDetails = showProductDetails;
+  window.exportChart = exportChart;
+  window.exportTopProducts = exportTopProducts;
+  window.exportMonthlyReport = exportMonthlyReport;
+  window.printDashboard = printDashboard;
+  window.closeModal = closeModal;
+
+</script>
+
+</body>
+</html>

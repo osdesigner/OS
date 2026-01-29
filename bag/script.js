@@ -114,7 +114,7 @@ function calculateTotal() {
   let total = 0;
 
   cart.forEach(item => {
-    total += item.price * item.qty;
+    total += item.sellPrice * item.qty;
   });
 
   document.getElementById("totalPrice").textContent = total.toLocaleString("ar-EG");
