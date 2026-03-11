@@ -46,6 +46,11 @@
 <link rel="icon" href="icone.png" type="image/png">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="CSS/style.css">
+<link rel="stylesheet" href="CSS/footer.css">
+<link rel="stylesheet" href="CSS/header.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <!-- Security Headers (خفيفة بدون سيرفر) -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -87,37 +92,36 @@
      </button>
 
 
-    <a href="bag/" class="cart"> 
-      <img width="22" height="22" src="https://img.icons8.com/deco/48/shopping-bag.png">
+    <a href="/bag/" class="cart"> 
+        <img width="22" height="22" src="https://img.icons8.com/deco/48/shopping-bag.png" alt="سلة التسوق">
+        <span class="cart-count" id="cartCount">0</span>
     </a>
 
-    <a href="#" class="cart"> 
+    <a href="/search/" class="cart"> 
       <img width="20" height="20" src="https://img.icons8.com/ios-glyphs/30/search--v1.png">
     </a>
 
     <!-- منيو الديسكتوب -->
     <div class="a-nav">
-      <a href="https://os-br.pages.dev/phone/">هواتف</a>
-      <a href="https://os-br.pages.dev/accessories/">اكسسوارات</a>
-      <a href="https://os-br.pages.dev/haed-phons/">هيدفونز</a>
-      <a href="https://os-br.pages.dev/airpods/">ايربودز</a>
+      <a href="/phone/">هواتف</a>
+      <a href="/accessories/">اكسسوارات</a>
+      <a href="/haed-phons/">هيدفونز</a>
+      <a href="/airpods/">ايربودز</a>
     </div>
   </div>
 
   <!-- منيو الموبايل -->
   <div class="mnu-mobile" id="mnu-mobile">
-    <a href="https://os-br.pages.dev/phone/">هواتف</a>
-    <a href="https://os-br.pages.dev/accessories/">اكسسوارات</a>
-    <a href="https://os-br.pages.dev/haed-phons/">هيدفونز</a>
-    <a href="https://os-br.pages.dev/airpods/">ايربودز</a>
+    <a href="/phone/">هواتف</a>
+    <a href="/accessories/">اكسسوارات</a>
+    <a href="/haed-phons/">هيدفونز</a>
+    <a href="/airpods/">ايربودز</a>
   </div>
 
   <img src="https://os-br.pages.dev/icone.png" class="logo">
 </header>
 
-
-
-
+.
 
 
 <section class="products-grid">
@@ -168,83 +172,94 @@
     <img src="store-card-13-accessories-nav-202509.png" alt="iPad">
   </div>
 
-
-
 </section>
 
 
+<!-- الفوتر -->
+    <footer class="brand-footer">
+        <div class="logo-ic-fo">
+            <img src="/icone.png" class="logo-fo" alt="OS Store">
+            <svg viewBox="0 0 32 32" class="logo-ic-fo-ri" xmlns="http://www.w3.org/2000/svg">
+                <path d="m22.5597 16.9375-5.5076-5.5c-.5854-.5854-1.5323-.5825-2.1157.0039-.5835.5869-.5815 1.5366.0039 2.1211l4.4438 4.4375-4.4438 4.4375c-.5854.5845-.5874 1.5342-.0039 2.1211.2922.2944.676.4414 1.0598.4414.3818 0 .7637-.1455 1.0559-.4375l5.5076-5.5c.2815-.2812.4403-.6636.4403-1.0625s-.1588-.7812-.4403-1.0625z"/>
+            </svg>
+            <p></p>
+        </div>
 
 
-<footer class="brand-footer">
 
- 
+        <div class="footer-grid">
+            <!-- العمود الأول -->
+            <div class="footer-col">
+                <h4>هواتف</h4>
+                <ul>
+                    <li><a href="/phone/">هواتف ذكية</a></li>
+                    <li><a href="/phone/">هواتف مستعملة</a></li>
+                </ul>
+            </div>
 
-  <div class="footer-grid">
+            <!-- العمود الثاني -->
+            <div class="footer-col">
+                <h4>سماعات</h4>
+                <ul>
+                    <li><a href="/airpods/">ايربودز</a></li>
+                    <li><a href="/haed-phons/">هيدفونز</a></li>
+                    <li><a href="/haed-phons/">سماعات رياضية</a></li>
+                </ul>
+            </div>
 
-    <!-- العمود الأول -->
-    <div class="footer-col">
-      <h4>هواتف</h4>
-      <ul>
-        <li><a href="https://os-br.pages.dev/phone/">هواتف</a></li>
-      </ul>
-    </div>
+            <!-- العمود الثالث -->
+            <div class="footer-col">
+                <h4>اكسسوارات</h4>
+                <ul>
+                    <li><a href="/accessories/">شواحن</a></li>
+                    <li><a href="/accessories/">أغطية</a></li>
+                    <li><a href="/accessories/">كابل</a></li>
+                </ul>
+            </div>
 
-    <!-- العمود الثاني -->
-    <div class="footer-col">
-      <h4>سماعات</h4>
-      <ul>
-        <li><a href="https://os-br.pages.dev/airpods/">ايربودز</a></li>
-        <li><a href="https://os-br.pages.dev/haed-phons/">هيدفونز</a></li>
+            <!-- العمود الرابع -->
+            <div class="footer-col">
+                <h4>التواصل</h4>
+                <ul class="contact-list">
+                    <li>
+                        <a href="tel:01144898934">
+                            <i class="fa-solid fa-phone"></i>
+                            اتصل بنا
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://wa.me/201144898934" target="_blank">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            تواصل واتساب
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://maps.app.goo.gl/DCfBBLwhcrM6C92p8" target="_blank">
+                            <i class="fa-solid fa-location-dot"></i>
+                            موقع المتجر
+                        </a>
+                    </li>
+                </ul>
+                
+                <!-- وسائل التواصل الاجتماعي -->
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/groups/osshop" aria-label="فيسبوك"><i class="fab fa-facebook"></i></a>
+                    
+                </div>
+            </div>
+        </div>
 
-      </ul>
-    </div>
-
-    <!-- العمود الثالث -->
-    <div class="footer-col">
-      <h4>اكسسوارات</h4>
-      <ul>
-        <li><a href="https://os-br.pages.dev/accessories/">اكسسوارات</a></li>
-      </ul>
-    </div>
-
-   <!-- العمود الرابع -->
-<div class="footer-col">
-  <h4>التواصل</h4>
-  <ul class="contact-list">
-    <li>
-      <a href="tel:01144898934">
-        <i class="fa-solid fa-phone"></i>
-        01144898934
-      </a>
-    </li>
-
-    <li>
-      <a href="https://wa.me/201144898934" target="_blank">
-        <i class="fa-brands fa-whatsapp"></i>
-        تواصل واتساب
-      </a>
-    </li>
-
-    <li>
-      <a href="https://maps.app.goo.gl/DCfBBLwhcrM6C92p8" target="_blank">
-        <i class="fa-solid fa-location-dot"></i>
-        موقع المتجر
-      </a>
-    </li>
-  </ul>
-</div>
+        <div class="footer-bottom">
+            <span>© 2026 OS Store. جميع الحقوق محفوظة.</span>
+            <div class="footer-links">
+              
+            </div>
+        </div>
+    </footer>
 
 
-  </div>
-
-  <div class="footer-bottom">
-    <span>© 2025 Brand Phone. جميع الحقوق محفوظة.</span>
-   
-  </div>
-
-</footer>
-
-<script src="script.js"></script>   
+<script src="script/script.js"></script> 
+  <script type="module" src="script/script-slider-top.js"></script>
 </body>
 
 </html>

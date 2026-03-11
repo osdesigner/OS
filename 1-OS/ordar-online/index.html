@@ -776,7 +776,7 @@
     <!-- سيتم تعبئة الطلبات هنا عبر الجافاسكريبت -->
   </div>
 
-  <script type="module">
+ <script type="module">
     // Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import {
@@ -851,7 +851,7 @@
     function formatDate(timestamp) {
       if (!timestamp) return "غير محدد";
       
-      const date = timestamp.toDate ? timestamp.toDate() : new Date();
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
       return date.toLocaleDateString("ar-SA", {
         year: "numeric",
         month: "long",
@@ -861,36 +861,68 @@
       });
     }
 
-// إنشاء رسالة واتساب مع جدول مرتب
-// إنشاء رسالة واتساب مع جدول مرتب + لينك الصفحة
-function createWhatsAppMessage(order) {
-  const customerName =
-    order.customerName ||
-    `${order.firstName || ""} ${order.lastName || ""}`.trim() ||
-    "عميلنا الكريم";
+    // دالة لجلب المنتجات من هيكل البيانات الصحيح
+    function getOrderItems(order) {
+      // التحقق من وجود orders
+      if (!order.orders) return [];
+      
+      // إذا كان orders عبارة عن مصفوفة من المنتجات مباشرة
+      if (Array.isArray(order.orders)) {
+        return order.orders;
+      }
+      
+      // إذا كان orders عبارة عن مصفوفة تحتوي على items (التنسيق القديم)
+      if (Array.isArray(order.orders) && order.orders.length > 0 && order.orders[0].items) {
+        return order.orders[0].items;
+      }
+      
+      return [];
+    }
 
-  const items = order.orders?.[0]?.items || [];
+    // دالة لحساب إجمالي المنتجات
+    function calculateTotal(order) {
+      // إذا كان هناك total محسوب مسبقاً
+      if (order.total) return order.total;
+      
+      // حساب المجموع من المنتجات
+      const items = getOrderItems(order);
+      return items.reduce((sum, item) => {
+        const price = item.sellPrice || item.price || 0;
+        const qty = item.qty || 1;
+        return sum + (price * qty);
+      }, 0);
+    }
 
-  let itemsTable = "";
-  if (items.length) {
-    itemsTable += "المنتج            | الكمية | السعر\n";
-    itemsTable += "-------------------------------\n";
+    // إنشاء رسالة واتساب مع جدول مرتب
+    function createWhatsAppMessage(order) {
+      const customerName =
+        order.customerName ||
+        `${order.firstName || ""} ${order.lastName || ""}`.trim() ||
+        "عميلنا الكريم";
 
-    items.forEach(item => {
-      const name = item.title.padEnd(15, " ");
-      const qty = String(item.qty).padEnd(6, " ");
-      const total = `${item.price * item.qty} ج.م`;
-      itemsTable += `${name} | ${qty} | ${total}\n`;
-    });
-  } else {
-    itemsTable = "لا توجد منتجات";
-  }
+      const items = getOrderItems(order);
 
-  // 🔗 لينك صفحة متابعة الطلب
-  const orderLink =
-    `https://os-br.pages.dev/1-admin-OS/ordar-stor-online/review/?id=${order.orderId}`;
+      let itemsTable = "";
+      if (items.length) {
+        itemsTable += "المنتج            | الكمية | السعر\n";
+        itemsTable += "-------------------------------\n";
 
-  return `
+        items.forEach(item => {
+          const name = (item.title || "منتج").padEnd(15, " ");
+          const qty = String(item.qty || 1).padEnd(6, " ");
+          const price = item.sellPrice || item.price || 0;
+          const total = price * (item.qty || 1);
+          itemsTable += `${name} | ${qty} | ${total} ج.م\n`;
+        });
+      } else {
+        itemsTable = "لا توجد منتجات";
+      }
+
+      // لينك صفحة متابعة الطلب
+      const orderLink =
+        `https://os-br.pages.dev/1-OS/ordar-online/review/?id=${order.orderId}`;
+
+      return `
 مرحباً ${customerName}
 
 تفاصيل طلبك:
@@ -898,26 +930,29 @@ function createWhatsAppMessage(order) {
 - المنتجات:
 ${itemsTable}
 
-- إجمالي الطلب: ${order.total || 0} ج.م
+- إجمالي الطلب: ${calculateTotal(order)} ج.م
 - رقم الطلب: ${order.orderId || "-"}
 
-- حالة الطلب: جاري تجهيز طلبك
+- حالة الطلب: ${order.status || "قيد المراجعة"}
 
 📦 تابع حالة طلبك من هنا:
 ${orderLink}
 
 — فريق براند فون
 `.trim();
-}
-
-
+    }
 
     // إنشاء رسالة جيميل
     function createEmailMessage(order) {
       const customerName = order.customerName || `${order.firstName || ""} ${order.lastName || ""}`.trim();
-      const itemsList = order.orders?.[0]?.items?.map(item => 
-        `<tr><td>${item.title}</td><td>${item.qty}</td><td>${item.price} ج.م</td><td>${item.price * item.qty} ج.م</td></tr>`
-      ).join("") || "<tr><td colspan='4'>لا توجد منتجات</td></tr>";
+      const items = getOrderItems(order);
+      
+      const itemsList = items.map(item => {
+        const price = item.sellPrice || item.price || 0;
+        const qty = item.qty || 1;
+        const total = price * qty;
+        return `<tr><td>${item.title || "منتج"}</td><td>${qty}</td><td>${price} ج.م</td><td>${total} ج.م</td></tr>`;
+      }).join("") || "<tr><td colspan='4'>لا توجد منتجات</td></tr>";
       
       return `Subject: تفاصيل طلبك - ${order.orderId || ""}
 
@@ -934,7 +969,7 @@ ${orderLink}
   ${itemsList}
 </table>
 
-الإجمالي: ${order.total || 0} ج.م
+الإجمالي: ${calculateTotal(order)} ج.م
 رقم الطلب: ${order.orderId || ""}
 
 شكراً لثقتكم بنا!
@@ -957,7 +992,7 @@ ${orderLink}
         const query = currentSearchQuery.toLowerCase();
         filtered = filtered.filter(order => {
           const name = order.customerName || `${order.firstName || ""} ${order.lastName || ""}`.trim().toLowerCase();
-          const orderId = (order.orderId || "").toLowerCase();
+          const orderId = String(order.orderId || "").toLowerCase();
           const phone = (order.phone || "").toLowerCase();
           
           return name.includes(query) || 
@@ -1007,23 +1042,21 @@ ${orderLink}
           statusIcon = "fas fa-times-circle";
         }
 
-        
+        // الحصول على المنتجات
+        const items = getOrderItems(order);
+        const totalAmount = calculateTotal(order);
         
         // إنشاء رابط الاتصال
-       const phoneNumber = order.phone || "";
+        const phoneNumber = order.phone || "";
 
-// نشيل أي رموز
-let cleanPhone = phoneNumber.replace(/\D/g, '');
-
-// لو بيبدأ بـ 0 نشيله
-if (cleanPhone.startsWith("0")) {
-  cleanPhone = cleanPhone.substring(1);
-}
-
-// لو مش مضاف كود مصر، نضيفه
-if (cleanPhone && !cleanPhone.startsWith("20")) {
-  cleanPhone = "20" + cleanPhone;
-}
+        // تنظيف رقم الهاتف
+        let cleanPhone = phoneNumber.replace(/\D/g, '');
+        if (cleanPhone.startsWith("0")) {
+          cleanPhone = cleanPhone.substring(1);
+        }
+        if (cleanPhone && !cleanPhone.startsWith("20")) {
+          cleanPhone = "20" + cleanPhone;
+        }
 
         const whatsappLink = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(createWhatsAppMessage(order))}` : "#";
         const telLink = phoneNumber ? `tel:${phoneNumber}` : "#";
@@ -1035,19 +1068,22 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
               <i class="fas fa-hashtag"></i>
               ${order.orderId || order.id.substring(0, 8)}
             </div>
-            
+            <div class="order-date">
+              <i class="far fa-calendar-alt"></i>
+              ${formatDate(order.createdAt || order.timestamp)}
+            </div>
           </div>
           
           <div class="contact-buttons">
-            <a href="${telLink}" class="contact-btn phone" ${!phoneNumber ? 'style="opacity:0.5; cursor:not-allowed;"' : ''}>
+            <a href="${telLink}" class="contact-btn phone" ${!phoneNumber ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
               <i class="fas fa-phone-alt"></i>
               إتصل
             </a>
-            <a href="${whatsappLink}" target="_blank" class="contact-btn whatsapp" ${!cleanPhone ? 'style="opacity:0.5; cursor:not-allowed;"' : ''}>
+            <a href="${whatsappLink}" target="_blank" class="contact-btn whatsapp" ${!cleanPhone ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
               <i class="fab fa-whatsapp"></i>
               واتساب
             </a>
-            <a href="${emailLink}" class="contact-btn email" ${!order.email ? 'style="opacity:0.5; cursor:not-allowed;"' : ''}>
+            <a href="${emailLink}" class="contact-btn email" ${!order.email ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
               <i class="fas fa-envelope"></i>
               بريد
             </a>
@@ -1098,7 +1134,7 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
           <div class="items-section">
             <div class="section-title">
               <i class="fas fa-shopping-basket"></i>
-              المنتجات (${order.orders?.[0]?.items?.length || 0})
+              المنتجات (${items.length})
             </div>
             <div class="items-list" id="items-${order.id}">
               <!-- سيتم تعبئة المنتجات هنا -->
@@ -1116,7 +1152,7 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
                 </select>
               </div>
               <div class="total-price">
-                ${order.total || 0} ج.م
+                ${totalAmount} ج.م
               </div>
             </div>
             
@@ -1129,7 +1165,6 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
         
         // تعبئة المنتجات
         const itemsContainer = orderDiv.querySelector(`#items-${order.id}`);
-        const items = order.orders?.[0]?.items || [];
         
         if (items.length === 0) {
           itemsContainer.innerHTML = '<p style="text-align: center; color: #999; padding: 10px;">لا توجد منتجات</p>';
@@ -1138,16 +1173,23 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
             const itemDiv = document.createElement("div");
             itemDiv.className = "item";
             
+            const price = item.sellPrice || item.price || 0;
+            const qty = item.qty || 1;
+            const total = price * qty;
+            
             itemDiv.innerHTML = `
-              <img src="${item.image || 'https://via.placeholder.com/100x100/e0e0e0/607d8b?text=No+Image'}" alt="${item.title}" class="item-img">
+              <img src="${item.image || 'https://via.placeholder.com/100x100/e0e0e0/607d8b?text=No+Image'}" 
+                   alt="${item.title || 'منتج'}" 
+                   class="item-img"
+                   onerror="this.src='https://via.placeholder.com/100x100/e0e0e0/607d8b?text=No+Image'">
               <div class="item-details">
                 <div class="item-title">${item.title || "منتج غير معروف"}</div>
-                <div>
-                  <span class="item-qty">${item.qty || 1}x</span>
-                  <span class="item-price">${item.price || 0} ج.م</span>
-                  <span style="font-weight: 700; color: var(--primary); margin-right: 10px;">${(item.price || 0) * (item.qty || 1)} ج.م</span>
+                <div class="item-price-info">
+                  <span class="item-qty">${qty}x</span>
+                  <span class="item-price">${price} ج.م</span>
+                  <span class="item-total">${total} ج.م</span>
                 </div>
-                ${item.serial ? `<p style="font-size: 12px; color: #666; margin-top: 5px;">رقم تسلسلي: ${item.serial}</p>` : ""}
+                ${item.serial ? `<p class="item-serial">رقم تسلسلي: ${item.serial}</p>` : ""}
               </div>
             `;
             
@@ -1207,8 +1249,8 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
         
         // ترتيب الطلبات من الأحدث إلى الأقدم
         allOrders.sort((a, b) => {
-          const dateA = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(0);
-          const dateB = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(0);
+          const dateA = a.createdAt ? new Date(a.createdAt) : (a.timestamp?.toDate ? a.timestamp.toDate() : new Date(0));
+          const dateB = b.createdAt ? new Date(b.createdAt) : (b.timestamp?.toDate ? b.timestamp.toDate() : new Date(0));
           return dateB - dateA;
         });
         
@@ -1222,6 +1264,9 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
             </div>
             <h3>حدث خطأ أثناء التحميل</h3>
             <p>تعذر تحميل الطلبات. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.</p>
+            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 5px; cursor: pointer;">
+              <i class="fas fa-sync-alt"></i> إعادة المحاولة
+            </button>
           </div>
         `;
       }
@@ -1242,25 +1287,6 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
         <span>${message}</span>
       `;
       
-      // إضافة الأنماط
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        background: ${type === 'success' ? 'var(--primary)' : '#f44336'};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 1000;
-        font-weight: 600;
-        animation: slideIn 0.3s ease;
-      `;
-      
       document.body.appendChild(notification);
       
       // إخفاء الإشعار بعد 3 ثوان
@@ -1268,20 +1294,6 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
       }, 3000);
-      
-      // إضافة أنيميشن
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes slideIn {
-          from { transform: translateY(-100px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-          from { transform: translateY(0); opacity: 1; }
-          to { transform: translateY(-100px); opacity: 0; }
-        }
-      `;
-      document.head.appendChild(style);
     }
 
     // إعداد فلتر الحالة
@@ -1351,6 +1363,72 @@ if (cleanPhone && !cleanPhone.startsWith("20")) {
       
       setupStatusFilter();
     }
+
+    // إضافة بعض الأنماط CSS للإشعارات
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateY(-100px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(-100px); opacity: 0; }
+      }
+      
+      .notification {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        background: var(--primary);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      
+      .notification.error {
+        background: #f44336;
+      }
+      
+      .item-price-info {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-top: 5px;
+      }
+      
+      .item-qty {
+        background: var(--primary-light);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+      }
+      
+      .item-total {
+        font-weight: 700;
+        color: var(--primary);
+      }
+      
+      .order-date {
+        font-size: 14px;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+    `;
+    document.head.appendChild(style);
 
     // التحميل الأولي وإعداد الأحداث
     document.addEventListener("DOMContentLoaded", function() {

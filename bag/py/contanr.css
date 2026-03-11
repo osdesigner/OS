@@ -1,222 +1,144 @@
+    main {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
 
-.cont{
-  display: flex;
-  justify-content: center;
-  align-items: self-start;
-}
+    h1.h1-top {
+        text-align: center;
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
 
-.h1-top{
-    font-size: 2em;
-    margin: 70px 70px 100px 70px;
-}
+    /* ===== قسم الفورم والأوردرات ===== */
+    .checkout-section {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
 
-section{
-  display: flex;
-}
+    .form-section {
+        flex: 1 1 350px;
+        padding: 20px 5px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-.name{
-  display: flex;
-  gap:1px;
-  width: 40%;
-}
+    .form-section .name {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
 
-/* ===== form-section ===== */
-.form-section {
-  background-color: #fff;
-  padding: 55px ;
-  width: 40%;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  margin: 0 auto 30px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .form-section input {
+        flex: 1 1 45%;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        outline: none;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
 
-/* ===== input fields ===== */
-.form-section input {
-  padding: 12px 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
+    .form-section input:focus {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 5px rgba(255,107,107,0.4);
+    }
 
-.form-section input:focus {
-  outline: none;
-  border-color: #000;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-}
+    /* ===== قسم الأوردرات ===== */
+    #ordersContainer {
+        flex: 1 1 500px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-/* ===== Google Sign-In button ===== */
-#googleSignIn {
-  background-color: #4285F4;
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
-  border: none;
-  padding: 12px 0;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    .order-card {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease;
+    }
 
-#googleSignIn:hover {
-  background-color: #3367D6;
-}
+    .order-card:hover {
+        transform: translateY(-2px);
+    }
 
-/* ===== send order button ===== */
-#sendOrderBtn {
-  display: block;
-  width: 15%;
-  background-color: #009be2;
-  color: #fff;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 14px 0;
-  border: none;
-  border-radius: 35px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
+    .item {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
 
-#sendOrderBtn:hover {
-  background-color: #222;
-  transform: translateY(-2px);
-}
+    .item img {
+        width: 150px;
+        height: 100%;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
 
-/* ===== orders container ===== */
-#ordersContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 40%;
-  margin: 0 auto 30px auto;
-}
+    .item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 14px;
+        color: #555;
+    }
 
-/* ===== order-card ===== */
-.order-card {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+    .item-details div:first-child {
+        font-weight: 600;
+        color: #222;
+    }
 
-/* ===== individual items ===== */
-.order-card .item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
+    /* ===== إجمالي الطلب وزر الإرسال ===== */
+    .to {
+        margin-top: 25px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-.order-card .item:last-child {
-  border-bottom: none;
-}
+    #totalPrice {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111;
+    }
 
-.order-card .item img {
-  width: 120px;
-  object-fit: cover;
-  border-radius: 8px;
-}
+    #sendOrderBtn {
+        padding: 15px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        background: #049bff;
+        color: #fff;
+        border: none;
+        border-radius: 35px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
 
-.order-card .item-details {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+    #sendOrderBtn:hover {
+        background: #ff3b3b;
+    }
 
-.order-card .item-details div {
-  font-size: 17px;
-  font-weight: 600;
-  color: #555;
-}
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+        .checkout-section {
+            flex-direction: column;
+        }
 
-.to{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-  margin: 70px 0 ;
-}
-/* ===== responsive ===== */
-@media (max-width: 600px) {
-  .form-section, #sendOrderBtn, #ordersContainer {
-    font-size: 12px;
-  }
+        .form-section input {
+            flex: 1 1 45%;
+        }
 
-  .h1-top{
-    font-size: 1.5em;
-    margin: 50px 20px 70px 20px;
-  }
-
-  .order-card .item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .order-card .item img {
-    width: 100%;
-    height: auto;
-  }
-  section{
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    width: 90%;
-  }
-  .name{
-    width: 100%;
-    display: flex;
-    gap: 10px;
-  }
-
-  .name input{
-    width: 50%;
-  }
-  .form-section{
-    width: 100%;
-  }
-  #ordersContainer{
-    width: 100%;
-  }
-  
-  }
-
-
-@media (max-width: 768px) {
-  .bag-show {
-    padding: 20px;
-  }
-
-  .bag-show h1 {
-    font-size: 1.5em;
-    margin: 50px 20px 70px 20px;
-  }
-
-  .product-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .img-box img {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .product-details {
-    text-align: left; /* للغات من اليسار لليمين */
-    margin-top: 10px;
-  }
-
-  .cart-total {
-    font-size: 18px;
-    margin-top: 30px;
-  }
-}
-  
+      .name input {
+          width: 45%;
+      }
+    }

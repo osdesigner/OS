@@ -43,6 +43,11 @@ function continueSite() {
   dropdown.style.display = "none";
 }
 
+
+
+
+
+
 const menuBtn = document.getElementById("menuBtn");
 const mobileMenu = document.getElementById("mnu-mobile");
 
@@ -50,6 +55,33 @@ menuBtn.addEventListener("click", () => {
   menuBtn.classList.toggle("active");
   mobileMenu.classList.toggle("active");
 });
+
+
+ // تحديث عداد السلة
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+        }
+
+        // إضافة إلى السلة
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.qty += 1;
+                showNotification(`تم زيادة الكمية لـ ${product.title} في السلة`);
+            } else {
+                cart.push({ ...product, qty: 1 });
+                showNotification(`تم إضافة ${product.title} إلى السلة`);
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        }
+
+
 
 // نجيب الوقت الحالي بالميلي ثانية
 const now = new Date().getTime();
@@ -64,3 +96,9 @@ if (lastVisit && now - lastVisit > 30 * 60 * 1000) { // 30 دقيقة × 60 ثا
 
 // نخزن الوقت الحالي كآخر زيارة
 localStorage.setItem("lastVisit", now);
+
+
+  // تحميل المنتجات عند بدء الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+        });

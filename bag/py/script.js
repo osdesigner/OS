@@ -1,7 +1,7 @@
-// JS - Firebase 9 Modular
+// ===== Firebase 9 Modular =====
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 // ===== Firebase Config =====
 const firebaseConfig = {
@@ -18,10 +18,8 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 // ===== عناصر الصفحة =====
-const googleSignInBtn = document.getElementById("googleSignIn");
 const firstNameInput = document.getElementById("firstName");
 const lastNameInput = document.getElementById("lastName");
-const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
 const provinceInput = document.getElementById("province");
 const cityInput = document.getElementById("city");
@@ -30,207 +28,145 @@ const ordersContainer = document.getElementById("ordersContainer");
 const sendBtn = document.getElementById("sendOrderBtn");
 const totalPriceDiv = document.getElementById("totalPrice");
 
-// ===== عرض الأوردرات وحساب التوتال =====
-const orders = JSON.parse(localStorage.getItem("orders")) || [];
+// ===== جلب الأوردرات من localStorage بعد توحيد الشكل =====
+const rawOrders = JSON.parse(localStorage.getItem("orders")) || [];
+let currentOrders = [];
+if (Array.isArray(rawOrders)) {
+    // عدة طلبات
+    rawOrders.forEach(order => {
+        if (order.items) currentOrders.push(...order.items);
+    });
+} else if (rawOrders.items) {
+    // طلب واحد
+    currentOrders = rawOrders.items;
+}
+
+// ===== عرض الأوردرات وحساب الإجمالي =====
 let totalPrice = 0;
+ordersContainer.innerHTML = ""; // مسح أي محتوى قديم
 
-orders.forEach(order => {
-  const div = document.createElement("div");
-  div.className = "order-card";
+if (currentOrders.length === 0) {
+    ordersContainer.innerHTML = '<p style="text-align:center; padding:20px;">لا توجد منتجات في سلة الشراء.</p>';
+} else {
+    currentOrders.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "item";
 
-  order.items.forEach(item => {
-    const itemDiv = document.createElement("div");
-    itemDiv.className = "item";
-    itemDiv.innerHTML = `
-      <img src="${item.image}">
-      <div class="item-details">
-        <div>اسم المنتج: ${item.title}</div>
-        <div>السعر: ${item.sellPrice}</div>
-        <div>الكمية: ${item.qty}</div>
-      </div>
-    `;
-    div.appendChild(itemDiv);
+        const itemPrice = item.sellPrice || item.price || 0;
+        const itemQty = item.qty || 1;
+        const itemTotal = itemPrice * itemQty;
+        totalPrice += itemTotal;
 
-    totalPrice += item.price * item.qty;
-  });
-
-  ordersContainer.appendChild(div);
-});
-
-totalPriceDiv.textContent = "الإجمالي: " + totalPrice + " جنيه";
-
-// ===== Google SignIn =====
-googleSignInBtn.addEventListener("click", async () => {
-  const provider = new GoogleAuthProvider();
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    localStorage.setItem("userLoggedIn", "true");
-    fillUserData(user);
-  } catch (e) {
-    console.error(e);
-    alert("فشل تسجيل الدخول");
-  }
-});
-
-function fillUserData(user) {
-  const names = user.displayName ? user.displayName.split(" ") : [];
-  const firstName = names[0] || "";
-  const lastName = names.slice(1).join(" ") || "";
-
-  const email = user.email || "";
-
-  firstNameInput.value = firstName;
-  lastNameInput.value = lastName;
-  emailInput.value = email;
-
-  googleSignInBtn.style.display = "none";
-
-  // عنوان افتراضي
-  if (!provinceInput.value) provinceInput.value = "Beheira";
-  if (!cityInput.value) cityInput.value = "Badr";
-  if (!streetInput.value) streetInput.value = "Beheira";
-
-  saveUserData(); // نحفظ أي حاجة اتملت
+        itemDiv.innerHTML = `
+            <img src="${item.image || 'https://via.placeholder.com/100'}" alt="${item.title || 'منتج'}">
+            <div class="item-details">
+                <div>${item.title || 'منتج'}</div>
+                <div>السعر: ${itemPrice} جنيه</div>
+                <div>الكمية: ${itemQty}</div>
+                <div>الإجمالي: ${itemTotal} جنيه</div>
+            </div>
+        `;
+        ordersContainer.appendChild(itemDiv);
+    });
 }
 
+// عرض الإجمالي النهائي
+totalPriceDiv.textContent = `الإجمالي الكلي: ${totalPrice} جنيه`;
+
+// ===== حفظ واسترجاع بيانات المستخدم من localStorage =====
 function saveUserData() {
-  const data = {
-    firstName: firstNameInput.value,
-    lastName: lastNameInput.value,
-    email: emailInput.value,
-    phone: phoneInput.value,
-    province: provinceInput.value,
-    city: cityInput.value,
-    street: streetInput.value
-  };
-  localStorage.setItem("userData", JSON.stringify(data));
+    const data = {
+        firstName: firstNameInput.value,
+        lastName: lastNameInput.value,
+        phone: phoneInput.value,
+        province: provinceInput.value,
+        city: cityInput.value,
+        street: streetInput.value
+    };
+    localStorage.setItem("userData", JSON.stringify(data));
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const data = JSON.parse(localStorage.getItem("userData"));
-  if (!data) return;
+function loadUserData() {
+    const data = JSON.parse(localStorage.getItem("userData"));
+    if (data) {
+        firstNameInput.value = data.firstName || "";
+        lastNameInput.value = data.lastName || "";
+        phoneInput.value = data.phone || "";
+        provinceInput.value = data.province || "";
+        cityInput.value = data.city || "";
+        streetInput.value = data.street || "";
+    }
+}
 
-  firstNameInput.value = data.firstName || "";
-  lastNameInput.value = data.lastName || "";
-  emailInput.value = data.email || "";
-  phoneInput.value = data.phone || "";
-  provinceInput.value = data.province || "";
-  cityInput.value = data.city || "";
-  streetInput.value = data.street || "";
+// استرجاع البيانات عند تحميل الصفحة
+loadUserData();
 
-  googleSignInBtn.style.display = "none";
+// حفظ البيانات عند التغيير
+[firstNameInput, lastNameInput, phoneInput, provinceInput, cityInput, streetInput].forEach(input => {
+    if (input) input.addEventListener("input", saveUserData);
 });
 
-[
-  firstNameInput,
-  lastNameInput,
-  emailInput,
-  phoneInput,
-  provinceInput,
-  cityInput,
-  streetInput
-].forEach(input => {
-  input.addEventListener("input", saveUserData);
-});
-
-// ===== عند تحميل الصفحة =====
-window.addEventListener("DOMContentLoaded", () => {
-  const savedData = JSON.parse(localStorage.getItem("userData"));
-  if (savedData) {
-    firstNameInput.value = savedData.firstName || "";
-    lastNameInput.value = savedData.lastName || "";
-    emailInput.value = savedData.email || "";
-    phoneInput.value = savedData.phone || "";
-    provinceInput.value = savedData.province || "Beheira";
-    cityInput.value = savedData.city || "Badr";
-    streetInput.value = savedData.street || "Beheira";
-
-    googleSignInBtn.style.display = "none";
-  }
-});
-
-
-// ===== التحقق من تسجيل الدخول مسبقاً =====
-onAuthStateChanged(auth, user => {
-  if (user || localStorage.getItem("userLoggedIn")) {
-    googleSignInBtn.style.display = "none";
-    if (user) fillUserData(user);
-  }
-});
-
-// ===== الحصول على الموقع =====
+// ===== الحصول على الموقع (اختياري) =====
 function getLocation() {
-  return new Promise(resolve => {
-    if (!navigator.geolocation) return resolve(null);
-    navigator.geolocation.getCurrentPosition(pos => {
-      resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-    }, () => resolve(null));
-  });
+    return new Promise(resolve => {
+        if (!navigator.geolocation) return resolve(null);
+        navigator.geolocation.getCurrentPosition(
+            pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+            () => resolve(null)
+        );
+    });
 }
 
 // ===== ارسال الأوردر =====
 sendBtn.addEventListener("click", async () => {
-  if (!firstNameInput.value || !lastNameInput.value || !emailInput.value) {
-    alert("اكتب الاسم والبريد الالكتروني");
-    return;
-  }
+    if (!firstNameInput.value || !lastNameInput.value || !phoneInput.value) {
+        alert("يرجى إدخال الاسم الأول والأخير ورقم الهاتف.");
+        return;
+    }
 
-  const location = await getLocation();
-  const fullAddress = `${provinceInput.value} - ${cityInput.value} - ${streetInput.value}`;
+    if (currentOrders.length === 0) {
+        alert("سلة الشراء فارغة. أضف منتجات أولاً.");
+        return;
+    }
 
-  const orderId = Date.now(); // رقم أوردر فريد
+    const location = await getLocation();
+    const fullAddress = `${provinceInput.value} - ${cityInput.value} - ${streetInput.value}`.replace(/^ - - $/, '');
 
-  const docData = {
-    customerName: firstNameInput.value + " " + lastNameInput.value,
-    firstName: firstNameInput.value,
-    lastName: lastNameInput.value,
-    email: emailInput.value,
-    phone: phoneInput.value,
-    address: fullAddress,
-    location: location ? `Lat: ${location.lat}, Lng: ${location.lng}` : "",
-    orderId: orderId,
-    status: "تم إرسال الطلب",
-    orders: orders.map(o => ({
-      orderId: o.orderId,
-      total: o.total || totalPrice,
-      items: o.items.map(i => ({
-        id: i.id,
-        title: i.title,
-        price: i.price,
-        qty: i.qty,
-        serial: i.serial,
-        image: i.image
-      }))
-    })),
-    total: totalPrice
-  };
+    const orderId = Date.now(); // رقم أوردر فريد
 
-  try {
-    // حفظ الأوردر كامل في Firestore مع orderId
-    await setDoc(doc(db, "orders", String(orderId)), docData);
+    const docData = {
+        customerName: `${firstNameInput.value} ${lastNameInput.value}`,
+        firstName: firstNameInput.value,
+        lastName: lastNameInput.value,
+        phone: phoneInput.value,
+        address: fullAddress || "لم يذكر",
+        location: location ? `Lat: ${location.lat}, Lng: ${location.lng}` : "",
+        orderId: orderId,
+        status: "تم إرسال الطلب",
+        orders: currentOrders,
+        total: totalPrice,
+        createdAt: new Date().toISOString()
+    };
 
-    alert("تم إرسال الأوردر بنجاح!");
-    localStorage.setItem("lastOrderId", orderId);
-    localStorage.removeItem("orders");
-
-    // إفراغ الصفحة
-    ordersContainer.innerHTML = "";
-    totalPriceDiv.textContent = "";
-
-    // تحويل المستخدم لصفحة الفاتورة مع orderId
-    window.location.href = `confirmation/?orderId=${orderId}`;
-  } catch (e) {
-    console.error(e);
-    alert("حدث خطأ أثناء الإرسال");
-  }
+    try {
+        await setDoc(doc(db, "orders", String(orderId)), docData);
+        alert("✅ تم إرسال الأوردر بنجاح!");
+        localStorage.setItem("lastOrderId", orderId);
+        localStorage.removeItem("orders");
+        localStorage.removeItem("cart");
+        window.location.href = `confirmation/?orderId=${orderId}`;
+    } catch (e) {
+        console.error("خطأ في الإرسال:", e);
+        alert("❌ حدث خطأ أثناء الإرسال. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.");
+    }
 });
 
-  const menuBtn = document.getElementById("menuBtn");
+// ===== قائمة الموبايل =====
+const menuBtn = document.getElementById("menuBtn");
 const mobileMenu = document.getElementById("mnu-mobile");
-
-menuBtn.addEventListener("click", () => {
-  menuBtn.classList.toggle("active");
-  mobileMenu.classList.toggle("active");
-});
-
+if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener("click", () => {
+        menuBtn.classList.toggle("active");
+        mobileMenu.classList.toggle("active");
+    });
+}

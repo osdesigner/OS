@@ -10,15 +10,15 @@ const hasGovernorate =
 if (hasGovernorate) {
   dropdown.style.display = "none";
 } else {
-  dropdown.style.display = "flex"; // أو block حسب الستايل عندك
+  dropdown.style.display = "flex";
 }
 
-// ===== إغلاق مؤقت بزر X =====
+// ===== إغلاق مؤقت =====
 function closeDropdown() {
   dropdown.style.display = "none";
 }
 
-// ===== لو اختار Other =====
+// ===== اختيار Other =====
 select.addEventListener("change", () => {
   if (select.value === "other") {
     window.location.href = "other-country/index.html";
@@ -34,15 +34,13 @@ function continueSite() {
     return;
   }
 
-  // نخزن كـ محافظة
   localStorage.setItem("selectedGovernorateCode", country);
-
-  // اختياري (لو محتاج country)
   localStorage.setItem("country", country);
 
   dropdown.style.display = "none";
 }
 
+// ===== قائمة الموبايل =====
 const menuBtn = document.getElementById("menuBtn");
 const mobileMenu = document.getElementById("mnu-mobile");
 
@@ -51,54 +49,60 @@ menuBtn.addEventListener("click", () => {
   mobileMenu.classList.toggle("active");
 });
 
-// نجيب الوقت الحالي بالميلي ثانية
+// ===== تحديث الصفحة بعد 30 دقيقة =====
 const now = new Date().getTime();
-
-// نجيب آخر وقت زيارة مخزن
 const lastVisit = localStorage.getItem("lastVisit");
 
-// لو فيه وقت مخزن ومر عليه أكتر من 30 دقيقة → نعمل ريفرش
-if (lastVisit && now - lastVisit > 30 * 60 * 1000) { // 30 دقيقة × 60 ثانية × 1000 ملي
+if (lastVisit && now - lastVisit > 30 * 60 * 1000) {
   location.reload();
 }
 
-// نخزن الوقت الحالي كآخر زيارة
 localStorage.setItem("lastVisit", now);
 
-
+// ===== السلة =====
 const products = document.getElementById("products");
 const bag = JSON.parse(localStorage.getItem("cart")) || [];
 
+// عرض المنتجات
+let html = "";
+
 bag.forEach(item => {
-   products.innerHTML += `
-    <div class="product-item" data-id="${item.id}">
-  <div class="img-box">
-    <img src="${item.image}">
-  </div>
 
-  <h3 class="title">${item.title}</h3>
+html += `
+<div class="product-item" data-id="${item.id}">
 
-  <select class="qty-select" data-id="${item.id}">
-    <option value="1" ${item.qty==1?'selected':''}>1</option>
-    <option value="2" ${item.qty==2?'selected':''}>2</option>
-    <option value="3" ${item.qty==3?'selected':''}>3</option>
-    <option value="4" ${item.qty==4?'selected':''}>4</option>
-    <option value="5" ${item.qty==5?'selected':''}>5</option>
-    <option value="6" ${item.qty==6?'selected':''}>6</option>
-    <option value="7" ${item.qty==7?'selected':''}>7</option>
-    <option value="8" ${item.qty==8?'selected':''}>8</option>
-    <option value="9" ${item.qty==9?'selected':''}>9</option>
-    <option value="10" ${item.qty>=10?'selected':''}>+10</option>
-  </select>
+<div class="img-box">
+<img src="${item.image}">
+</div>
 
-  <span class="price">$${item.sellPrice}.00</span>
+<h3 class="title">${item.title}</h3>
 
-  <!-- زر الحذف -->
-  <button class="remove-btn" data-id="${item.id}">حذف</button>
+<select class="qty-select" data-id="${item.id}">
+<option value="1" ${item.qty==1?'selected':''}>1</option>
+<option value="2" ${item.qty==2?'selected':''}>2</option>
+<option value="3" ${item.qty==3?'selected':''}>3</option>
+<option value="4" ${item.qty==4?'selected':''}>4</option>
+<option value="5" ${item.qty==5?'selected':''}>5</option>
+<option value="6" ${item.qty==6?'selected':''}>6</option>
+<option value="7" ${item.qty==7?'selected':''}>7</option>
+<option value="8" ${item.qty==8?'selected':''}>8</option>
+<option value="9" ${item.qty==9?'selected':''}>9</option>
+<option value="10" ${item.qty>=10?'selected':''}>+10</option>
+</select>
+
+<span class="price">${item.sellPrice} جنيه</span>
+
+<button class="remove-btn" data-id="${item.id}">حذف</button>
+
 </div>
 <hr>
+`;
 
-`})
+});
+
+products.innerHTML = html;
+
+// ===== وظائف السلة =====
 
 function getCart() {
   return JSON.parse(localStorage.getItem("cart")) || [];
@@ -108,8 +112,9 @@ function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-/* حساب الإجمالي */
+// ===== حساب الإجمالي =====
 function calculateTotal() {
+
   const cart = getCart();
   let total = 0;
 
@@ -117,48 +122,56 @@ function calculateTotal() {
     total += item.sellPrice * item.qty;
   });
 
-  document.getElementById("totalPrice").textContent = total.toLocaleString("ar-EG");
+  document.getElementById("totalPrice").textContent =
+    total.toLocaleString("ar-EG") + " جنيه";
 }
 
-/* تغيير الكمية */
+// ===== تغيير الكمية =====
 document.addEventListener("change", (e) => {
-  if (e.target.classList.contains("qty-select")) {
-    const id = e.target.dataset.id;
-    const qty = parseInt(e.target.value);
 
-    let cart = getCart();
-    cart = cart.map(item =>
-      item.id === id ? { ...item, qty } : item
-    );
+if (e.target.classList.contains("qty-select")) {
 
-    saveCart(cart);
-    calculateTotal(); // 🔥 يتحسب لوحده
-  }
-});
+const id = e.target.dataset.id;
+const qty = parseInt(e.target.value);
 
-/* حذف المنتج */
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("remove-btn")) {
-    const id = e.target.dataset.id;
+let cart = getCart();
 
-    let cart = getCart();
-    cart = cart.filter(item => item.id !== id);
+cart = cart.map(item =>
+item.id === id ? { ...item, qty } : item
+);
 
-    saveCart(cart);
-
-    // إزالة العنصر من الصفحة
-    e.target.closest(".product-item").remove();
-
-    calculateTotal(); // 🔥 تحديث الإجمالي
-  }
-});
-
-/* حساب أول ما الصفحة تفتح */
+saveCart(cart);
 calculateTotal();
 
+}
 
+});
+
+// ===== حذف المنتج =====
+document.addEventListener("click", (e) => {
+
+if (e.target.classList.contains("remove-btn")) {
+
+const id = e.target.dataset.id;
+
+let cart = getCart();
+cart = cart.filter(item => item.id !== id);
+
+saveCart(cart);
+
+e.target.closest(".product-item").remove();
+
+calculateTotal();
+
+}
+
+});
+
+// ===== حساب أول ما الصفحة تفتح =====
+calculateTotal();
 
 document.getElementById("saveOrder").addEventListener("click", () => {
+
   const cart = getCart();
 
   if (cart.length === 0) {
@@ -167,8 +180,9 @@ document.getElementById("saveOrder").addEventListener("click", () => {
   }
 
   let total = 0;
+
   cart.forEach(item => {
-    total += item.price * item.qty;
+    total += item.sellPrice * item.qty;
   });
 
   const orderId = Date.now();
@@ -180,14 +194,52 @@ document.getElementById("saveOrder").addEventListener("click", () => {
     date: new Date().toLocaleString("ar-EG")
   };
 
-  const orders = JSON.parse(localStorage.getItem("orders")) || [];
-  orders.push(newOrder);
-  localStorage.setItem("orders", JSON.stringify(orders));
+  // حفظ طلب واحد فقط
+  localStorage.setItem("orders", JSON.stringify(newOrder));
 
-  // تفريغ السلة
-  localStorage.removeItem("cart");
-
-  // ⬅️ تحويل لصفحة تانية مع رقم الطلب
+  // الانتقال لصفحة الدفع
   window.location.href = `py/?orderId=${orderId}`;
+
 });
 
+// ===== عداد السلة =====
+function updateCartCount() {
+
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+
+document.getElementById("cartCount").textContent = totalItems;
+
+}
+
+// ===== إضافة للسلة =====
+function addToCart(product) {
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const existing = cart.find(item => String(item.id) === String(product.id));
+
+  // لو المنتج موجود
+  if (existing) {
+
+    existing.qty += 1; // زيادة الكمية
+
+  } else {
+
+    // إضافة منتج جديد
+    cart.push({
+      id: product.id,
+      title: product.title,
+      image: product.image,
+      sellPrice: product.sellPrice,
+      qty: 1
+    });
+
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  updateCartCount();
+  calculateTotal();
+}
