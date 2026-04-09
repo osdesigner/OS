@@ -415,7 +415,7 @@
 
     products.forEach(data => {
         productsDiv.innerHTML += `
-<div class="product-card">
+        <div class="product-card">
 
     ${data.sellPrice > 3000 ? '<span class="badge">فاخر</span>' : ''}
     ${data.sellPrice < 500 ? '<span class="badge">عرض خاص</span>' : ''}
@@ -430,7 +430,7 @@
 
         <div class="product-buttons">
 
-            <button onclick='addToCart({
+            <button class="add-to-cart" onclick='addToCart({
                 id: "${data.id}",
                 title: "${data.title}",
                 sellPrice: ${data.sellPrice},
@@ -451,8 +451,6 @@
 `;
     });
 }
-
-
 
 function filterProducts() {
     const value = document.getElementById("searchInput").value.toLowerCase();
@@ -527,7 +525,6 @@ function setKeyword(word) {
     function viewProduct(id){
     window.location.href = `/product/index.html?id=${id}`;
 }
-
 </script>
 
 </body>

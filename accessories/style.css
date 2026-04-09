@@ -8,6 +8,18 @@
 
 }
 
+
+   /* تحسينات إضافية */
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #f5f5f7;
+            --accent-color: #0071e3;
+            --text-color: #333333;
+            --light-text: #666666;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
 body {
     font-family: "Zain", sans-serif;
     font-weight: 300;
@@ -15,9 +27,6 @@ body {
     background-color: #ffffff;
     color: #333;
 }
-
-
-
 
 .hed-img-top{
   display: flex;
@@ -105,7 +114,7 @@ button#continue-btn:hover {
 
 .contenar{
   width: 92%;
-  margin: 100px auto;
+  margin: 50px auto ;
   padding: 20px;
 }
 
@@ -153,25 +162,9 @@ button#continue-btn:hover {
 
 .product-card button {
   width: 100%;
-  padding: 10px;
-  background: #000;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+  border-radius: 28px;
   cursor: pointer;
 }
-
-
-   /* تحسينات إضافية */
-        :root {
-            --primary-color: #000000;
-            --secondary-color: #f5f5f7;
-            --accent-color: #0071e3;
-            --text-color: #333333;
-            --light-text: #666666;
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
-        }
         
         .loading-overlay {
             position: fixed;
@@ -362,7 +355,31 @@ button#continue-btn:hover {
             pointer-events: auto;
             display: flex;
         }
+
+        .product-buttons{
+          display: flex;
+          gap: 10px;
+        }
+
+        .add-to-cart{
+        background: transparent;
+        border: 1px solid #0199ff;
+        color: #0199ff;
+        font-size: 12px;
+        padding: 5px;
+
+        }
         
+        .view-product{
+          background: rgb(1, 153, 255);
+          color: var(--primary-color);
+          border: 1px solid #0199ff;
+          padding: 10px;
+          border-radius: 8px;
+          color: white;
+          cursor: pointer;
+          transition: var(--transition);
+        }
         /* تحسينات للعرض على الموبايل */
         @media (max-width: 768px) {
             .product-actions {
