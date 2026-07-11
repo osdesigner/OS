@@ -664,7 +664,7 @@ header a.call-btn:hover {
         }
 
         .swiper-pagination-bullet-active {
-            background: #1d1d1f;
+            background: #ff4901;
             width: 28px;
             border-radius: 6px;
         }
@@ -1450,7 +1450,7 @@ footer{
     }
     
     .overlay-text-2 {
-        top: 42.5%;
+        top: 39%;
     }
 
     .overlay-text-2 h2{
@@ -1488,7 +1488,7 @@ footer{
     }
     
     .contact {
-        bottom: 37%;
+        bottom: 43%;
         left: 30%;
         gap: 25px;
         padding: 10px 15px;
