@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>براند فون OS - لوحة التحكم</title>
+    <link rel="icon" href="https://os-br.pages.dev/icone.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* نفس الـ CSS السابق ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --gold: #d4a843;
+            --gold-light: #e8c96e;
+            --gold-dark: #b8942f;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --radius-sm: 12px;
+            --radius-md: 20px;
+            --radius-lg: 30px;
+            --font: 'Cairo', 'Segoe UI', sans-serif;
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-secondary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--bg-primary);
+            padding: 20px 30px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(212, 168, 67, 0.1);
+        }
+
+        .header .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header .logo-section img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .header .logo-section h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .header .logo-section h1 span {
+            color: var(--gold);
+        }
+
+        .header .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header .user-section .user-info {
+            text-align: left;
+        }
+
+        .header .user-section .user-info .name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .header .user-section .user-info .email {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .header .user-section .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+        }
+
+        .header .user-section .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logout-btn {
+            padding: 8px 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212, 168, 67, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .stat-card:nth-child(1)::before { background: var(--gold); }
+        .stat-card:nth-child(2)::before { background: var(--success); }
+        .stat-card:nth-child(3)::before { background: var(--info); }
+        .stat-card:nth-child(4)::before { background: var(--warning); }
+        .stat-card:nth-child(5)::before { background: var(--danger); }
+        .stat-card:nth-child(6)::before { background: var(--purple); }
+
+        .stat-card .stat-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .stat-card .stat-number {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .stat-card .stat-label {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .stat-card .stat-number.debt {
+            color: var(--danger);
+        }
+
+        .stat-card .stat-number.credit {
+            color: var(--success);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .chart-box {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212, 168, 67, 0.08);
+        }
+
+        .chart-box .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chart-box .chart-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .chart-box .chart-header .chart-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chart-box .chart-header .chart-controls button {
+            padding: 6px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .chart-box .chart-header .chart-controls button:hover {
+            border-color: var(--gold);
+        }
+
+        .chart-box .chart-header .chart-controls button.active {
+            border-color: var(--gold);
+            background: rgba(212, 168, 67, 0.1);
+            color: var(--gold-dark);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+        }
+
+        .chart-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .chart-stat-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .chart-stat-item .stat-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .chart-stat-item .stat-label {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212, 168, 67, 0.08);
+        }
+
+        .card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card .card-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .card .card-header .view-all {
+            font-size: 12px;
+            color: var(--gold-dark);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .card .card-header .view-all:hover {
+            color: var(--gold);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th {
+            text-align: right;
+            padding: 10px 8px;
+            font-size: 12px;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        table td {
+            padding: 10px 8px;
+            font-size: 13px;
+            color: var(--primary);
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        table tr:hover td {
+            background: #fafafa;
+        }
+
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-badge.completed {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-badge.debt {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick-action-btn {
+            padding: 12px;
+            background: var(--bg-secondary);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 13px;
+        }
+
+        .quick-action-btn:hover {
+            border-color: var(--gold);
+            background: var(--bg-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-action-btn .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .debt-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .debt-item:last-child {
+            border-bottom: none;
+        }
+
+        .debt-item .debt-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .debt-item .debt-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .debt-item .debt-phone {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .debt-item .debt-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .debt-item .debt-amount.debt {
+            color: var(--danger);
+        }
+
+        .debt-item .debt-amount.credit {
+            color: var(--success);
+        }
+
+        .product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-item .product-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-item .product-info .product-rank {
+            font-size: 20px;
+            min-width: 30px;
+        }
+
+        .product-item .product-info .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-item .product-info .product-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .product-item .product-info .product-category {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .product-item .product-sales {
+            font-weight: 700;
+            color: var(--gold-dark);
+            font-size: 14px;
+        }
+
+        .product-item .product-sales .sales-count {
+            font-size: 12px;
+            color: #999;
+            font-weight: 400;
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid { grid-template-columns: 1fr 1fr; }
+            .quick-actions { grid-template-columns: 1fr 1fr; }
+            .chart-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 992px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; flex-direction: column; align-items: stretch; }
+            .header .user-section { justify-content: space-between; }
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .stat-card .stat-number { font-size: 20px; }
+            .quick-actions { grid-template-columns: 1fr 1fr; }
+            .chart-stats { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 500px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .quick-actions { grid-template-columns: 1fr; }
+            .header .logo-section h1 { font-size: 18px; }
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold-dark); }
+        ::selection { background: var(--gold); color: #ffffff; }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .loading-spinner .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f0f0f0;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #999;
+        }
+
+        .empty-state .icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-section">
+            <img src="https://os-br.pages.dev/icone.png" alt="براند فون OS">
+            <h1>براند فون <span>OS</span></h1>
+        </div>
+        <div class="user-section">
+            <div class="user-info">
+                <div class="name" id="userName">مرحباً بك</div>
+                <div class="email" id="userEmail">loading...</div>
+            </div>
+            <div class="user-avatar">
+                <img src="https://os-br.pages.dev/icone.png" alt="User" id="userAvatar">
+            </div>
+            <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
+        </div>
+    </header>
+
+    <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-number" id="totalSales">0</div>
+            <div class="stat-label">إجمالي المبيعات</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-number" id="totalProducts">0</div>
+            <div class="stat-label">إجمالي المنتجات</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🧾</div>
+            <div class="stat-number" id="totalInvoices">0</div>
+            <div class="stat-label">عدد الفواتير</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-number" id="totalCustomers">0</div>
+            <div class="stat-label">العملاء</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-number debt" id="totalDebts">0</div>
+            <div class="stat-label">المدينون (عليهم)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📥</div>
+            <div class="stat-number credit" id="totalCredits">0</div>
+            <div class="stat-label">الدائنون (لهم)</div>
+        </div>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-box">
+            <div class="chart-header">
+                <h3>📈 حركة المبيعات</h3>
+                <div class="chart-controls">
+                    <button class="active" data-period="week">أسبوع</button>
+                    <button data-period="month">شهر</button>
+                    <button data-period="year">سنة</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="salesChart"></canvas>
+            </div>
+            <div class="chart-stats">
+                <div class="chart-stat-item">
+                    <div class="stat-value" id="avgSales">0 ₪</div>
+                    <div class="stat-label">📊 متوسط المبيعات</div>
+                </div>
+                <div class="chart-stat-item">
+                    <div class="stat-value" id="totalPeriod">0 ₪</div>
+                    <div class="stat-label">💰 إجمالي الفترة</div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-box">
+            <div class="chart-header">
+                <h3>📊 توزيع المبيعات</h3>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="pieChart"></canvas>
+            </div>
+            <div class="chart-stats">
+                <div class="chart-stat-item">
+                    <div class="stat-value" id="cashPercent">0%</div>
+                    <div class="stat-label">💵 كاش</div>
+                </div>
+                <div class="chart-stat-item">
+                    <div class="stat-value" id="debtPercent">0%</div>
+                    <div class="stat-label">📝 أجل</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 25px;">
+        <div class="card-header">
+            <h3>⚡ إجراءات سريعة</h3>
+        </div>
+        <div class="quick-actions">
+            <button class="quick-action-btn" onclick="window.location.href='sales/'">
+                <span class="icon">🛒</span>
+                بيع جديد
+            </button>
+            <button class="quick-action-btn" onclick="window.location.href='products/'">
+                <span class="icon">📦</span>
+                إدارة المنتجات
+            </button>
+            <button class="quick-action-btn" onclick="window.location.href='invoices/'">
+                <span class="icon">🧾</span>
+                الفواتير
+            </button>
+            <button class="quick-action-btn" onclick="window.location.href='/kacher/dashboard/debtors/'">
+                <span class="icon">📝</span>
+                المدينون
+            </button>
+            <button class="quick-action-btn" onclick="window.location.href='/kacher/dashboard/creditors/'">
+                <span class="icon">📥</span>
+                الدائنون
+            </button>
+            <button class="quick-action-btn" onclick="window.location.href='maintenance.html'">
+                <span class="icon">🔧</span>
+                الصيانة
+            </button>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>📋 آخر الفواتير</h3>
+                <a class="view-all" onclick="window.location.href='/kacher/dashboard/invoices/'">عرض الكل →</a>
+            </div>
+            <div class="table-responsive">
+                <table id="invoicesTable">
+                    <thead>
+                        <tr>
+                            <th>رقم الفاتورة</th>
+                            <th>العميل</th>
+                            <th>المبلغ</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesBody">
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#999;">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
+                                    جاري التحميل...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>🏆 أشهر المنتجات</h3>
+                <a class="view-all" onclick="window.location.href='products.html'">عرض الكل →</a>
+            </div>
+            <div id="topProducts">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    جاري التحميل...
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>📝 المدينون (عليهم)</h3>
+                <a class="view-all" onclick="window.location.href='/kacher/dashboard/debtors/'">عرض الكل →</a>
+            </div>
+            <div id="debtorsList">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    جاري التحميل...
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>📥 الدائنون (لهم)</h3>
+                <a class="view-all" onclick="window.location.href='/kacher/dashboard/creditors/'">عرض الكل →</a>
+            </div>
+            <div id="creditorsList">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    جاري التحميل...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align:center; padding:20px; color:#999; font-size:13px;">
+        براند فون OS © 2027 - جميع الحقوق محفوظة
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signOut,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection,
+            query,
+            getDocs,
+            orderBy,
+            limit,
+            doc,
+            onSnapshot,
+            where
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+            authDomain: "stor-121.firebaseapp.com",
+            projectId: "stor-121",
+            storageBucket: "stor-121.firebasestorage.app",
+            messagingSenderId: "944316047610",
+            appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
+            measurementId: "G-F4JBRJKR1R"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const ALLOWED_EMAILS = ['osdesigner5647@gmail.com'];
+
+        let salesChart = null;
+        let pieChart = null;
+        let currentPeriod = 'week';
+        let allInvoices = [];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            if (!ALLOWED_EMAILS.includes(user.email)) {
+                await signOut(auth);
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = user.displayName || 'مستخدم';
+            document.getElementById('userEmail').textContent = user.email;
+            if (user.photoURL) {
+                document.getElementById('userAvatar').src = user.photoURL;
+            }
+
+            await loadDashboardData();
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            localStorage.clear();
+            window.location.href = 'index.html';
+        });
+
+        document.querySelectorAll('.chart-controls button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.chart-controls button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentPeriod = this.dataset.period;
+                updateChart();
+            });
+        });
+
+        // ============================================
+        // 📊 تحميل البيانات
+        // ============================================
+        async function loadDashboardData() {
+            try {
+                // 1. المنتجات
+                const productsSnap = await getDocs(collection(db, 'products'));
+                document.getElementById('totalProducts').textContent = productsSnap.size;
+
+                // 2. العملاء
+                const customersSnap = await getDocs(collection(db, 'customers'));
+                document.getElementById('totalCustomers').textContent = customersSnap.size;
+
+                // 3. الفواتير - من جميع المصادر مع إزالة التكرار
+                const invoiceMap = new Map();
+                const collections = ['invoices_cash', 'invoices_debt', 'invoices'];
+                
+                for (const coll of collections) {
+                    try {
+                        const snap = await getDocs(collection(db, coll));
+                        snap.forEach(doc => {
+                            const data = doc.data();
+                            const key = data.invoiceNumber || doc.id;
+                            if (!invoiceMap.has(key)) {
+                                invoiceMap.set(key, {
+                                    id: doc.id,
+                                    ...data,
+                                    collection: coll
+                                });
+                            }
+                        });
+                    } catch (e) {
+                        console.log(`⚠️ No collection: ${coll}`);
+                    }
+                }
+
+                allInvoices = Array.from(invoiceMap.values());
+                
+                // 4. حساب الإحصائيات
+                let totalSales = 0;
+                let totalDebts = 0;
+                let totalCredits = 0;
+                const customers = new Set();
+
+                allInvoices.forEach(data => {
+                    const total = data.total || 0;
+                    totalSales += total;
+                    
+                    if (data.saleType === 'debt' || data.status === 'debt') {
+                        totalDebts += data.remainingAmount || total;
+                    }
+                    
+                    if (data.customerPhone) {
+                        customers.add(data.customerPhone);
+                    }
+                });
+
+                document.getElementById('totalSales').textContent = totalSales.toFixed(2) + ' ₪';
+                document.getElementById('totalInvoices').textContent = allInvoices.length;
+
+                // 5. حساب المدينون من customers والدائنون من creditors
+                let debtTotal = 0;
+                customersSnap.forEach(doc => {
+                    const data = doc.data();
+                    const balance = data.balance || 0;
+                    if (balance > 0) debtTotal += balance;
+                });
+
+                // ✅ حساب الدائنون من creditors collection
+                let creditTotal = 0;
+                const creditorsSnap = await getDocs(collection(db, 'creditors'));
+                creditorsSnap.forEach(doc => {
+                    const data = doc.data();
+                    creditTotal += data.balance || 0;
+                });
+
+                document.getElementById('totalDebts').textContent = debtTotal.toFixed(2) + ' ₪';
+                document.getElementById('totalCredits').textContent = creditTotal.toFixed(2) + ' ₪';
+
+                // 6. تحميل البيانات الفرعية
+                await loadRecentInvoices(allInvoices);
+                await loadTopProducts();
+                await loadDebtors();
+                await loadCreditors();
+                
+                // 7. تحديث الرسم البياني
+                updateChart();
+
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+            }
+        }
+
+        function dataSafely(doc) {
+            try {
+                return doc.data();
+            } catch {
+                return {};
+            }
+        }
+
+        // ============================================
+        // 📈 تحديث الرسم البياني
+        // ============================================
+        function updateChart() {
+            const now = new Date();
+            const filtered = filterInvoicesByPeriod(allInvoices, currentPeriod, now);
+            
+            const dailyData = processDailyData(filtered);
+            renderSalesChart(dailyData);
+            renderPieChart(filtered);
+            updateChartStats(filtered);
+        }
+
+        function filterInvoicesByPeriod(invoices, period, now) {
+            let cutoff = new Date(now);
+            
+            switch(period) {
+                case 'week':
+                    cutoff.setDate(now.getDate() - 7);
+                    break;
+                case 'month':
+                    cutoff.setMonth(now.getMonth() - 1);
+                    break;
+                case 'year':
+                    cutoff.setFullYear(now.getFullYear() - 1);
+                    break;
+                default:
+                    cutoff.setDate(now.getDate() - 7);
+            }
+
+            return invoices.filter(inv => {
+                if (!inv.createdAt) return false;
+                let date;
+                if (inv.createdAt?.toDate) {
+                    date = inv.createdAt.toDate();
+                } else if (inv.createdAt?.seconds) {
+                    date = new Date(inv.createdAt.seconds * 1000);
+                } else {
+                    date = new Date(inv.createdAt);
+                }
+                return date >= cutoff;
+            });
+        }
+
+        function processDailyData(invoices) {
+            const dailyMap = new Map();
+            
+            invoices.forEach(inv => {
+                let date;
+                if (inv.createdAt?.toDate) {
+                    date = inv.createdAt.toDate();
+                } else if (inv.createdAt?.seconds) {
+                    date = new Date(inv.createdAt.seconds * 1000);
+                } else {
+                    date = new Date(inv.createdAt);
+                }
+                
+                const key = date.toISOString().split('T')[0];
+                const total = inv.total || 0;
+                
+                dailyMap.set(key, (dailyMap.get(key) || 0) + total);
+            });
+
+            const sorted = Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+            
+            return {
+                labels: sorted.map(([key]) => key),
+                values: sorted.map(([, value]) => value)
+            };
+        }
+
+        function renderSalesChart(data) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            if (salesChart) {
+                salesChart.destroy();
+            }
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(212, 168, 67, 0.4)');
+            gradient.addColorStop(0.5, 'rgba(212, 168, 67, 0.15)');
+            gradient.addColorStop(1, 'rgba(212, 168, 67, 0)');
+
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels.length > 0 ? data.labels : ['لا توجد بيانات'],
+                    datasets: [{
+                        label: 'المبيعات',
+                        data: data.values.length > 0 ? data.values : [0],
+                        borderColor: '#d4a843',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#d4a843',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleFont: { family: 'Cairo' },
+                            bodyFont: { family: 'Cairo' },
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y.toFixed(2) + ' ₪';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { family: 'Cairo' },
+                                callback: function(value) {
+                                    return value.toFixed(0) + ' ₪';
+                                }
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: 'Cairo' },
+                                maxRotation: 45,
+                                autoSkip: true,
+                                maxTicksLimit: 15
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // 🥧 RENDER PIE CHART
+        // ============================================
+        function renderPieChart(invoices) {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            
+            if (pieChart) {
+                pieChart.destroy();
+            }
+
+            let cashTotal = 0;
+            let debtTotal = 0;
+
+            invoices.forEach(inv => {
+                const total = inv.total || 0;
+                const saleType = inv.saleType || inv.type || '';
+                const status = inv.status || '';
+                
+                if (saleType === 'debt' || 
+                    status === 'debt' || 
+                    (inv.remainingAmount && inv.remainingAmount > 0 && inv.saleType !== 'cash')) {
+                    debtTotal += total;
+                } else {
+                    cashTotal += total;
+                }
+            });
+
+            const total = cashTotal + debtTotal;
+            const cashPercent = total > 0 ? (cashTotal / total) * 100 : 0;
+            const debtPercent = total > 0 ? (debtTotal / total) * 100 : 0;
+
+            document.getElementById('cashPercent').textContent = cashPercent.toFixed(1) + '%';
+            document.getElementById('debtPercent').textContent = debtPercent.toFixed(1) + '%';
+
+            if (total === 0) {
+                document.getElementById('cashPercent').textContent = '0%';
+                document.getElementById('debtPercent').textContent = '0%';
+            }
+
+            pieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['كاش', 'أجل'],
+                    datasets: [{
+                        data: [cashTotal || 0, debtTotal || 0],
+                        backgroundColor: ['#10b981', '#ef4444'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Cairo', size: 12 },
+                                padding: 15,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleFont: { family: 'Cairo' },
+                            bodyFont: { family: 'Cairo' },
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percent = total > 0 ? (context.parsed / total) * 100 : 0;
+                                    return context.label + ': ' + context.parsed.toFixed(2) + ' ₪ (' + percent.toFixed(1) + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartStats(invoices) {
+            const total = invoices.reduce((sum, inv) => sum + (inv.total || 0), 0);
+            const count = invoices.length;
+            const avg = count > 0 ? total / count : 0;
+
+            document.getElementById('totalPeriod').textContent = total.toFixed(2) + ' ₪';
+            document.getElementById('avgSales').textContent = avg.toFixed(2) + ' ₪';
+        }
+
+        // ============================================
+        // 📋 تحميل آخر الفواتير
+        // ============================================
+        async function loadRecentInvoices(invoicesData) {
+            const tbody = document.getElementById('invoicesBody');
+            
+            try {
+                const sorted = invoicesData
+                    .filter(inv => inv.createdAt)
+                    .sort((a, b) => {
+                        let dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+                        let dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                        return dateB - dateA;
+                    })
+                    .slice(0, 5);
+
+                if (sorted.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#999; padding:20px;">
+                                📭 لا توجد فواتير
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                sorted.forEach(inv => {
+                    const invoiceNumber = inv.invoiceNumber || 'INV-' + (inv.id || '').slice(0, 6);
+                    const customer = inv.customerName || 'عميل';
+                    const total = inv.total || 0;
+                    const status = inv.saleType === 'debt' || inv.status === 'debt' ? 'debt' : 'completed';
+                    const statusLabel = status === 'debt' ? 'أجل' : 'مكتمل';
+
+                    html += `
+                        <tr>
+                            <td><strong>${invoiceNumber}</strong></td>
+                            <td>${customer}</td>
+                            <td>${total.toFixed(2)} ₪</td>
+                            <td><span class="status-badge ${status}">${statusLabel}</span></td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:var(--danger); padding:20px;">
+                            ⚠️ حدث خطأ
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // ============================================
+        // 🏆 تحميل أشهر المنتجات
+        // ============================================
+        async function loadTopProducts() {
+            const container = document.getElementById('topProducts');
+            
+            try {
+                const productsSnap = await getDocs(collection(db, 'products'));
+                
+                if (productsSnap.empty) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="icon">📦</span>
+                            لا توجد منتجات
+                        </div>
+                    `;
+                    return;
+                }
+
+                const products = [];
+                productsSnap.forEach(doc => {
+                    const data = dataSafely(doc);
+                    products.push({
+                        id: doc.id,
+                        name: data.name || 'منتج',
+                        icon: data.icon || '📱',
+                        category: data.category || 'عام',
+                        price: data.price || 0,
+                        sales: data.sales || 0
+                    });
+                });
+
+                products.sort((a, b) => b.sales - a.sales);
+
+                const top5 = products.slice(0, 5);
+                const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+                
+                let html = '';
+                top5.forEach((product, index) => {
+                    html += `
+                        <div class="product-item">
+                            <div class="product-info">
+                                <span class="product-rank">${medals[index] || '🏅'}</span>
+                                <div class="product-details">
+                                    <div class="product-name">${product.icon} ${product.name}</div>
+                                    <div class="product-category">${product.category}</div>
+                                </div>
+                            </div>
+                            <div class="product-sales">
+                                ${product.sales || 0} <span class="sales-count">مبيعات</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                container.innerHTML = `
+                    <div class="empty-state" style="color:var(--danger);">
+                        ⚠️ حدث خطأ في التحميل
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // 📝 تحميل المدينون (من customers - balance > 0)
+        // ============================================
+        async function loadDebtors() {
+            const container = document.getElementById('debtorsList');
+            
+            try {
+                const snapshot = await getDocs(collection(db, 'customers'));
+                const debtors = [];
+
+                snapshot.forEach(doc => {
+                    const data = dataSafely(doc);
+                    if (data.balance > 0) {
+                        debtors.push({
+                            id: doc.id,
+                            name: data.name || 'عميل',
+                            phone: data.phone || '',
+                            balance: data.balance || 0
+                        });
+                    }
+                });
+
+                debtors.sort((a, b) => b.balance - a.balance);
+
+                if (debtors.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="icon">✅</span>
+                            لا يوجد مدينون
+                        </div>
+                    `;
+                    return;
+                }
+
+                const top5 = debtors.slice(0, 5);
+                let html = '';
+                top5.forEach(debtor => {
+                    html += `
+                        <div class="debt-item">
+                            <div class="debt-info">
+                                <div class="debt-name">${debtor.name}</div>
+                                <div class="debt-phone">${debtor.phone || 'لا يوجد رقم'}</div>
+                            </div>
+                            <div class="debt-amount debt">${debtor.balance.toFixed(2)} ₪</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                container.innerHTML = `
+                    <div class="empty-state" style="color:var(--danger);">
+                        ⚠️ حدث خطأ في التحميل
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // 📥 تحميل الدائنون (من creditors collection)
+        // ============================================
+        async function loadCreditors() {
+            const container = document.getElementById('creditorsList');
+            
+            try {
+                // ✅ جلب من collection 'creditors' مباشرة
+                const snapshot = await getDocs(collection(db, 'creditors'));
+                const creditors = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    creditors.push({
+                        id: doc.id,
+                        name: data.name || 'دائن',
+                        phone: data.phone || '',
+                        balance: data.balance || 0,
+                        paid: data.paid || 0,
+                        reason: data.reason || '',
+                        address: data.address || ''
+                    });
+                });
+
+                // ترتيب حسب المبلغ المستحق (الأعلى أولاً)
+                creditors.sort((a, b) => b.balance - a.balance);
+
+                if (creditors.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <span class="icon">✅</span>
+                            لا يوجد دائنون
+                        </div>
+                    `;
+                    return;
+                }
+
+                const top5 = creditors.slice(0, 5);
+                let html = '';
+                top5.forEach(creditor => {
+                    html += `
+                        <div class="debt-item">
+                            <div class="debt-info">
+                                <div class="debt-name">${creditor.name}</div>
+                                <div class="debt-phone">${creditor.phone || 'لا يوجد رقم'}</div>
+                                ${creditor.reason ? `<div style="font-size:11px;color:#999;">📝 ${creditor.reason}</div>` : ''}
+                            </div>
+                            <div class="debt-amount credit">${creditor.balance.toFixed(2)} ₪</div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.error('❌ خطأ في تحميل الدائنون:', error);
+                container.innerHTML = `
+                    <div class="empty-state" style="color:var(--danger);">
+                        ⚠️ حدث خطأ في تحميل الدائنون
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // 📡 تحديث لحظي
+        // ============================================
+        const collections = ['invoices_cash', 'invoices_debt', 'invoices', 'customers', 'products', 'creditors'];
+        collections.forEach(coll => {
+            try {
+                onSnapshot(collection(db, coll), () => {
+                    loadDashboardData();
+                });
+            } catch (e) {
+                console.log(`⚠️ Cannot listen to ${coll}`);
+            }
+        });
+
+        window.db = db;
+        window.auth = auth;
+
+        console.log('✅ Dashboard loaded successfully');
+    </script>
+</body>
+</html>

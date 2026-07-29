@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>دفتر الأجال المتطور · براند فون</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1a1a2e;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f6fa;
+            --gold: #d4a843;
+            --gold-light: #e8c96e;
+            --gold-dark: #b8942f;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --font: 'Cairo', 'Segoe UI', sans-serif;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --whatsapp: #25D366;
+        }
+        html, body { height: 100%; }
+        body {
+            font-family: var(--font);
+            background: var(--bg-secondary);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background: var(--bg-primary);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212,168,67,0.1);
+            flex-shrink: 0;
+        }
+        .header .logo-section { display: flex; align-items: center; gap: 10px; }
+        .header .logo-section h1 { font-size: 17px; font-weight: 900; color: var(--primary); }
+        .header .logo-section h1 span { color: var(--gold); }
+        .header .page-title { font-size: 12px; color: #999; font-weight: 600; }
+        .header .user-section { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .logout-btn {
+            padding: 5px 14px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(239,68,68,0.3); }
+        .back-btn {
+            padding: 5px 14px;
+            background: var(--bg-secondary);
+            color: var(--primary);
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212,168,67,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); }
+        .stat-card .stat-icon { font-size: 22px; margin-bottom: 4px; }
+        .stat-card .stat-number { font-size: 22px; font-weight: 900; color: var(--primary); }
+        .stat-card .stat-number.debt { color: var(--danger); }
+        .stat-card .stat-number.success { color: var(--success); }
+        .stat-card .stat-number.warning { color: var(--warning); }
+        .stat-card .stat-label { font-size: 11px; color: #999; margin-top: 2px; }
+        .stat-card .stat-change { font-size: 11px; font-weight: 700; margin-top: 2px; }
+        .stat-card .stat-change.up { color: var(--success); }
+        .stat-card .stat-change.down { color: var(--danger); }
+        
+        /* ===== CHARTS ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+        .chart-box {
+            background: var(--bg-primary);
+            padding: 15px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212,168,67,0.08);
+        }
+        .chart-box .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .chart-box .chart-header h4 { font-size: 14px; color: var(--primary); }
+        .chart-box .chart-header .chart-controls { display: flex; gap: 5px; }
+        .chart-box .chart-header .chart-controls button {
+            padding: 3px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            background: var(--bg-primary);
+            font-family: var(--font);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+        .chart-box .chart-header .chart-controls button:hover { border-color: var(--gold); }
+        .chart-box .chart-header .chart-controls button.active { border-color: var(--gold); background: rgba(212,168,67,0.1); color: var(--gold-dark); }
+        .chart-box .chart-wrapper { position: relative; height: 200px; }
+        
+        .chart-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .chart-stats .stat-item {
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        .chart-stats .stat-item .value { font-size: 16px; font-weight: 900; }
+        .chart-stats .stat-item .label { font-size: 10px; color: #999; }
+        .chart-stats .stat-item .value.up { color: var(--success); }
+        .chart-stats .stat-item .value.down { color: var(--danger); }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .toolbar .search-box { flex: 1; min-width: 150px; display: flex; gap: 8px; }
+        .toolbar .search-box input {
+            flex: 1;
+            padding: 8px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .toolbar .search-box input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,168,67,0.1); }
+        .toolbar .btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .toolbar .btn-primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: white; }
+        .toolbar .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,67,0.4); }
+        .toolbar .btn-refresh { background: var(--info); color: white; }
+        .toolbar .btn-refresh:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(59,130,246,0.4); }
+        .toolbar .btn-add { background: var(--success); color: white; }
+        .toolbar .btn-add:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(16,185,129,0.4); }
+        .toolbar .btn-whatsapp-all { background: var(--whatsapp); color: white; }
+        .toolbar .btn-whatsapp-all:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(37,211,102,0.4); }
+        .toolbar .btn-export { background: var(--purple); color: white; }
+        .toolbar .btn-export:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(139,92,246,0.4); }
+        
+        .table-container {
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(212,168,67,0.08);
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+            margin-bottom: 50px;
+        }
+        .table-container .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .table-container .table-header h3 { font-size: 14px; color: var(--primary); }
+        .table-container .table-header .badge-count {
+            background: var(--bg-secondary);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        .table-responsive { overflow: auto; flex: 1; }
+        .table-responsive::-webkit-scrollbar { width: 5px; height: 5px; }
+        .table-responsive::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 10px; }
+        .table-responsive::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 500px; }
+        table thead { background: var(--bg-secondary); position: sticky; top: 0; z-index: 10; }
+        table th { text-align: right; padding: 8px 12px; font-size: 11px; color: #666; font-weight: 700; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
+        table td { padding: 8px 12px; font-size: 13px; color: var(--primary); border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+        table tbody tr:hover td { background: #fafafa; }
+        table tbody tr:last-child td { border-bottom: none; }
+        .amount-debt { color: var(--danger); font-weight: 700; }
+        .amount-zero { color: #6b7280; }
+        .badge-debt { background: #fee2e2; color: var(--danger); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-paid { background: #d1fae5; color: var(--success); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-partial { background: #fef3c7; color: var(--warning); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-block; }
+        .badge-customer { background: #dbeafe; color: var(--info); padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; display: inline-block; margin-right: 4px; }
+        .action-btn {
+            padding: 4px 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            white-space: nowrap;
+        }
+        .action-btn:hover { transform: scale(1.05); }
+        .action-btn.pay { background: var(--success); }
+        .action-btn.pay:hover { box-shadow: 0 4px 15px rgba(16,185,129,0.3); }
+        .action-btn.details { background: var(--warning); }
+        .action-btn.details:hover { box-shadow: 0 4px 15px rgba(245,158,11,0.3); }
+        .action-btn.delete { background: var(--danger); }
+        .action-btn.delete:hover { box-shadow: 0 4px 15px rgba(239,68,68,0.3); }
+        .action-btn.whatsapp { background: var(--whatsapp); }
+        .action-btn.whatsapp:hover { box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
+        .actions-cell { display: flex; gap: 5px; flex-wrap: wrap; }
+        
+        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
+        .empty-state .icon { font-size: 48px; display: block; margin-bottom: 10px; }
+        .empty-state h4 { font-size: 16px; color: var(--primary); margin-bottom: 5px; }
+        .empty-state p { font-size: 13px; }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: var(--bg-primary);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            max-width: 95vw;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+        .modal::-webkit-scrollbar { width: 5px; }
+        .modal::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+        .modal .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .modal .modal-header h3 { font-size: 18px; color: var(--primary); }
+        .modal .modal-header .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+        .modal .modal-header .close-modal:hover { color: var(--danger); transform: rotate(90deg); }
+        .modal .form-group { margin-bottom: 14px; }
+        .modal .form-group label { display: block; font-weight: 600; font-size: 13px; color: var(--primary); margin-bottom: 4px; }
+        .modal .form-group input, .modal .form-group select, .modal .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        .modal .form-group input:focus, .modal .form-group select:focus, .modal .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(212,168,67,0.1);
+        }
+        .modal .form-group textarea { resize: vertical; min-height: 50px; }
+        .modal .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+        .modal .modal-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal .modal-actions .confirm { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: white; }
+        .modal .modal-actions .confirm:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,67,0.4); }
+        .modal .modal-actions .cancel { background: var(--bg-secondary); color: var(--primary); }
+        .modal .modal-actions .cancel:hover { background: #e5e7eb; }
+        .modal.details { max-width: 98vw; max-height: 95vh; padding: 20px; font-size: 13px; }
+        .modal.details .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            background: var(--bg-secondary);
+            padding: 12px 15px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+        .modal.details .info-grid .item { display: flex; flex-direction: column; }
+        .modal.details .info-grid .item .label { font-size: 11px; color: #999; }
+        .modal.details .info-grid .item .value { font-weight: 600; font-size: 14px; }
+        .modal.details .info-grid .item .value.debt { color: var(--danger); }
+        .modal.details .info-grid .item .value.credit { color: var(--success); }
+        .invoice-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        .invoice-card .inv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .invoice-card .inv-header .num { font-weight: 700; font-size: 14px; }
+        .invoice-card .inv-header .date { font-size: 12px; color: #999; }
+        .invoice-card .inv-items { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0; }
+        .invoice-card .inv-items th { background: #f0f0f0; padding: 5px 8px; text-align: right; font-size: 11px; color: #666; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
+        .invoice-card .inv-items td { padding: 5px 8px; border-bottom: 1px solid #f0f0f0; font-size: 12px; }
+        .invoice-card .inv-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+        .invoice-card .inv-summary .item { display: flex; justify-content: space-between; padding: 2px 0; }
+        .invoice-card .inv-summary .item .label { color: #666; font-size: 12px; }
+        .invoice-card .inv-summary .item .value { font-weight: 700; }
+        .payment-log {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+        .payment-log h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .payment-log .log-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 12px;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 13px;
+            background: #fafafa;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+        .payment-log .log-item .date { color: #666; font-size: 12px; }
+        .payment-log .log-item .amount { font-weight: 700; color: var(--success); }
+        .payment-log .log-item .amount.debt { color: var(--danger); }
+        .payment-log .log-item .note { color: #888; font-size: 12px; }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-primary);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-xl);
+            border-right: 4px solid var(--success);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            animation: slideUp 0.4s ease;
+            min-width: 250px;
+            max-width: 90%;
+            font-size: 13px;
+        }
+        .toast.show { display: flex; }
+        .toast.error { border-right-color: var(--danger); }
+        .toast .icon { font-size: 20px; }
+        .toast .msg { flex: 1; font-weight: 500; }
+        .whatsapp-share {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--whatsapp);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: none;
+            font-family: var(--font);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+        .whatsapp-share:hover { transform: scale(1.03); box-shadow: 0 4px 15px rgba(37,211,102,0.4); }
+        
+        .total-remaining {
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 8px; }
+            .header { padding: 10px 14px; flex-direction: column; align-items: stretch; }
+            .header .logo-section h1 { font-size: 15px; }
+            .header .user-section { justify-content: space-between; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .modal.details { padding: 12px; max-width: 100vw; max-height: 98vh; }
+            .invoice-card .inv-summary { grid-template-columns: 1fr; }
+            .modal .form-row { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .chart-stats { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .modal .modal-actions { flex-direction: column; }
+            .actions-cell { flex-direction: column; }
+            .actions-cell button { width: 100%; }
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+        .loading-spinner { text-align: center; padding: 20px; font-size: 13px; color: #999; }
+        .loading-spinner .spinner { width: 25px; height: 25px; border: 3px solid #f0f0f0; border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 8px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        
+        .payment-summary {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin: 12px 0;
+        }
+        .payment-summary .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+        .payment-summary .row .label { color: #666; }
+        .payment-summary .row .value { font-weight: 700; }
+        
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .trend-indicator.up { color: var(--success); }
+        .trend-indicator.down { color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="logo-section">
+        <h1>دفتر <span>الأجال</span></h1>
+        <span class="page-title">• نظام متطور لإدارة الديون</span>
+    </div>
+    <div class="user-section">
+        <span id="userEmailDisplay" style="font-size:12px;color:#666;">مرحباً</span>
+        <button class="logout-btn" id="logoutBtn">تسجيل خروج</button>
+        <a href="#" class="back-btn" id="backBtn">↩ رجوع</a>
+    </div>
+</div>
+
+<!-- stats -->
+<div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-icon">📄</div><div class="stat-number" id="totalDebtInvoices">0</div><div class="stat-label">فواتير الدين</div><div class="stat-change up" id="invoiceChange">+0%</div></div>
+    <div class="stat-card"><div class="stat-icon">🧾</div><div class="stat-number debt" id="totalDebtAmount">0</div><div class="stat-label">إجمالي المستحق</div><div class="stat-change up" id="amountChange">+0%</div></div>
+    <div class="stat-card"><div class="stat-icon">👤</div><div class="stat-number" id="uniqueCustomers">0</div><div class="stat-label">عدد العملاء</div><div class="stat-change up" id="customerChange">+0%</div></div>
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-number" id="totalCustomerBalance">0</div><div class="stat-label">إجمالي أرصدة العملاء</div><div class="stat-change" id="balanceChange">—</div></div>
+</div>
+
+<!-- ===== CHARTS ===== -->
+<div class="charts-grid">
+    <div class="chart-box">
+        <div class="chart-header">
+            <h4>📈 حركة الديون اليومية</h4>
+            <div class="chart-controls">
+                <button class="active" data-period="week">أسبوع</button>
+                <button data-period="month">شهر</button>
+                <button data-period="year">سنة</button>
+            </div>
+        </div>
+        <div class="chart-wrapper"><canvas id="debtChart"></canvas></div>
+        <div class="chart-stats">
+            <div class="stat-item"><div class="value up" id="avgDebt">0 ₪</div><div class="label">📊 متوسط الدين</div></div>
+            <div class="stat-item"><div class="value" id="totalPeriod">0 ₪</div><div class="label">💰 إجمالي الفترة</div></div>
+            <div class="stat-item"><div class="value" id="invoicePeriod">0</div><div class="label">📄 فواتير الفترة</div></div>
+        </div>
+    </div>
+    <div class="chart-box">
+        <div class="chart-header">
+            <h4>📊 توزيع العملاء</h4>
+        </div>
+        <div class="chart-wrapper"><canvas id="customerChart"></canvas></div>
+        <div class="chart-stats">
+            <div class="stat-item"><div class="value" id="debtorPercent">0%</div><div class="label">📝 مدينون</div></div>
+            <div class="stat-item"><div class="value" id="paidPercent">0%</div><div class="label">✅ مكتمل</div></div>
+            <div class="stat-item"><div class="value" id="partialPercent">0%</div><div class="label">⏳ جزئي</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- toolbar -->
+<div class="toolbar">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 بحث باسم العميل أو رقم الهاتف..." />
+    </div>
+    <button class="btn btn-add" id="addCustomerBtn"><i class="fas fa-user-plus"></i> إضافة عميل</button>
+    <button class="btn btn-whatsapp-all" id="whatsappAllBtn"><i class="fab fa-whatsapp"></i> إرسال للكل</button>
+    <button class="btn btn-export" id="exportBtn"><i class="fas fa-file-pdf"></i> تقرير PDF</button>
+    <button class="btn btn-refresh" id="refreshBtn"><i class="fas fa-sync"></i> تحديث</button>
+</div>
+
+<!-- table -->
+<div class="table-container">
+    <div class="table-header">
+        <h3>📋 العملاء والفواتير</h3>
+        <span class="badge-count" id="invoiceCount">0</span>
+    </div>
+    <div class="table-responsive" id="tableWrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>العميل</th>
+                    <th>الهاتف</th>
+                    <th>إجمالي الديون</th>
+                    <th>المدفوع</th>
+                    <th>المتبقي</th>
+                    <th>عدد الفواتير</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody id="invoicesBody">
+                <tr><td colspan="7"><div class="loading-spinner"><div class="spinner"></div>جاري التحميل...</div></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"><span class="icon">✅</span><span class="msg" id="toastMsg">تم</span></div>
+
+<!-- payment modal -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal">
+        <div class="modal-header"><h3>💳 تسديد دفعة</h3><button class="close-modal" data-modal="paymentModal">✕</button></div>
+        <div class="form-group"><label>العميل</label><input type="text" id="payCustomerName" disabled /></div>
+        <div class="form-group"><label>المتبقي الحالي</label><input type="text" id="payRemaining" disabled /></div>
+        <div class="form-group"><label>المبلغ المسدد</label><input type="number" id="payAmount" placeholder="أدخل المبلغ" min="0" step="0.01" /></div>
+        <div class="form-group"><label>ملاحظة (اختياري)</label><input type="text" id="payNote" placeholder="سبب الدفع" /></div>
+        <div class="modal-actions"><button class="confirm" id="confirmPayment">تأكيد السداد</button><button class="cancel" data-modal="paymentModal">إلغاء</button></div>
+    </div>
+</div>
+
+<!-- customer details modal -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal details">
+        <div class="modal-header"><h3>📄 تفاصيل العميل</h3><button class="close-modal" data-modal="detailsModal">✕</button></div>
+        <div id="detailsContent"></div>
+    </div>
+</div>
+
+<!-- add customer modal -->
+<div class="modal-overlay" id="addCustomerModal">
+    <div class="modal">
+        <div class="modal-header"><h3><i class="fas fa-user-plus"></i> إضافة عميل جديد</h3><button class="close-modal" data-modal="addCustomerModal">✕</button></div>
+        <div class="form-group"><label>الاسم الكامل *</label><input type="text" id="custName" placeholder="أدخل اسم العميل" /></div>
+        <div class="form-group"><label>رقم الهاتف *</label><input type="text" id="custPhone" placeholder="مثال: 01123456789" /></div>
+        <div class="form-group"><label>العنوان</label><input type="text" id="custAddress" placeholder="أدخل العنوان" /></div>
+        <div class="form-group"><label>المبلغ المستحق (دين سابق)</label><input type="number" id="custBalance" placeholder="0" min="0" step="0.01" value="0" /></div>
+        <div class="form-group"><label>سبب الدين</label><textarea id="custReason" placeholder="سبب الدين (اختياري)"></textarea></div>
+        <div class="modal-actions"><button class="confirm" id="confirmAddCustomer"><i class="fas fa-save"></i> حفظ العميل</button><button class="cancel" data-modal="addCustomerModal">إلغاء</button></div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+        getAuth, signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import {
+        getFirestore, collection, query, getDocs, doc, updateDoc, increment,
+        addDoc, serverTimestamp, where, deleteDoc, orderBy, limit, getDoc, setDoc,
+        onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+        authDomain: "stor-121.firebaseapp.com",
+        projectId: "stor-121",
+        storageBucket: "stor-121.firebasestorage.app",
+        messagingSenderId: "944316047610",
+        appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
+        measurementId: "G-F4JBRJKR1R"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ALLOWED_EMAILS = ['osdesigner5647@gmail.com'];
+
+    // DOM refs
+    const tbody = document.getElementById('invoicesBody');
+    const searchInput = document.getElementById('searchInput');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const backBtn = document.getElementById('backBtn');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    const addCustomerBtn = document.getElementById('addCustomerBtn');
+    const whatsappAllBtn = document.getElementById('whatsappAllBtn');
+    const exportBtn = document.getElementById('exportBtn');
+
+    const totalDebtInvoices = document.getElementById('totalDebtInvoices');
+    const totalDebtAmount = document.getElementById('totalDebtAmount');
+    const uniqueCustomers = document.getElementById('uniqueCustomers');
+    const totalCustomerBalance = document.getElementById('totalCustomerBalance');
+    const invoiceCount = document.getElementById('invoiceCount');
+
+    const paymentModal = document.getElementById('paymentModal');
+    const detailsModal = document.getElementById('detailsModal');
+    const addCustomerModal = document.getElementById('addCustomerModal');
+    const payCustomerName = document.getElementById('payCustomerName');
+    const payRemaining = document.getElementById('payRemaining');
+    const payAmount = document.getElementById('payAmount');
+    const payNote = document.getElementById('payNote');
+    const confirmPaymentBtn = document.getElementById('confirmPayment');
+
+    const detailsContent = document.getElementById('detailsContent');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+
+    const custName = document.getElementById('custName');
+    const custPhone = document.getElementById('custPhone');
+    const custAddress = document.getElementById('custAddress');
+    const custBalance = document.getElementById('custBalance');
+    const custReason = document.getElementById('custReason');
+    const confirmAddCustomer = document.getElementById('confirmAddCustomer');
+
+    let allCustomers = [];
+    let allInvoices = [];
+    let currentCustomerId = null;
+    let debtChart = null;
+    let customerChart = null;
+
+    function showToast(msg, isError = false) {
+        toastMsg.textContent = msg;
+        toast.className = 'toast show' + (isError ? ' error' : '');
+        clearTimeout(toast._hide);
+        toast._hide = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function formatDate(ts) {
+        if (!ts) return '—';
+        if (ts.toDate) ts = ts.toDate();
+        return new Date(ts).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' });
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    document.querySelectorAll('.close-modal, .cancel').forEach(el => {
+        el.addEventListener('click', (e) => {
+            const modal = el.closest('.modal-overlay');
+            if (modal) modal.classList.remove('show');
+        });
+    });
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+        el.addEventListener('click', (e) => { if (e.target === el) el.classList.remove('show'); });
+    });
+
+    // ============================================
+    // 📊 CHART FUNCTIONS
+    // ============================================
+    function updateCharts(period = 'week') {
+        const now = new Date();
+        let cutoff = new Date(now);
+        
+        switch(period) {
+            case 'week': cutoff.setDate(now.getDate() - 7); break;
+            case 'month': cutoff.setMonth(now.getMonth() - 1); break;
+            case 'year': cutoff.setFullYear(now.getFullYear() - 1); break;
+            default: cutoff.setDate(now.getDate() - 7);
+        }
+
+        // Filter invoices by period
+        const filtered = allInvoices.filter(inv => {
+            let date;
+            if (inv.createdAt?.toDate) date = inv.createdAt.toDate();
+            else if (inv.createdAt?.seconds) date = new Date(inv.createdAt.seconds * 1000);
+            else date = new Date(inv.createdAt);
+            return date >= cutoff;
+        });
+
+        // ===== LINE CHART =====
+        const dailyMap = new Map();
+        filtered.forEach(inv => {
+            let date;
+            if (inv.createdAt?.toDate) date = inv.createdAt.toDate();
+            else if (inv.createdAt?.seconds) date = new Date(inv.createdAt.seconds * 1000);
+            else date = new Date(inv.createdAt);
+            const key = date.toISOString().split('T')[0];
+            const amount = inv.remainingAmount || 0;
+            dailyMap.set(key, (dailyMap.get(key) || 0) + amount);
+        });
+
+        const sorted = Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+        const labels = sorted.map(([key]) => key);
+        const values = sorted.map(([, value]) => value);
+
+        const ctx = document.getElementById('debtChart').getContext('2d');
+        if (debtChart) debtChart.destroy();
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+        gradient.addColorStop(0, 'rgba(212, 168, 67, 0.4)');
+        gradient.addColorStop(1, 'rgba(212, 168, 67, 0)');
+
+        debtChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels.length > 0 ? labels : ['لا توجد بيانات'],
+                datasets: [{
+                    label: 'الديون المتبقية',
+                    data: values.length > 0 ? values : [0],
+                    borderColor: '#d4a843',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#d4a843',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: { family: 'Cairo' },
+                        bodyFont: { family: 'Cairo' },
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toFixed(2) + ' ₪';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: { family: 'Cairo' },
+                            callback: function(value) {
+                                return value.toFixed(0) + ' ₪';
+                            }
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    x: {
+                        ticks: {
+                            font: { family: 'Cairo' },
+                            maxRotation: 45,
+                            autoSkip: true,
+                            maxTicksLimit: 15
+                        },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ===== PIE CHART =====
+        let debtCount = 0, partialCount = 0, paidCount = 0;
+        filtered.forEach(inv => {
+            const remaining = inv.remainingAmount || 0;
+            const total = inv.total || 0;
+            if (remaining === 0) paidCount++;
+            else if (remaining < total) partialCount++;
+            else debtCount++;
+        });
+
+        const pieCtx = document.getElementById('customerChart').getContext('2d');
+        if (customerChart) customerChart.destroy();
+
+        customerChart = new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['مدينون', 'مدفوع جزئياً', 'مكتمل'],
+                datasets: [{
+                    data: [debtCount, partialCount, paidCount],
+                    backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Cairo', size: 10 },
+                            padding: 10,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: { family: 'Cairo' },
+                        bodyFont: { family: 'Cairo' },
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percent = total > 0 ? (context.parsed / total) * 100 : 0;
+                                return context.label + ': ' + context.parsed + ' (' + percent.toFixed(1) + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ===== CHART STATS =====
+        const total = filtered.reduce((s, inv) => s + (inv.remainingAmount || 0), 0);
+        const avg = filtered.length > 0 ? total / filtered.length : 0;
+        document.getElementById('avgDebt').textContent = avg.toFixed(2) + ' ₪';
+        document.getElementById('totalPeriod').textContent = total.toFixed(2) + ' ₪';
+        document.getElementById('invoicePeriod').textContent = filtered.length;
+
+        const totalAll = filtered.length;
+        document.getElementById('debtorPercent').textContent = totalAll > 0 ? ((debtCount / totalAll) * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('paidPercent').textContent = totalAll > 0 ? ((paidCount / totalAll) * 100).toFixed(1) + '%' : '0%';
+        document.getElementById('partialPercent').textContent = totalAll > 0 ? ((partialCount / totalAll) * 100).toFixed(1) + '%' : '0%';
+    }
+
+    // Chart period controls
+    document.querySelectorAll('.chart-controls button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.chart-controls button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            updateCharts(this.dataset.period);
+        });
+    });
+
+    // ============================================
+    // 📊 LOAD DATA
+    // ============================================
+    async function loadData() {
+        try {
+            // Load customers
+            const customerSnap = await getDocs(collection(db, 'customers'));
+            allCustomers = [];
+            customerSnap.forEach(doc => {
+                const d = doc.data();
+                allCustomers.push({ id: doc.id, ...d });
+            });
+
+            // Load invoices - debt only
+            const invoiceSnap = await getDocs(collection(db, 'invoices'));
+            allInvoices = [];
+            invoiceSnap.forEach(doc => {
+                const d = doc.data();
+                const isDebt = d.status === 'debt' || d.saleType === 'debt' || (d.remainingAmount && d.remainingAmount > 0);
+                if (isDebt) {
+                    allInvoices.push({ id: doc.id, ...d });
+                }
+            });
+
+            renderTable(searchInput.value);
+            updateStats();
+            updateCharts('week');
+        } catch (e) {
+            console.error(e);
+            showToast('حدث خطأ أثناء تحميل البيانات', true);
+            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="icon">⚠️</span><h4>خطأ</h4><p>${e.message}</p></div></td></tr>`;
+        }
+    }
+
+    function renderTable(filter = '') {
+        const q = filter.trim().toLowerCase();
+        
+        const customerMap = {};
+        allCustomers.forEach(c => {
+            const name = c.name || 'غير معروف';
+            customerMap[c.id] = {
+                id: c.id,
+                name: name,
+                phone: c.phone || '',
+                address: c.address || '',
+                balance: c.balance || 0,
+                reason: c.reason || '',
+                invoices: [],
+                totalDebt: 0,
+                totalPaid: 0,
+                remaining: 0
+            };
+        });
+
+        allInvoices.forEach(inv => {
+            let customerId = null;
+            for (const [id, c] of Object.entries(customerMap)) {
+                if (c.name === inv.customerName || (inv.customerPhone && c.phone === inv.customerPhone)) {
+                    customerId = id;
+                    break;
+                }
+            }
+            if (!customerId && inv.customerName) {
+                customerId = 'temp_' + inv.customerName;
+                customerMap[customerId] = {
+                    id: customerId,
+                    name: inv.customerName,
+                    phone: inv.customerPhone || '',
+                    address: '',
+                    balance: 0,
+                    reason: '',
+                    invoices: [],
+                    totalDebt: 0,
+                    totalPaid: 0,
+                    remaining: 0,
+                    isTemp: true
+                };
+            }
+            if (customerId && customerMap[customerId]) {
+                customerMap[customerId].invoices.push(inv);
+                customerMap[customerId].totalDebt += inv.total || 0;
+                customerMap[customerId].totalPaid += inv.paidAmount || 0;
+                customerMap[customerId].remaining += inv.remainingAmount || 0;
+            }
+        });
+
+        let customerList = Object.values(customerMap);
+        
+        if (q) {
+            customerList = customerList.filter(c => 
+                c.name.toLowerCase().includes(q) ||
+                (c.phone && c.phone.includes(q))
+            );
+        }
+
+        customerList.sort((a, b) => b.remaining - a.remaining);
+
+        if (customerList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="icon">📭</span><h4>لا توجد بيانات</h4><p>لا يوجد عملاء أو فواتير أجل</p></div></td></tr>`;
+            invoiceCount.textContent = '0';
+            return;
+        }
+
+        let html = '';
+        customerList.forEach((c) => {
+            const isTemp = c.isTemp || false;
+            const hasRemaining = c.remaining > 0;
+            const hasPhone = c.phone && c.phone.length > 0;
+            
+            html += `<tr>
+                <td><strong>${c.name}</strong> ${isTemp ? '<span class="badge-customer">مؤقت</span>' : ''}</td>
+                <td>${c.phone || '—'}</td>
+                <td>${c.totalDebt.toFixed(2)}</td>
+                <td>${c.totalPaid.toFixed(2)}</td>
+                <td class="${hasRemaining ? 'amount-debt' : 'amount-zero'}">${c.remaining.toFixed(2)}</td>
+                <td>${c.invoices.length}</td>
+                <td class="actions-cell">
+                    <button class="action-btn details" data-id="${c.id}" data-name="${c.name}"><i class="fas fa-info-circle"></i> تفاصيل</button>
+                    ${hasRemaining ? `<button class="action-btn pay" data-id="${c.id}" data-remaining="${c.remaining}"><i class="fas fa-money-bill-wave"></i> سداد</button>` : ''}
+                    ${hasPhone ? `<button class="action-btn whatsapp" data-phone="${c.phone}" data-name="${c.name}" data-remaining="${c.remaining}"><i class="fab fa-whatsapp"></i></button>` : ''}
+                </td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        invoiceCount.textContent = customerList.length;
+    }
+
+    function updateStats() {
+        const totalInvoices = allInvoices.filter(inv => inv.status === 'debt' || (inv.remainingAmount && inv.remainingAmount > 0)).length;
+        const totalRemaining = allInvoices.reduce((s, inv) => s + (inv.remainingAmount || 0), 0);
+        const totalBalance = allCustomers.reduce((s, c) => s + (c.balance || 0), 0);
+
+        totalDebtInvoices.textContent = totalInvoices;
+        totalDebtAmount.textContent = totalRemaining.toFixed(2);
+        uniqueCustomers.textContent = allCustomers.length;
+        totalCustomerBalance.textContent = totalBalance.toFixed(2);
+    }
+
+    // ============================================
+    // 👁️ SHOW CUSTOMER DETAILS
+    // ============================================
+    async function showCustomerDetails(customerId, customerName) {
+        try {
+            let customer = allCustomers.find(c => c.id === customerId);
+            let invoices = allInvoices.filter(inv => inv.customerName === (customer?.name || customerName));
+            
+            if (!customer) {
+                customer = {
+                    id: customerId,
+                    name: customerName,
+                    phone: '',
+                    address: '',
+                    balance: 0,
+                    reason: ''
+                };
+                invoices = allInvoices.filter(inv => inv.customerName === customerName);
+            }
+
+            const remaining = invoices.reduce((s, inv) => s + (inv.remainingAmount || 0), 0);
+            const total = invoices.reduce((s, inv) => s + (inv.total || 0), 0);
+            const paid = invoices.reduce((s, inv) => s + (inv.paidAmount || 0), 0);
+
+            let paymentHistory = [];
+            for (const inv of invoices) {
+                try {
+                    const paymentsSnap = await getDocs(collection(db, 'invoices', inv.id, 'payments'));
+                    paymentsSnap.forEach(doc => {
+                        const p = doc.data();
+                        paymentHistory.push({
+                            ...p,
+                            invoiceNumber: inv.invoiceNumber || inv.id
+                        });
+                    });
+                } catch (e) {}
+            }
+            paymentHistory.sort((a, b) => {
+                let dateA = a.date?.toDate ? a.date.toDate() : new Date(a.date);
+                let dateB = b.date?.toDate ? b.date.toDate() : new Date(b.date);
+                return dateB - dateA;
+            });
+
+            let invoicesHtml = '';
+            if (invoices.length > 0) {
+                invoicesHtml = `<div style="margin-top:12px;"><h4 style="font-size:14px;margin-bottom:8px;">📄 فواتير العميل (${invoices.length})</h4>`;
+                invoices.forEach(inv => {
+                    const isPaid = inv.remainingAmount === 0 || inv.status === 'paid';
+                    const isPartial = inv.remainingAmount > 0 && inv.remainingAmount < inv.total;
+                    const statusBadge = isPaid ? 'badge-paid' : (isPartial ? 'badge-partial' : 'badge-debt');
+                    const statusText = isPaid ? '✅ مدفوعة' : (isPartial ? '⏳ مدفوعة جزئياً' : '📌 دين');
+                    
+                    invoicesHtml += `
+                        <div class="invoice-card" style="margin-bottom:8px;">
+                            <div class="inv-header">
+                                <span class="num">#${inv.invoiceNumber || '—'}</span>
+                                <span class="date">${formatDate(inv.createdAt)}</span>
+                                <span class="${statusBadge}">${statusText}</span>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:13px;">
+                                <div><span style="color:#666;">الإجمالي:</span> ${(inv.total || 0).toFixed(2)}</div>
+                                <div><span style="color:#666;">المدفوع:</span> ${(inv.paidAmount || 0).toFixed(2)}</div>
+                                <div><span style="color:#666;font-weight:700;color:${isPaid ? 'var(--success)' : 'var(--danger)'};">المتبقي:</span> ${(inv.remainingAmount || 0).toFixed(2)}</div>
+                            </div>
+                            ${inv.items && inv.items.length ? `<div style="font-size:12px;color:#666;margin-top:4px;">${inv.items.map(i => `${i.name} (${i.quantity})`).join(' • ')}</div>` : ''}
+                        </div>
+                    `;
+                });
+                invoicesHtml += `</div>`;
+            } else {
+                invoicesHtml = `<p style="color:#999;font-size:13px;">لا توجد فواتير لهذا العميل</p>`;
+            }
+
+            let paymentHtml = '';
+            if (paymentHistory.length > 0) {
+                paymentHtml = `
+                    <div class="payment-log">
+                        <h4><i class="fas fa-history"></i> سجل الدفعات (${paymentHistory.length})</h4>
+                        ${paymentHistory.map(p => `
+                            <div class="log-item">
+                                <span class="date">${formatDate(p.date)}</span>
+                                <span class="amount">+${(p.amount || 0).toFixed(2)} ₪</span>
+                                <span class="note">${p.note || 'دفعة'}</span>
+                                <span style="font-size:11px;color:#888;">فاتورة: ${p.invoiceNumber || '—'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                paymentHtml = `<div class="payment-log"><h4><i class="fas fa-history"></i> سجل الدفعات</h4><p style="color:#999;font-size:13px;">لا توجد دفعات مسجلة</p></div>`;
+            }
+
+            const phone = customer.phone || '';
+            const message = `📋 *تقرير ديون العميل*\n👤 ${customer.name}\n📱 ${phone || '—'}\n📄 عدد الفواتير: ${invoices.length}\n💰 إجمالي الديون: ${total.toFixed(2)}\n💳 المدفوع: ${paid.toFixed(2)}\n📉 المتبقي: ${remaining.toFixed(2)}\n📌 من فريق براند فون`;
+
+            detailsContent.innerHTML = `
+                <div class="info-grid">
+                    <div class="item"><span class="label">الاسم</span><span class="value">${customer.name}</span></div>
+                    <div class="item"><span class="label">الهاتف</span><span class="value">${customer.phone || '—'}</span></div>
+                    <div class="item"><span class="label">العنوان</span><span class="value">${customer.address || '—'}</span></div>
+                    <div class="item"><span class="label">إجمالي الديون</span><span class="value debt">${total.toFixed(2)}</span></div>
+                    <div class="item"><span class="label">المدفوع</span><span class="value">${paid.toFixed(2)}</span></div>
+                    <div class="item"><span class="label">المتبقي</span><span class="value debt">${remaining.toFixed(2)}</span></div>
+                    <div class="item"><span class="label">رصيد العميل</span><span class="value" style="color:${(customer.balance || 0) < 0 ? 'var(--danger)' : 'var(--success)'}">${(customer.balance || 0).toFixed(2)}</span></div>
+                </div>
+                ${customer.reason ? `<div style="background:#fefce8;padding:8px 12px;border-radius:8px;margin-bottom:10px;"><i class="fas fa-info-circle"></i> سبب الدين: ${customer.reason}</div>` : ''}
+                
+                <div class="payment-summary">
+                    <div class="row"><span class="label">📊 ملخص الدفعات</span><span class="value">${paymentHistory.length} دفعة</span></div>
+                    <div class="row"><span class="label">💰 إجمالي المدفوع</span><span class="value" style="color:var(--success);">${paymentHistory.reduce((s, p) => s + (p.amount || 0), 0).toFixed(2)} ₪</span></div>
+                </div>
+
+                ${invoicesHtml}
+                ${paymentHtml}
+                
+                <div style="margin-top:15px;display:flex;gap:8px;flex-wrap:wrap;">
+                    ${phone ? `<button class="whatsapp-share" onclick="window.open('https://wa.me/2${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(message)}', '_blank')"><i class="fab fa-whatsapp"></i> إرسال التقرير</button>` : ''}
+                    ${customer.id && !customer.isTemp ? `<button class="delete-customer-btn" id="deleteCustomerBtn" style="display:inline-flex;align-items:center;gap:8px;background:#dc2626;color:white;padding:8px 18px;border-radius:30px;border:none;font-weight:700;cursor:pointer;"><i class="fas fa-user-slash"></i> حذف العميل</button>` : ''}
+                </div>
+            `;
+
+            const deleteBtn = document.getElementById('deleteCustomerBtn');
+            if (deleteBtn && customer.id && !customer.isTemp) {
+                deleteBtn.onclick = () => deleteCustomer(customer.id);
+            }
+
+            openModal('detailsModal');
+        } catch (e) {
+            showToast('فشل تحميل التفاصيل: ' + e.message, true);
+        }
+    }
+
+    async function deleteCustomer(customerId) {
+        if (!confirm('⚠️ هل أنت متأكد من حذف هذا العميل وجميع فواتيره نهائياً؟')) return;
+        try {
+            const customer = allCustomers.find(c => c.id === customerId);
+            if (!customer) return;
+            
+            const invToDelete = allInvoices.filter(inv => inv.customerName === customer.name);
+            for (const inv of invToDelete) {
+                await deleteDoc(doc(db, 'invoices', inv.id));
+            }
+            
+            await deleteDoc(doc(db, 'customers', customerId));
+            
+            showToast(`تم حذف العميل ${customer.name} وجميع فواتيره`);
+            closeModal('detailsModal');
+            await loadData();
+        } catch (e) {
+            showToast('فشل الحذف: ' + e.message, true);
+        }
+    }
+
+    // ============================================
+    // 💳 PAYMENT
+    // ============================================
+    function showPaymentModal(customerId, remaining) {
+        const customer = allCustomers.find(c => c.id === customerId);
+        if (!customer) {
+            showToast('العميل غير موجود', true);
+            return;
+        }
+        currentCustomerId = customerId;
+        payCustomerName.value = customer.name;
+        payRemaining.value = remaining.toFixed(2);
+        payAmount.value = '';
+        payNote.value = '';
+        openModal('paymentModal');
+    }
+
+    async function handlePayment() {
+        if (!currentCustomerId) return showToast('لا يوجد عميل محدد', true);
+        const customer = allCustomers.find(c => c.id === currentCustomerId);
+        if (!customer) return showToast('العميل غير موجود', true);
+        
+        const amount = parseFloat(payAmount.value);
+        if (isNaN(amount) || amount <= 0) return showToast('أدخل مبلغ صحيح', true);
+        
+        const remaining = parseFloat(payRemaining.value) || 0;
+        if (amount > remaining) return showToast('المبلغ أكبر من المتبقي', true);
+
+        try {
+            const customerInvoices = allInvoices.filter(inv => 
+                inv.customerName === customer.name && 
+                inv.remainingAmount > 0 &&
+                (inv.status === 'debt' || inv.saleType === 'debt')
+            );
+            
+            if (customerInvoices.length === 0) {
+                return showToast('لا توجد فواتير مستحقة لهذا العميل', true);
+            }
+
+            customerInvoices.sort((a, b) => {
+                let dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+                let dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                return dateA - dateB;
+            });
+
+            let remainingAmount = amount;
+            const updates = [];
+
+            for (const inv of customerInvoices) {
+                if (remainingAmount <= 0) break;
+                const invRemaining = inv.remainingAmount || 0;
+                const payAmount = Math.min(remainingAmount, invRemaining);
+                const newRemaining = invRemaining - payAmount;
+                const newPaid = (inv.paidAmount || 0) + payAmount;
+                const newStatus = newRemaining <= 0 ? 'paid' : 'debt';
+
+                updates.push({
+                    id: inv.id,
+                    remaining: newRemaining,
+                    paid: newPaid,
+                    status: newStatus,
+                    payAmount: payAmount,
+                    invoiceNumber: inv.invoiceNumber || inv.id
+                });
+
+                remainingAmount -= payAmount;
+            }
+
+            for (const update of updates) {
+                await updateDoc(doc(db, 'invoices', update.id), {
+                    remainingAmount: update.remaining,
+                    paidAmount: update.paid,
+                    status: update.status,
+                    updatedAt: serverTimestamp()
+                });
+
+                await addDoc(collection(db, 'invoices', update.id, 'payments'), {
+                    amount: update.payAmount,
+                    date: serverTimestamp(),
+                    method: 'cash',
+                    note: payNote.value || 'دفعة من العميل'
+                });
+            }
+
+            await updateDoc(doc(db, 'customers', currentCustomerId), {
+                balance: increment(-amount),
+                updatedAt: serverTimestamp()
+            });
+
+            showToast(`✅ تم تسديد ${amount.toFixed(2)} بنجاح للعميل ${customer.name}`);
+            closeModal('paymentModal');
+            await loadData();
+        } catch (e) {
+            showToast('فشل السداد: ' + e.message, true);
+        }
+    }
+
+    // ============================================
+    // ➕ ADD CUSTOMER
+    // ============================================
+    async function handleAddCustomer() {
+        const name = custName.value.trim();
+        const phone = custPhone.value.trim();
+        const address = custAddress.value.trim();
+        const balance = parseFloat(custBalance.value) || 0;
+        const reason = custReason.value.trim();
+
+        if (!name) { showToast('الاسم مطلوب', true); return; }
+        if (!phone) { showToast('رقم الهاتف مطلوب', true); return; }
+
+        try {
+            const docRef = await addDoc(collection(db, 'customers'), {
+                name: name,
+                phone: phone,
+                address: address,
+                balance: balance,
+                reason: reason,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+            
+            if (balance > 0) {
+                await addDoc(collection(db, 'invoices'), {
+                    customerName: name,
+                    customerPhone: phone,
+                    invoiceNumber: 'DEBT-' + Date.now().toString().slice(-6),
+                    total: balance,
+                    paidAmount: 0,
+                    remainingAmount: balance,
+                    status: 'debt',
+                    saleType: 'debt',
+                    paymentMethod: 'debt',
+                    items: [{ name: 'دين سابق', quantity: 1, price: balance }],
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    note: reason || 'دين سابق من العميل'
+                });
+            }
+            
+            showToast(`✅ تم إضافة العميل ${name} بنجاح`);
+            closeModal('addCustomerModal');
+            custName.value = '';
+            custPhone.value = '';
+            custAddress.value = '';
+            custBalance.value = '0';
+            custReason.value = '';
+            await loadData();
+        } catch (e) {
+            showToast('فشل إضافة العميل: ' + e.message, true);
+        }
+    }
+
+    // ============================================
+    // 📱 WHATSAPP ALL
+    // ============================================
+    async function sendWhatsAppToAll() {
+        const customerDebts = {};
+        allInvoices.forEach(inv => {
+            const remaining = inv.remainingAmount || 0;
+            if (remaining > 0 && inv.customerName) {
+                if (!customerDebts[inv.customerName]) {
+                    customerDebts[inv.customerName] = 0;
+                }
+                customerDebts[inv.customerName] += remaining;
+            }
+        });
+
+        const customersToSend = [];
+        allCustomers.forEach(c => {
+            const name = c.name || '';
+            const phone = c.phone || '';
+            const debt = customerDebts[name] || 0;
+            if (debt > 0 && phone) {
+                customersToSend.push({
+                    name: name,
+                    phone: phone,
+                    debt: debt
+                });
+            }
+        });
+
+        if (customersToSend.length === 0) {
+            showToast('لا يوجد عملاء لديهم ديون وأرقام هواتف', true);
+            return;
+        }
+
+        if (!confirm(`📱 سيتم إرسال رسائل لـ ${customersToSend.length} عميل لديهم ديون. هل أنت متأكد؟`)) return;
+
+        const message = `📋 *تذكير بالديون المستحقة*\n\nنود تذكيرك بأن لديك مبلغ مستحق لدينا.\nبرجاء التواصل معنا لتسوية المبلغ.\n\n📌 من فريق براند فون\nشكراً لثقتكم`;
+
+        let count = 0;
+        for (const customer of customersToSend) {
+            const phone = customer.phone.replace(/[^0-9]/g, '');
+            if (phone) {
+                const fullMessage = `👤 ${customer.name}\n- المتبقي: ${customer.debt.toFixed(2)}\n\n${message}`;
+                const url = `https://wa.me/2${phone}?text=${encodeURIComponent(fullMessage)}`;
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, count * 2000);
+                count++;
+            }
+        }
+        showToast(`جاري فتح ${count} محادثة واتساب للعملاء`);
+    }
+
+    // ============================================
+    // 📄 EXPORT PDF (simulated)
+    // ============================================
+    function exportPDF() {
+        showToast('📄 جاري تجهيز التقرير...');
+        setTimeout(() => {
+            const total = allInvoices.reduce((s, inv) => s + (inv.remainingAmount || 0), 0);
+            const msg = `📊 *تقرير الديون*\n📅 ${new Date().toLocaleString('ar-EG')}\n📄 عدد الفواتير: ${allInvoices.length}\n💰 إجمالي المستحق: ${total.toFixed(2)} ₪\n👤 عدد العملاء: ${allCustomers.length}\n📌 من فريق براند فون`;
+            const blob = new Blob([msg], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `تقرير_الديون_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ تم تصدير التقرير');
+        }, 500);
+    }
+
+    // ============================================
+    // 🎯 EVENT LISTENERS
+    // ============================================
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+
+        if (target.classList.contains('details')) {
+            const id = target.dataset.id;
+            const name = target.dataset.name;
+            if (id) showCustomerDetails(id, name);
+        } else if (target.classList.contains('pay')) {
+            const id = target.dataset.id;
+            const remaining = parseFloat(target.dataset.remaining) || 0;
+            if (id) showPaymentModal(id, remaining);
+        } else if (target.classList.contains('whatsapp')) {
+            const phone = target.dataset.phone;
+            const name = target.dataset.name;
+            const remaining = parseFloat(target.dataset.remaining) || 0;
+            if (phone) {
+                let msg = `📋 *تذكير بالديون*\n👤 ${name}`;
+                if (remaining > 0) {
+                    msg += `\n📉 المتبقي: ${remaining.toFixed(2)}`;
+                }
+                msg += `\n📌 من فريق براند فون`;
+                window.open(`https://wa.me/2${phone.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
+            }
+        }
+    });
+
+    confirmPaymentBtn.addEventListener('click', handlePayment);
+    confirmAddCustomer.addEventListener('click', handleAddCustomer);
+    refreshBtn.addEventListener('click', loadData);
+    searchInput.addEventListener('input', () => renderTable(searchInput.value));
+    addCustomerBtn.addEventListener('click', () => openModal('addCustomerModal'));
+    whatsappAllBtn.addEventListener('click', sendWhatsAppToAll);
+    exportBtn.addEventListener('click', exportPDF);
+
+    logoutBtn.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            window.location.href = 'login.html';
+        }).catch(e => showToast('خطأ في تسجيل الخروج', true));
+    });
+
+    backBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.history.back();
+    });
+
+    // Real-time updates
+    onSnapshot(collection(db, 'invoices'), () => { loadData(); });
+    onSnapshot(collection(db, 'customers'), () => { loadData(); });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const email = user.email;
+            userEmailDisplay.textContent = email || 'مستخدم';
+            if (!ALLOWED_EMAILS.includes(email)) {
+                showToast('⚠️ غير مصرح بهذا البريد', true);
+                signOut(auth);
+                return;
+            }
+            loadData();
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+</script>
+
+</body>
+</html>

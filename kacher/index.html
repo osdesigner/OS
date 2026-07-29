@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>براند فون OS - نظام الكاشير</title>
+    <link rel="icon" href="https://os-br.pages.dev/icone.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --gold: #d4a843;
+            --gold-light: #e8c96e;
+            --gold-dark: #b8942f;
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --radius-sm: 12px;
+            --radius-lg: 30px;
+            --font: 'Cairo', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(212, 168, 67, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(212, 168, 67, 0.02) 0%, transparent 50%);
+            animation: rotateBackground 60s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes rotateBackground {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle 10s infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1.5s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 3s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 4.5s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 6s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 2s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 5s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 7s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 3.5s; }
+        .particle:nth-child(10) { left: 15%; animation-delay: 8s; }
+
+        @keyframes floatParticle {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            20% { opacity: 0.3; }
+            80% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-100vh) scale(1); }
+        }
+
+        .login-container {
+            background: var(--bg-primary);
+            padding: 50px 45px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            width: 420px;
+            max-width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid rgba(212, 168, 67, 0.1);
+            text-align: center;
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(50px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+            background-size: 300% 100%;
+            animation: goldBar 3s linear infinite;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        @keyframes goldBar {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        .logo-section {
+            margin-bottom: 35px;
+        }
+
+        .logo-section img {
+            width: 90px;
+            height: 90px;
+            padding: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 15px;
+        }
+
+        .logo-section img:hover {
+            transform: scale(1.05) rotate(-5deg);
+        }
+
+        .logo-section h1 {
+            color: var(--primary);
+            font-size: 34px;
+            font-weight: 900;
+        }
+
+        .logo-section h1 span {
+            color: var(--gold);
+        }
+
+        .logo-section .subtitle {
+            color: #666;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .store-info {
+            background: var(--bg-secondary);
+            padding: 15px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 30px;
+            font-size: 15px;
+            color: #444;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .store-info .phone {
+            background: rgba(212, 168, 67, 0.1);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--gold-dark);
+            border: 1px solid rgba(212, 168, 67, 0.2);
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: #ffffff;
+            color: #3c4043;
+            border: 2px solid #dadce0;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: var(--font);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .google-btn:hover:not(:disabled) {
+            background: #f8f9fa;
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .google-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .google-btn .google-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .google-btn .btn-spinner {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid #e0e0e0;
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .google-btn.loading .btn-spinner {
+            display: block;
+        }
+        .google-btn.loading .btn-text {
+            display: none;
+        }
+        .google-btn.loading .google-icon {
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            background: #fee2e2;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            font-size: 13px;
+            border: 1px solid #fecaca;
+            animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .success-msg {
+            color: #10b981;
+            background: #d1fae5;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+            font-size: 13px;
+            border: 1px solid #a7f3d0;
+        }
+
+        .success-msg.show {
+            display: block;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .footer .brand {
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        .domain-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-dot.online {
+            background: #10b981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.offline {
+            background: #ef4444;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .allowed-email {
+            background: var(--bg-secondary);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            margin: 10px 0;
+            border: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .allowed-email .email {
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 35px 25px;
+            }
+            .logo-section h1 {
+                font-size: 28px;
+            }
+            .logo-section img {
+                width: 70px;
+                height: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="logo-section">
+            <img src="https://os-br.pages.dev/icone.png" alt="براند فون OS">
+            <h1>براند فون <span>OS</span></h1>
+            <p class="subtitle">نظام إدارة المحلات المتطور</p>
+        </div>
+
+        <div class="store-info">
+            <span>📍 <strong>براند فون</strong></span>
+            <span class="phone">📞 01144898934</span>
+        </div>
+
+        <div class="allowed-email">
+        </div>
+
+        <button class="google-btn" id="googleLoginBtn">
+            <span class="google-icon">
+                <svg viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.99 23.99 0 0 0 0 24c0 3.77.87 7.35 2.56 10.56l7.97-5.97z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.97C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+            </span>
+            <span class="btn-text">🚀 تسجيل الدخول بحساب Google</span>
+            <span class="btn-spinner"></span>
+        </button>
+
+        <div class="divider"><span>أو</span></div>
+
+        <div style="font-size: 14px; color: #666;">
+            <span class="domain-badge">🌐 النطاق الحالي: <span id="currentDomain"></span></span>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+        <div class="success-msg" id="successMsg"></div>
+
+        <div class="footer">
+            <span>
+                <span class="status-dot online" id="statusDot"></span>
+                <span id="connectionStatus">متصل</span>
+            </span>
+            <span class="brand">✨ براند فون</span>
+        </div>
+    </div>
+
+    <script type="module">
+        // عرض النطاق الحالي
+        document.getElementById('currentDomain').textContent = window.location.hostname;
+
+        // 🔐 البريد الإلكتروني المسموح به فقط
+        const ALLOWED_EMAILS = ['osdesigner5647@gmail.com'];
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithPopup, 
+            GoogleAuthProvider,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            enableIndexedDbPersistence,
+            doc,
+            setDoc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAvLmzn4rnQrPrIeP40wzgbXqDy5xMhO7o",
+            authDomain: "stor-121.firebaseapp.com",
+            projectId: "stor-121",
+            storageBucket: "stor-121.firebasestorage.app",
+            messagingSenderId: "944316047610",
+            appId: "1:944316047610:web:8ceeab3664e0e25d0da943",
+            measurementId: "G-F4JBRJKR1R"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // تفعيل Offline
+        enableIndexedDbPersistence(db)
+            .then(() => console.log('✅ Offline persistence enabled'))
+            .catch(() => console.warn('⚠️ Offline persistence failed'));
+
+        // حالة الاتصال
+        function updateStatus(online) {
+            const statusText = document.getElementById('connectionStatus');
+            const statusDot = document.getElementById('statusDot');
+            
+            if (online) {
+                statusText.textContent = 'متصل';
+                statusDot.className = 'status-dot online';
+            } else {
+                statusText.textContent = 'غير متصل';
+                statusDot.className = 'status-dot offline';
+            }
+        }
+
+        window.addEventListener('online', () => updateStatus(true));
+        window.addEventListener('offline', () => updateStatus(false));
+
+        // ============================================
+        // 🔐 التحقق من البريد الإلكتروني المسموح به
+        // ============================================
+        async function checkAllowedEmail(user) {
+            const email = user.email;
+            
+            // التحقق من البريد
+            if (!ALLOWED_EMAILS.includes(email)) {
+                // تسجيل خروج فوري
+                await signOut(auth);
+                
+                // حذف البيانات المحلية
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userUID');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userPhoto');
+                
+                // عرض رسالة خطأ
+                const errorDiv = document.getElementById('errorMsg');
+                errorDiv.textContent = `❌ عذراً، حساب (${email}) غير مصرح به.\n🔐 المسموح فقط: ${ALLOWED_EMAILS.join(', ')}`;
+                errorDiv.style.display = 'block';
+                errorDiv.classList.add('show');
+                
+                return false;
+            }
+            
+            return true;
+        }
+
+        // ============================================
+        // 👤 التحقق من حالة تسجيل الدخول
+        // ============================================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // التحقق من البريد المسموح به
+                const isAllowed = await checkAllowedEmail(user);
+                if (!isAllowed) {
+                    return; // تم تسجيل الخروج بالفعل
+                }
+                
+                // إذا كان مسموح، انتقل للوحة التحكم
+                window.location.href = 'dashboard/';
+            }
+        });
+
+        // ============================================
+        // 🚀 تسجيل الدخول بـ Google
+        // ============================================
+        const googleBtn = document.getElementById('googleLoginBtn');
+        const errorDiv = document.getElementById('errorMsg');
+        const successDiv = document.getElementById('successMsg');
+
+        googleBtn.addEventListener('click', async function() {
+            errorDiv.classList.remove('show');
+            errorDiv.style.display = 'none';
+            successDiv.classList.remove('show');
+            successDiv.style.display = 'none';
+            
+            this.classList.add('loading');
+            this.disabled = true;
+
+            try {
+                const provider = new GoogleAuthProvider();
+                provider.addScope('profile');
+                provider.addScope('email');
+                
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // 🔐 التحقق من البريد المسموح به
+                const isAllowed = await checkAllowedEmail(user);
+                if (!isAllowed) {
+                    this.classList.remove('loading');
+                    this.disabled = false;
+                    return;
+                }
+                
+                // ✅ البريد مسموح - حفظ في Firestore
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
+                
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, {
+                        uid: user.uid,
+                        name: user.displayName || 'مستخدم',
+                        email: user.email,
+                        photoURL: user.photoURL || '',
+                        role: 'admin',
+                        active: true,
+                        store: 'براند فون',
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString()
+                    });
+                } else {
+                    await setDoc(userRef, {
+                        lastLogin: new Date().toISOString()
+                    }, { merge: true });
+                }
+
+                // حفظ محلياً
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('userUID', user.uid);
+                localStorage.setItem('userName', user.displayName || 'مستخدم');
+                localStorage.setItem('userPhoto', user.photoURL || '');
+                
+                // رسالة نجاح
+                successDiv.textContent = `✅ مرحباً ${user.displayName}! تم تسجيل الدخول بنجاح. جاري التوجيه...`;
+                successDiv.style.display = 'block';
+                successDiv.classList.add('show');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard/';
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                
+                let errorMessage = 'حدث خطأ غير متوقع';
+                
+                if (error.code === 'auth/popup-closed-by-user') {
+                    errorMessage = 'تم إغلاق نافذة تسجيل الدخول';
+                } else if (error.code === 'auth/popup-blocked') {
+                    errorMessage = 'تم حظر النافذة المنبثقة، يرجى السماح بها';
+                } else if (error.code === 'auth/network-request-failed') {
+                    errorMessage = 'مشكلة في الاتصال بالإنترنت';
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    errorMessage = `⚠️ النطاق (${window.location.hostname}) غير مصرح به.\n📌 يرجى إضافته في Firebase Console`;
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'محاولات كثيرة، حاول لاحقاً';
+                } else {
+                    errorMessage = error.message || 'حدث خطأ، حاول مرة أخرى';
+                }
+                
+                errorDiv.textContent = '❌ ' + errorMessage;
+                errorDiv.style.display = 'block';
+                errorDiv.classList.add('show');
+                
+                this.classList.remove('loading');
+                this.disabled = false;
+            }
+        });
+
+        window.auth = auth;
+        window.db = db;
+    </script>
+</body>
+</html>
